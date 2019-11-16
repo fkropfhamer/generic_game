@@ -22,10 +22,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemon": "^1.19.4",
-    "webpack": "^4.41.2"
+    "express": "^4.17.1",
   },
   "devDependencies": {
+    "nodemon": "^1.19.4",
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
