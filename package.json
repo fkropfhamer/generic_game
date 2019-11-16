@@ -12,5 +12,8 @@
     "url": "git@gitlab.lrz.de:gruppe-gg/gg.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^4.41.2"
+  }
 }
