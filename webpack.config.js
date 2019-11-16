@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: './assets/js/main.js',
+  entry: './src/client/js/main.js',
   module: {
     rules: [
       {
@@ -24,7 +24,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'assets', 'index.html'),
+      template: path.resolve(__dirname, 'src', 'client', 'index.html'),
     }),
   ],
   resolve: {
