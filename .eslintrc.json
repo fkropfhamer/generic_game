@@ -12,7 +12,18 @@
     "prettier/prettier": ["error"],
     "no-unused-vars": 2,
     "no-undef": 2,
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    "no-param-reassign": 0,
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+      }
+    ]
   },
   "parserOptions": {
     "sourceType": "module"
