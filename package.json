@@ -1,0 +1,16 @@
+{
+  "name": "gg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.lrz.de:gruppe-gg/gg.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
