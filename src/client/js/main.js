@@ -1,3 +1,5 @@
+import '../css/index.css';
+
 let socket;
 
 const init = () => {
