@@ -1,4 +1,5 @@
 import '../css/index.css';
+import './player';
 
 class Game {
   constructor() {
