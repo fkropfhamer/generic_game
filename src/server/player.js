@@ -4,10 +4,10 @@ export default class Player {
   }
 
   notifyStart() {
-    this.socket.emit('start', {});
+    this.socket.emit('start');
   }
 
   notifyWaiting() {
-    this.socket.emit('waiting', {});
+    this.socket.emit('waiting');
   }
 }

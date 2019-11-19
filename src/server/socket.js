@@ -22,9 +22,12 @@ class Socket {
       if (!this.waitingPlayer) {
         this.waitingPlayer = player;
         player.notifyWaiting();
+        console.log('player is waiting');
       } else {
         const game = new Game(this.waitingPlayer, player);
         game.start();
+        console.log('game ist starting');
+        this.waitingPlayer = false;
       }
     });
   }
