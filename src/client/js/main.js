@@ -5,9 +5,12 @@ class Game {
   constructor() {
     this.setupSocket();
     this.view = new View();
-
+    this.pressedUp = false;
+    this.pressedDown = false;
+    this.pressedLeft = false;
+    this.pressedRight = false;
     this.setupKeyPressedEvents();
-   // setInterval(this.loop.bind(this), 50);
+    // setInterval(this.loop.bind(this), 50);
   }
 
   draw() {
@@ -36,7 +39,7 @@ class Game {
   setupKeyPressedEvents() {
     window.addEventListener('keydown', this.keyPressed.bind(this));
     window.addEventListener('keyup', this.keyUp.bind(this));
-    window.addEventListener('click', this.shoot.bind(this));
+    // window.addEventListener('click', this.shoot.bind(this));
   }
 
   /*shoot(e) {
@@ -55,46 +58,32 @@ class Game {
   }*/
 
   keyPressed(e) {
-   // console.log('keydown', e);
-    if (this.gameState.ySpeed === 0) {
-      if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-        // this.sendUpdate(this.y + 50);
-        this.gameState.ySpeed = 10;
-        // this.update();
-      } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
-        // this.sendUpdate(this.y - 50);
-        this.gameState.ySpeed = -10;
-        // this.update();
-      }
-    }
-    if (this.gameState.xSpeed === 0) {
-      if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-        // this.sendUpdate(this.y + 50);
-        this.gameState.xSpeed = 10;
-        // this.update();
-      } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
-        // this.sendUpdate(this.y - 50);
-        this.gameState.xSpeed = -10;
-        // this.update();
-      }
+    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      this.pressedDown = true;
+    } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+      this.pressedUp = true;
+    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      this.pressedRight = true;
+    } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+      this.pressedLeft = true;
     }
   }
 
   keyUp(e) {
-    // eslint-disable-next-line prettier/prettier
-    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'KeyA' || e.code === 'KeyD') {
-  //    console.log('y');
-      this.gameState.xSpeed = 0;
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+      this.pressedLeft = false;
     }
- //   console.log('keyup', e);
-    if (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyS' || e.code === 'KeyW') {
-      this.gameState.ySpeed = 0;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      this.pressedRight = false;
     }
-  }
 
-  loop() {
-    this.draw();
-    this.update();
+    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+      this.pressedUp = false;
+    }
+
+    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      this.pressedDown = false;
+    }
   }
 
   setupSocket() {
@@ -112,7 +101,20 @@ class Game {
       //this.opponent.x = data.opponentX;
       //this.opponent.y = data.opponentY;
       this.draw();
+    });
+    this.socket.on('update', (data) => {
+      console.log('update', data);
 
+      this.x = data.x;
+      this.y = data.y;
+      this.opponent = { x: data.opponentX, y: data.opponentY };
+      this.draw();
+      this.socket.emit('keys', {
+        up: this.pressedUp,
+        down: this.pressedDown,
+        left: this.pressedLeft,
+        right: this.pressedRight,
+      });
     });
     this.socket.on('waiting', () => {console.log('you must wait!')});
   }
