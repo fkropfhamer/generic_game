@@ -7,10 +7,10 @@ export default class Game {
   start() {
     this.player1.x = 100;
     this.player1.y = 100;
-   
+
     this.player2.x = 200;
     this.player2.y = 200;
-   
+
     this.player1.notifyStart(this.player2);
     this.player2.notifyStart(this.player1);
 

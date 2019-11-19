@@ -23,7 +23,8 @@ class Game {
     // });
   }
 
-  /*update() {
+  /*
+  update() {
     this.gameState.x += this.gameState.xSpeed;
     this.gameState.y += this.gameState.ySpeed;
    // console.log(this.gameState);
@@ -34,7 +35,8 @@ class Game {
       b.x = x;
       b.y = y;
     });
-  }*/
+  }
+  */
 
   setupKeyPressedEvents() {
     window.addEventListener('keydown', this.keyPressed.bind(this));
@@ -42,7 +44,8 @@ class Game {
     // window.addEventListener('click', this.shoot.bind(this));
   }
 
-  /*shoot(e) {
+  /*
+  shoot(e) {
    // console.log(e.clientX, e.clientY);
     const dir = Math.atan2(
       e.clientY - this.view.canvas.offsetTop - this.gameState.y,
@@ -55,7 +58,8 @@ class Game {
       dir,
       speed: 20,
     });
-  }*/
+  }
+  */
 
   keyPressed(e) {
     if (e.code === 'ArrowDown' || e.code === 'KeyS') {
@@ -93,13 +97,13 @@ class Game {
       console.log('connected');
     });
     this.socket.on('start', (data) => {
-      console.log('game starting!')
+      console.log('game starting!');
 
       this.x = data.x;
       this.y = data.y;
       this.opponent = { x: data.opponentX, y: data.opponentY };
-      //this.opponent.x = data.opponentX;
-      //this.opponent.y = data.opponentY;
+      // this.opponent.x = data.opponentX;
+      // this.opponent.y = data.opponentY;
       this.draw();
     });
     this.socket.on('update', (data) => {
@@ -116,7 +120,9 @@ class Game {
         right: this.pressedRight,
       });
     });
-    this.socket.on('waiting', () => {console.log('you must wait!')});
+    this.socket.on('waiting', () => {
+      console.log('you must wait!');
+    });
   }
 }
 

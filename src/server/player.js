@@ -11,7 +11,7 @@ export default class Player {
       this.pressedLeft = data.left;
       this.pressedDown = data.down;
       this.pressedUp = data.up;
-    })
+    });
   }
 
   notifyStart(opponent) {
