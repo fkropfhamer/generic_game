@@ -1,9 +1,12 @@
 import io from 'socket.io';
 import server from './server';
+import Player from './player';
+import Game from './game';
 
 class Socket {
   constructor() {
-    this.games = [];
+    // this.games = [];
+    this.waitingPlayer = false;
   }
 
   listen(port) {
@@ -15,10 +18,14 @@ class Socket {
   setup() {
     this.io.on('connection', (socket) => {
       console.log('user connected');
-      socket.on('start', (data) => {
-        console.log('start');
-        this.start(socket, data.name);
-      });
+      const player = new Player(socket);
+      if (!this.waitingPlayer) {
+        this.waitingPlayer = player;
+        player.notifyWaiting();
+      } else {
+        const game = new Game(this.waitingPlayer, player);
+        game.start();
+      }
     });
   }
 }

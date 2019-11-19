@@ -29,7 +29,7 @@ class Game {
   update() {
     this.gameState.x += this.gameState.xSpeed;
     this.gameState.y += this.gameState.ySpeed;
-    console.log(this.gameState);
+   // console.log(this.gameState);
     this.gameState.bullets.forEach((b) => {
       const x = b.x + b.speed * Math.cos(b.dir);
       const y = b.y + b.speed * Math.sin(b.dir);
@@ -46,7 +46,7 @@ class Game {
   }
 
   shoot(e) {
-    console.log(e.clientX, e.clientY);
+   // console.log(e.clientX, e.clientY);
     const dir = Math.atan2(
       e.clientY - this.view.canvas.offsetTop - this.gameState.y,
       e.clientX - this.view.canvas.offsetLeft - this.gameState.x
@@ -61,7 +61,7 @@ class Game {
   }
 
   keyPressed(e) {
-    console.log('keydown', e);
+   // console.log('keydown', e);
     if (this.gameState.ySpeed === 0) {
       if (e.code === 'ArrowDown' || e.code === 'KeyS') {
         // this.sendUpdate(this.y + 50);
@@ -89,10 +89,10 @@ class Game {
   keyUp(e) {
     // eslint-disable-next-line prettier/prettier
     if (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'KeyA' || e.code === 'KeyD') {
-      console.log('y');
+  //    console.log('y');
       this.gameState.xSpeed = 0;
     }
-    console.log('keyup', e);
+ //   console.log('keyup', e);
     if (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyS' || e.code === 'KeyW') {
       this.gameState.ySpeed = 0;
     }
@@ -109,6 +109,8 @@ class Game {
     this.socket.on('connect', () => {
       console.log('connected');
     });
+    this.socket.on('start', () => { console.log('game starting!')});
+    this.socket.on('waiting', () => {console.log('you must wait!')});
   }
 }
 
