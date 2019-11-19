@@ -6,27 +6,21 @@ class Game {
     this.setupSocket();
     this.view = new View();
 
-    this.gameState = {
-      x: 100,
-      y: 100,
-      ySpeed: 0,
-      xSpeed: 0,
-      bullets: [],
-    };
-
     this.setupKeyPressedEvents();
-    setInterval(this.loop.bind(this), 50);
+   // setInterval(this.loop.bind(this), 50);
   }
 
   draw() {
     this.view.reset();
-    this.view.drawCircle(this.gameState.x, this.gameState.y, 25, 'blue');
-    this.gameState.bullets.forEach((b) => {
-      this.view.drawCircle(b.x, b.y, 5, 'blue');
-    });
+    this.view.drawCircle(this.x, this.y, 25, 'blue');
+    this.view.drawCircle(this.opponent.x, this.opponent.y, 25, 'red');
+
+    // this.gameState.bullets.forEach((b) => {
+    //  this.view.drawCircle(b.x, b.y, 5, 'blue');
+    // });
   }
 
-  update() {
+  /*update() {
     this.gameState.x += this.gameState.xSpeed;
     this.gameState.y += this.gameState.ySpeed;
    // console.log(this.gameState);
@@ -37,7 +31,7 @@ class Game {
       b.x = x;
       b.y = y;
     });
-  }
+  }*/
 
   setupKeyPressedEvents() {
     window.addEventListener('keydown', this.keyPressed.bind(this));
@@ -45,7 +39,7 @@ class Game {
     window.addEventListener('click', this.shoot.bind(this));
   }
 
-  shoot(e) {
+  /*shoot(e) {
    // console.log(e.clientX, e.clientY);
     const dir = Math.atan2(
       e.clientY - this.view.canvas.offsetTop - this.gameState.y,
@@ -58,7 +52,7 @@ class Game {
       dir,
       speed: 20,
     });
-  }
+  }*/
 
   keyPressed(e) {
    // console.log('keydown', e);
@@ -109,7 +103,17 @@ class Game {
     this.socket.on('connect', () => {
       console.log('connected');
     });
-    this.socket.on('start', () => { console.log('game starting!')});
+    this.socket.on('start', (data) => {
+      console.log('game starting!')
+
+      this.x = data.x;
+      this.y = data.y;
+      this.opponent = { x: data.opponentX, y: data.opponentY };
+      //this.opponent.x = data.opponentX;
+      //this.opponent.y = data.opponentY;
+      this.draw();
+
+    });
     this.socket.on('waiting', () => {console.log('you must wait!')});
   }
 }
