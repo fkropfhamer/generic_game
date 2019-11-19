@@ -22,7 +22,7 @@ class Game {
     this.view.reset();
     this.view.drawCircle(this.gameState.x, this.gameState.y, 25, 'blue');
     this.gameState.bullets.forEach((b) => {
-      this.view.drawCircle(b.x, b.y, 20, 'blue');
+      this.view.drawCircle(b.x, b.y, 5, 'blue');
     });
   }
 
@@ -63,22 +63,22 @@ class Game {
   keyPressed(e) {
     console.log('keydown', e);
     if (this.gameState.ySpeed === 0) {
-      if (e.code === 'ArrowDown') {
+      if (e.code === 'ArrowDown' || e.code === 'KeyS') {
         // this.sendUpdate(this.y + 50);
         this.gameState.ySpeed = 10;
         // this.update();
-      } else if (e.code === 'ArrowUp') {
+      } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
         // this.sendUpdate(this.y - 50);
         this.gameState.ySpeed = -10;
         // this.update();
       }
     }
     if (this.gameState.xSpeed === 0) {
-      if (e.code === 'ArrowRight') {
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') {
         // this.sendUpdate(this.y + 50);
         this.gameState.xSpeed = 10;
         // this.update();
-      } else if (e.code === 'ArrowLeft') {
+      } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
         // this.sendUpdate(this.y - 50);
         this.gameState.xSpeed = -10;
         // this.update();
@@ -87,12 +87,13 @@ class Game {
   }
 
   keyUp(e) {
-    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+    // eslint-disable-next-line prettier/prettier
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'KeyA' || e.code === 'KeyD') {
       console.log('y');
       this.gameState.xSpeed = 0;
     }
     console.log('keyup', e);
-    if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+    if (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyS' || e.code === 'KeyW') {
       this.gameState.ySpeed = 0;
     }
   }
