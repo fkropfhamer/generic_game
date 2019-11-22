@@ -1,5 +1,9 @@
 import '../css/index.css';
 import View from './view';
+import life1 from '../img/1 life left.png';
+import life2 from '../img/2 lives left.png';
+import life3 from '../img/3 lives left.png';
+import loadAssets from './assetLoader';
 
 class Game {
   constructor() {
@@ -9,6 +13,11 @@ class Game {
     this.pressedDown = false;
     this.pressedLeft = false;
     this.pressedRight = false;
+    loadAssets([{ name: '1life', url: life1 }]).then((assets) => {
+      console.log(assets);
+      this.assets = assets;
+      this.assetsLoaded = true;
+    });
     this.setupKeyPressedEvents();
     // setInterval(this.loop.bind(this), 50);
   }
