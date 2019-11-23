@@ -21,7 +21,6 @@ export default class Game {
     this.player1.update();
     this.player2.update();
 
-    // this.bullets.update()
     this.player1.notifyUpdate(this.player2);
     this.player2.notifyUpdate(this.player1);
   }
