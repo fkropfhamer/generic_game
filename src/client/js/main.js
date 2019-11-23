@@ -3,7 +3,7 @@ import View from './view';
 import life1 from '../img/1 life left.png';
 import life2 from '../img/2 lives left.png';
 import life3 from '../img/3 lives left.png';
-import loadAssets from './assetLoader';
+import AssetLoader from './assetLoader';
 
 class Game {
   constructor() {
@@ -13,7 +13,11 @@ class Game {
     this.pressedDown = false;
     this.pressedLeft = false;
     this.pressedRight = false;
-    loadAssets([{ name: '1life', url: life1 }]).then((assets) => {
+    AssetLoader.loadAssets([
+      { name: '1life', url: life1 },
+      { name: '2life', url: life2 },
+      { name: '3life', url: life3 },
+    ]).then((assets) => {
       console.log(assets);
       this.assets = assets;
       this.assetsLoaded = true;
