@@ -3,7 +3,6 @@ import View from './view';
 import life1 from '../img/1 life left.png';
 import life2 from '../img/2 lives left.png';
 import life3 from '../img/3 lives left.png';
-import chicken from '../img/chicken.png';
 import AssetLoader from './assetLoader';
 
 class Game {
@@ -18,7 +17,6 @@ class Game {
       { name: 'life1', url: life1 },
       { name: 'life2', url: life2 },
       { name: 'life3', url: life3 },
-      { name: 'chicken', url: chicken },
     ]).then((assets) => {
       console.log(assets);
       this.assets = assets;
