@@ -11,8 +11,8 @@ class Game {
 
   draw() {
     this.view.reset();
-    this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.dir, 0.1);
-    this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.dir, 0.1);
+    this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.angle, 0.1);
+    this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
     // this.view.drawCircle(this.x, this.y, 25, 'blue');
     this.view.drawCircle(this.opponent.x, this.opponent.y, 25, 'red');
 
@@ -26,14 +26,13 @@ class Game {
     window.addEventListener('keyup', this.keyUp.bind(this));
     window.addEventListener('click', this.shoot.bind(this));
     window.addEventListener('mousemove', (e) => {
-      const dir = Math.atan2(
+      const angle = Math.atan2(
         e.clientY - this.view.canvas.offsetTop - this.y,
         e.clientX - this.view.canvas.offsetLeft - this.x
       );
-        this.dir = dir;
-  
-      // Math.atan()
-      // this.socket.
+      // this.angle = angle;
+
+      this.socket.emit('update angle', { angle });
     });
   }
 
@@ -93,6 +92,7 @@ class Game {
 
       this.x = data.x;
       this.y = data.y;
+      this.angle = data.angle;
       this.opponent = { x: data.opponentX, y: data.opponentY };
       this.draw();
       this.socket.emit('keys', {

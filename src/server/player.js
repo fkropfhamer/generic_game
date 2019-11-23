@@ -13,12 +13,17 @@ export default class Player {
       this.pressedDown = data.down;
       this.pressedUp = data.up;
     });
+
+    this.socket.on('update angle', (data) => {
+      this.angle = data.angle;
+    });
   }
 
   notifyStart(opponent) {
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
+      angle: this.angle,
       opponentX: opponent.x,
       opponentY: opponent.y,
     });
@@ -32,6 +37,7 @@ export default class Player {
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
+      angle: this.angle,
       opponentX: opponent.x,
       opponentY: opponent.y,
     });
