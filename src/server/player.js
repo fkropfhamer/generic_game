@@ -29,6 +29,7 @@ export default class Player {
       angle: this.angle,
       opponentX: opponent.x,
       opponentY: opponent.y,
+      opponentAngle: opponent.angle,
     });
   }
 
@@ -43,6 +44,7 @@ export default class Player {
       angle: this.angle,
       opponentX: opponent.x,
       opponentY: opponent.y,
+      opponentAngle: opponent.angle,
     });
   }
 
