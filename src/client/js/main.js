@@ -17,11 +17,6 @@ const init = () => {
     { name: 'player1', url: player1 },
     { name: 'player4', url: player4 },
   ]).then((assets) => {
-    console.log(assets);
-    // this.view.drawCircle(100, 100, 50, 'red');
-
-    view.drawImage(100, 100, assets.life1);
-
     // eslint-disable-next-line no-new
     new Game(view, assets);
   });

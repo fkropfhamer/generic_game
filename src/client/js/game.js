@@ -13,8 +13,6 @@ class Game {
     this.view.reset();
     this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.angle, 0.1);
     this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
-    // this.view.drawCircle(this.x, this.y, 25, 'blue');
-    // this.view.drawCircle(this.opponent.x, this.opponent.y, 25, 'red');
     this.view.drawImageAtAngle(
       this.assets.life2,
       this.opponent.x,
@@ -29,10 +27,6 @@ class Game {
       this.opponent.angle,
       0.1
     );
-
-    // this.gameState.bullets.forEach((b) => {
-    //  this.view.drawCircle(b.x, b.y, 5, 'blue');
-    // });
   }
 
   setupKeyPressedEvents() {
@@ -44,7 +38,7 @@ class Game {
         e.clientY - this.view.canvas.offsetTop - this.y,
         e.clientX - this.view.canvas.offsetLeft - this.x
       );
-      // this.angle = angle;
+      this.angle = angle;
 
       this.socket.emit('update angle', { angle });
     });
@@ -95,9 +89,7 @@ class Game {
 
       this.x = data.x;
       this.y = data.y;
-      this.opponent = { x: data.opponentX, y: data.opponentY };
-      // this.opponent.x = data.opponentX;
-      // this.opponent.y = data.opponentY;
+      this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
       this.draw();
       this.setupKeyPressedEvents();
     });
@@ -118,6 +110,7 @@ class Game {
     });
     this.socket.on('waiting', () => {
       console.log('you must wait!');
+      this.waiting = true;
     });
   }
 }

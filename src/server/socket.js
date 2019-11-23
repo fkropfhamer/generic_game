@@ -5,7 +5,6 @@ import Game from './game';
 
 class Socket {
   constructor() {
-    // this.games = [];
     this.waitingPlayer = false;
   }
 
