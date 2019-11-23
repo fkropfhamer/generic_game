@@ -1,4 +1,4 @@
-import Bullet from "./bullet";
+import Bullet from './bullet';
 import Util from './util';
 
 export default class Player {
@@ -17,32 +17,17 @@ export default class Player {
       this.pressedDown = data.down;
       this.pressedUp = data.up;
     });
-    this.socket.on('click', (data) => {
-      if (data.fired) {
-        this.createBullet();
-      }
+    this.socket.on('shoot', (data) => {
+      this.createBullet();
+    });
+    this.socket.on('update angle', (data) => {
+      this.angle = data.angle;
     });
   }
 
   createBullet() {
-    const bullet = new Bullet(this.socket, this);
+    const bullet = new Bullet(this);
     this.game.addBullet(bullet);
-  }
-
-  notifyStart(opponent) {
-    // Gegner
-    this.socket.emit('start', {
-      // socket.emit = Sendet Infos von Socket
-      // socket.on = Listening for socket events specified with 'start'
-      x: this.x,
-      y: this.y,
-      opponentX: opponent.x,
-      opponentY: opponent.y,
-    }); // Hier socket sende etwas an den Client -> Können JSON-Objekt übergeben
-
-    this.socket.on('update angle', (data) => {
-      this.angle = data.angle;
-    });
   }
 
   notifyStart(opponent) {
@@ -60,7 +45,7 @@ export default class Player {
     this.socket.emit('waiting');
   }
 
-  notifyUpdate(opponent) {
+  notifyUpdate(opponent, bullets) {
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -68,6 +53,7 @@ export default class Player {
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
+      bullets,
     });
   }
 

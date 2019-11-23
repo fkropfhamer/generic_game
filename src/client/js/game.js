@@ -27,6 +27,7 @@ class Game {
       this.opponent.angle,
       0.1
     );
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, 'blue'));
   }
 
   setupKeyPressedEvents() {
@@ -90,6 +91,7 @@ class Game {
       this.x = data.x;
       this.y = data.y;
       this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.bullets = [];
       this.draw();
       this.setupKeyPressedEvents();
     });
@@ -100,6 +102,7 @@ class Game {
       this.y = data.y;
       this.angle = data.angle;
       this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.bullets = data.bullets;
       this.draw();
       this.socket.emit('keys', {
         up: this.pressedUp,

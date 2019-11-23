@@ -1,18 +1,17 @@
 export default class Bullet {
-  constructor(socket, player) {
-    this.socket = socket;
-    this.setupSocket();
-    this.position = { x: player.x, y: player.y };
-    this.distanceTraveled = 0;
-    this.source = player;
-    this.speed = 1;
+  constructor(player) {
+    // this.position = { x: player.x, y: player.y };
+    this.x = player.x;
+    this.y = player.y;
+    this.duration = 1000;
+    this.player = player;
+    this.speed = 10;
     this.angle = player.angle;
-
-    // this.destroyed = false;
   }
 
   update() {
-    this.position.x += this.speed * Math.cos(this.angle);
-    this.position.y += this.speed * Math.sin(this.angle);
+    this.x += this.speed * Math.cos(this.angle);
+    this.y += this.speed * Math.sin(this.angle);
+    this.duration -= 1;
   }
 }

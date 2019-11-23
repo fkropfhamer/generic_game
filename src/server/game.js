@@ -32,7 +32,13 @@ export default class Game {
     this.player1.update();
     this.player2.update();
 
-    this.player1.notifyUpdate(this.player2);
-    this.player2.notifyUpdate(this.player1);
+    this.bullets.forEach((bullet) => bullet.update());
+
+    const bullets = this.bullets.map((b) => {
+      return { x: b.x, y: b.y, angle: b.angle };
+    });
+
+    this.player1.notifyUpdate(this.player2, bullets);
+    this.player2.notifyUpdate(this.player1, bullets);
   }
 }
