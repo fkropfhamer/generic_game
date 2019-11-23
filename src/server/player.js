@@ -61,5 +61,5 @@ export default class Player {
     if (this.pressedRight && this.x <= 600 - this.speed - this.radius) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
     }
-}
+  }
 }
