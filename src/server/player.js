@@ -1,9 +1,12 @@
+import Util from './util';
+
 export default class Player {
   constructor(socket) {
     this.socket = socket;
     this.setupSocket();
     this.speed = 1;
     this.angle = 0;
+    this.radius = 60;
   }
 
   setupSocket() {
@@ -44,27 +47,17 @@ export default class Player {
   }
 
   update() {
-    if (this.pressedDown && this.pressedRight) {
-      this.angle = Math.PI / 4;
-    } else if (this.pressedDown && this.pressedLeft) {
-      this.angle = (Math.PI * 3) / 4;
-    } else if (this.pressedUp && this.pressedRight) {
-      this.angle = -Math.PI / 4;
-    } else if (this.pressedUp && this.pressedLeft) {
-      this.angle = -(Math.PI * 3) / 4;
-    } else if (this.pressedDown) {
-      this.angle = +Math.PI / 2;
-    } else if (this.pressedUp) {
-      this.angle = -Math.PI / 2;
-    } else if (this.pressedRight) {
-      this.angle = 0;
-    } else if (this.pressedLeft) {
-      this.angle = Math.PI;
+    if (this.pressedUp && this.y >= 0 + this.speed + this.radius) {
+      this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-
-    if (this.pressedLeft || this.pressedUp || this.pressedDown || this.pressedRight) {
-      this.y += Math.sin(this.angle) * this.speed;
-      this.x += Math.cos(this.angle) * this.speed;
+    if (this.pressedDown && this.y <= 400 - this.speed - this.radius) {
+      this.y += Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-  }
+    if (this.pressedLeft && this.x >= 0 + this.speed + this.radius) {
+      this.x -= Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
+    }
+    if (this.pressedRight && this.x <= 600 - this.speed - this.radius) {
+      this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
+    }
+}
 }
