@@ -1,6 +1,3 @@
-// import Player from './player';
-// import View from '../client/js/view';
-
 export default class Game {
   constructor(player1, player2) {
     this.player1 = player1;
@@ -35,8 +32,7 @@ export default class Game {
     this.player1.update();
     this.player2.update();
 
-    // this.bullet.update();
-    this.player1.notifyUpdate(this.player2); // An beide alle Positionen senden
-    this.player2.notifyUpdate(this.player1); // -> Muss noch was übergeben werden
+    this.player1.notifyUpdate(this.player2);
+    this.player2.notifyUpdate(this.player1);
   }
 }

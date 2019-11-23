@@ -1,13 +1,11 @@
 import io from 'socket.io';
 import server from './server';
 import Player from './player';
-// eslint-disable-next-line import/no-named-as-default
 import Game from './game';
 
 class Socket {
   constructor() {
-    // this.games = [];
-    this.waitingPlayer = null;
+    this.waitingPlayer = false;
   }
 
   listen(port) {
@@ -23,11 +21,14 @@ class Socket {
       console.log('user connected');
       const player = new Player(socket);
       if (!this.waitingPlayer) {
-        this.waitingpPlayer = player;
-        player.notifyWaiting(); // Du musst auf Gegenspieler warten
+        this.waitingPlayer = player;
+        player.notifyWaiting();
+        console.log('player is waiting');
       } else {
-        const game = new Game(this.waitingPlayer, player); // dem Spiel die beiden Spieler übergeben
+        const game = new Game(this.waitingPlayer, player);
         game.start();
+        console.log('game ist starting');
+        this.waitingPlayer = false;
       }
     });
   }
