@@ -3,7 +3,7 @@ class AssetLoader {
     return new Promise((resolve) => {
       const image = new Image();
       image.src = url;
-      image.onload = resolve({ name, image });
+      image.onload = () => resolve({ name, image });
     });
   }
 

@@ -27,6 +27,11 @@ class View {
     this.ctx.fill();
   }
 
+  drawImage(x, y, img) {
+    console.log(img, img.width, img.height);
+    this.ctx.drawImage(img, 0, 0);
+  }
+
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
