@@ -46,13 +46,13 @@ export default class Player {
       this.angle = -Math.PI / 4;
     } else if (this.pressedUp && this.pressedLeft) {
       this.angle = -(Math.PI * 3) / 4;
-    } else if (this.pressedDown && !this.pressedLeft && !this.pressedRight) {
+    } else if (this.pressedDown) {
       this.angle = +Math.PI / 2;
-    } else if (this.pressedUp && !this.pressedLeft && !this.pressedRight) {
+    } else if (this.pressedUp) {
       this.angle = -Math.PI / 2;
-    } else if (this.pressedRight && !this.pressedUp && !this.pressedDown) {
+    } else if (this.pressedRight) {
       this.angle = 0;
-    } else if (this.pressedLeft && !this.pressedUp && !this.pressedDown) {
+    } else if (this.pressedLeft) {
       this.angle = Math.PI;
     }
 
