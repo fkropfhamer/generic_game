@@ -7,13 +7,13 @@ class Game {
     this.pressedDown = false;
     this.pressedLeft = false;
     this.pressedRight = false;
-    this.setupKeyPressedEvents();
-    // setInterval(this.loop.bind(this), 50);
   }
 
   draw() {
     this.view.reset();
-    this.view.drawCircle(this.x, this.y, 25, 'blue');
+    this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.dir, 0.1);
+    this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.dir, 0.1);
+    // this.view.drawCircle(this.x, this.y, 25, 'blue');
     this.view.drawCircle(this.opponent.x, this.opponent.y, 25, 'red');
 
     // this.gameState.bullets.forEach((b) => {
@@ -21,43 +21,26 @@ class Game {
     // });
   }
 
-  /*
-    update() {
-      this.gameState.x += this.gameState.xSpeed;
-      this.gameState.y += this.gameState.ySpeed;
-     // console.log(this.gameState);
-      this.gameState.bullets.forEach((b) => {
-        const x = b.x + b.speed * Math.cos(b.dir);
-        const y = b.y + b.speed * Math.sin(b.dir);
-
-        b.x = x;
-        b.y = y;
-      });
-    }
-    */
-
   setupKeyPressedEvents() {
     window.addEventListener('keydown', this.keyPressed.bind(this));
     window.addEventListener('keyup', this.keyUp.bind(this));
-    // window.addEventListener('click', this.shoot.bind(this));
+    window.addEventListener('click', this.shoot.bind(this));
+    window.addEventListener('mousemove', (e) => {
+      const dir = Math.atan2(
+        e.clientY - this.view.canvas.offsetTop - this.y,
+        e.clientX - this.view.canvas.offsetLeft - this.x
+      );
+        this.dir = dir;
+  
+      // Math.atan()
+      // this.socket.
+    });
   }
 
-  /*
-    shoot(e) {
-     // console.log(e.clientX, e.clientY);
-      const dir = Math.atan2(
-        e.clientY - this.view.canvas.offsetTop - this.gameState.y,
-        e.clientX - this.view.canvas.offsetLeft - this.gameState.x
-      );
-
-      this.gameState.bullets.push({
-        x: this.gameState.x,
-        y: this.gameState.y,
-        dir,
-        speed: 20,
-      });
-    }
-    */
+  shoot(e) {
+    console.log('shoot', e.clientX, e.clientY);
+    this.socket.emit('shoot');
+  }
 
   keyPressed(e) {
     if (e.code === 'ArrowDown' || e.code === 'KeyS') {
@@ -103,6 +86,7 @@ class Game {
       // this.opponent.x = data.opponentX;
       // this.opponent.y = data.opponentY;
       this.draw();
+      this.setupKeyPressedEvents();
     });
     this.socket.on('update', (data) => {
       console.log('update', data);

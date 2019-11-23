@@ -36,6 +36,18 @@ class View {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
+
+  drawImageAtAngle(image, x, y, angle, scale = 1) {
+    const imgWidth = image.width * scale;
+    const imgHeight = image.height * scale;
+
+    this.ctx.save();
+    this.ctx.translate(x, y);
+    this.ctx.rotate(angle);
+
+    this.ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+    this.ctx.restore();
+  }
 }
 
 export default View;
