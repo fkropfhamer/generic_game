@@ -5,7 +5,7 @@ export default class Bullet {
     this.y = player.y;
     this.duration = 1000;
     this.player = player;
-    this.speed = 10;
+    this.speed = 5;
     this.angle = player.angle;
   }
 

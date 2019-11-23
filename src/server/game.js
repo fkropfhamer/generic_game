@@ -21,7 +21,7 @@ export default class Game {
 
     this.player1.game = this;
     this.player2.game = this;
-    setInterval(this.loop.bind(this), 100);
+    setInterval(this.loop.bind(this), 10);
   }
 
   addBullet(bullet) {
