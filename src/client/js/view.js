@@ -27,6 +27,11 @@ class View {
     this.ctx.fill();
   }
 
+  drawRect(x, y, height, width, color) {
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(x, y, width, height);
+  }
+
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);

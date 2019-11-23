@@ -1,3 +1,5 @@
+import Wall from './wall';
+
 // import Player from './player';
 // import View from '../client/js/view';
 
@@ -5,7 +7,8 @@ export default class Game {
   constructor(player1, player2) {
     this.player1 = player1;
     this.player2 = player2;
-    this.bullets = [];
+    this.bulletz = [];
+    this.walls = [];
   }
 
   start() {
@@ -22,13 +25,20 @@ export default class Game {
     this.player1.notifyStart(this.player2); // Countdown einblenden
     this.player2.notifyStart(this.player1); // oder sowas PLUS Info wo anderer Gegner steht
 
+    this.wallz = [];
+
     this.player1.game = this;
     this.player2.game = this;
     setInterval(this.loop.bind(this), 100);
   }
 
   addBullet(bullet) {
-    this.bullets.push(bullet);
+    this.bulletz.push(bullet);
+  }
+
+  addWall(x, y, height, width) {
+    const wall = new Wall(x, y, height, width, this.socket);
+    this.wallz.push(wall);
   }
 
   loop() {

@@ -1,4 +1,4 @@
-import Bullet from "./bullet";
+import Bullet from './bullet';
 
 export default class Player {
   constructor(socket) {
