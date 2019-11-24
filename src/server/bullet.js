@@ -1,6 +1,5 @@
 export default class Bullet {
   constructor(player) {
-    // this.position = { x: player.x, y: player.y };
     this.x = player.x;
     this.y = player.y;
     this.duration = 1000;
