@@ -24,7 +24,8 @@ test_code:
   stage: test
   script:
     - npm install
-    - npm run test
+    - npm run test:coverage
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
 
 test_code_style:
   stage: test

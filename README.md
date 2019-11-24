@@ -1,5 +1,7 @@
 [![pipeline status](https://gitlab.lrz.de/gruppe-gg/gg/badges/master/pipeline.svg)](https://gitlab.lrz.de/gruppe-gg/gg/commits/master)
 
+[![coverage report](https://gitlab.lrz.de/gruppe-gg/gg/badges/testcoverage/coverage.svg)](https://gitlab.lrz.de/gruppe-gg/gg/commits/master)
+
 # Group GG: `INSERT GAME TITLE`
 
 ## requires:
