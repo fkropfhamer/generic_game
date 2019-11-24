@@ -47,6 +47,15 @@
 - `npm run lint:fix`
 -> fix coding style
 
+### for testing:
+
+- `npm run test`
+-> run all tests
+
+- `npm run test:coverage`
+-> run all tests with coverage report
+
+
 ## packages:
 
 ### used packages:   
