@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint:prettier": "prettier --check '{**/*,*}.{js,jsx,json}'",
     "lint": "eslint . -c .eslintrc.json --ext js,json",
     "lint:fix": "prettier --write '{**/*,*}.{js,jsx,json}'",
