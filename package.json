@@ -10,10 +10,10 @@
     "lint:fix": "prettier --write '{**/*,*}.{js,jsx,json}'",
     "start": "npm run build && node dist/index.js",
     "dev": "nodemon --exec babel-node src/server/index.js",
-    "build:frontend": "webpack --mode production",
+    "build:client": "webpack --mode production",
     "watch": "webpack --watch --mode development",
     "build:server": "babel src/server -d dist",
-    "build": "npm run build:frontend && npm run build:server"
+    "build": "npm run build:client && npm run build:server"
   },
   "repository": {
     "type": "git",
