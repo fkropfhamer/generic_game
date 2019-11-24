@@ -1,5 +1,6 @@
 /public
 /dist
+/coverage
 
 package-lock.json
 package.json
