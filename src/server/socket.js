@@ -10,12 +10,14 @@ class Socket {
 
   listen(port) {
     this.server = server.listen(port);
-    this.io = io(this.server);
-    this.setup();
+    this.io = io(this.server); // Mache Websocket auf
+    this.setup(); // Config den Websocket
   }
 
+  // Öffnet den Websocket
   setup() {
     this.io.on('connection', (socket) => {
+      // wenn sich jemand connected -> Dann erstelle einen neuen Player
       console.log('user connected');
       const player = new Player(socket);
       if (!this.waitingPlayer) {

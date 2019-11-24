@@ -1,3 +1,4 @@
+import Bullet from './bullet';
 import Util from './util';
 
 export default class Player {
@@ -16,10 +17,17 @@ export default class Player {
       this.pressedDown = data.down;
       this.pressedUp = data.up;
     });
-
+    this.socket.on('shoot', () => {
+      this.createBullet();
+    });
     this.socket.on('update angle', (data) => {
       this.angle = data.angle;
     });
+  }
+
+  createBullet() {
+    const bullet = new Bullet(this);
+    this.game.addBullet(bullet);
   }
 
   notifyStart(opponent) {
@@ -37,7 +45,7 @@ export default class Player {
     this.socket.emit('waiting');
   }
 
-  notifyUpdate(opponent) {
+  notifyUpdate(opponent, bullets) {
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -45,6 +53,7 @@ export default class Player {
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
+      bullets,
     });
   }
 
