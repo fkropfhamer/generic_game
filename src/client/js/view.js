@@ -73,6 +73,31 @@ class View {
       this.waitingScreen.style.display = 'none';
     }
   }
+
+  showEndScreen() {
+    const endScreen = document.createElement('div');
+    endScreen.style.backgroundColor = 'red';
+    endScreen.style.position = 'absolute';
+    endScreen.style.left = '25%';
+    endScreen.style.top = '25%';
+    endScreen.style.width = `${this.width / 2}px`;
+    endScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'The Game has ended!';
+
+    endScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(endScreen);
+
+    this.endScreen = endScreen;
+  }
+
+  hideEndScreen() {
+    if (this.endScreen) {
+      this.endScreen.style.display = 'none';
+    }
+  }
 }
 
 export default View;
