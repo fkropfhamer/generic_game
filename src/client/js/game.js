@@ -87,6 +87,10 @@ class Game {
     });
     this.socket.on('start', (data) => {
       console.log('game starting!');
+      if (this.waiting) {
+        this.view.hideWaitingScreen();
+        this.waiting = false;
+      }
 
       this.x = data.x;
       this.y = data.y;
@@ -113,6 +117,7 @@ class Game {
     });
     this.socket.on('waiting', () => {
       console.log('you must wait!');
+      this.view.showWaitingScreen();
       this.waiting = true;
     });
   }

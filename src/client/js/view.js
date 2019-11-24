@@ -48,6 +48,31 @@ class View {
     this.ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
     this.ctx.restore();
   }
+
+  showWaitingScreen() {
+    const waitingScreen = document.createElement('div');
+    waitingScreen.style.backgroundColor = 'white';
+    waitingScreen.style.position = 'absolute';
+    waitingScreen.style.left = '25%';
+    waitingScreen.style.top = '25%';
+    waitingScreen.style.width = `${this.width / 2}px`;
+    waitingScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'You have to wait for another player!';
+
+    waitingScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(waitingScreen);
+
+    this.waitingScreen = waitingScreen;
+  }
+
+  hideWaitingScreen() {
+    if (this.waitingScreen) {
+      this.waitingScreen.style.display = 'none';
+    }
+  }
 }
 
 export default View;
