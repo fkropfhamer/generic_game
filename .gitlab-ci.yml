@@ -24,7 +24,7 @@ test_code:
   stage: test
   script:
     - npm install
-    - npm run test
+    - npm run test:coverage
 
 test_code_style:
   stage: test
