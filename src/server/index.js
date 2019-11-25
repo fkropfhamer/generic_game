@@ -1,4 +1,4 @@
-import Socket from './socket';
+import GameHandler from './gamehandler';
 
-const s = new Socket();
+const s = new GameHandler();
 s.listen(8080);

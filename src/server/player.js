@@ -2,8 +2,9 @@ import Bullet from './bullet';
 import Util from './util';
 
 export default class Player {
-  constructor(socket) {
+  constructor(socket, gameHandler) {
     this.socket = socket;
+    this.gameHandler = gameHandler;
     this.setupSocket();
     this.speed = 1;
     this.angle = 0;
@@ -23,6 +24,13 @@ export default class Player {
     this.socket.on('update angle', (data) => {
       this.angle = data.angle;
     });
+    this.socket.on('disconnect', () => {
+      if (this.waiting) {
+        this.gameHandler.waitingPlayer = false;
+      } else {
+        this.game.playerDisconnected(this);
+      }
+    });
   }
 
   createBullet() {
@@ -30,22 +38,25 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(opponent) {
+  notifyStart(opponent, timer) {
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
       angle: this.angle,
+      color: this.color,
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
+      timer,
     });
   }
 
   notifyWaiting() {
+    this.waiting = true;
     this.socket.emit('waiting');
   }
 
-  notifyUpdate(opponent, bullets) {
+  notifyUpdate(opponent, bullets, timer) {
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -54,7 +65,16 @@ export default class Player {
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
       bullets,
+      timer,
     });
+  }
+
+  notifyOpponentDisconnected() {
+    this.socket.emit('opponent disconnected');
+  }
+
+  notifyTimeOver() {
+    this.socket.emit('time over');
   }
 
   update() {

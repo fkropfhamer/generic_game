@@ -48,6 +48,115 @@ class View {
     this.ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
     this.ctx.restore();
   }
+
+  showTimer(timer) {
+    if (!this.timerDisplay) {
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.left = '25%';
+      div.style.top = '75%';
+
+      const timerDisplay = document.createElement('h1');
+
+      timerDisplay.innerHTML = `${timer}`;
+
+      div.appendChild(timerDisplay);
+
+      document.getElementById('root').appendChild(div);
+
+      this.timerDisplay = timerDisplay;
+    } else if (timer.toString() !== this.timerDisplay.innerHTML) {
+      this.timerDisplay.innerHTML = `${timer}`;
+    }
+  }
+
+  showWaitingScreen() {
+    const waitingScreen = document.createElement('div');
+    waitingScreen.style.backgroundColor = 'white';
+    waitingScreen.style.position = 'absolute';
+    waitingScreen.style.left = '25%';
+    waitingScreen.style.top = '25%';
+    waitingScreen.style.width = `${this.width / 2}px`;
+    waitingScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'You have to wait for another player!';
+
+    waitingScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(waitingScreen);
+
+    this.waitingScreen = waitingScreen;
+  }
+
+  hideWaitingScreen() {
+    if (this.waitingScreen) {
+      this.waitingScreen.style.display = 'none';
+    }
+  }
+
+  showEndScreen() {
+    const endScreen = document.createElement('div');
+    endScreen.style.backgroundColor = 'red';
+    endScreen.style.position = 'absolute';
+    endScreen.style.left = '25%';
+    endScreen.style.top = '25%';
+    endScreen.style.width = `${this.width / 2}px`;
+    endScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'The Game has ended!';
+
+    endScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(endScreen);
+
+    this.endScreen = endScreen;
+  }
+
+  hideEndScreen() {
+    if (this.endScreen) {
+      this.endScreen.style.display = 'none';
+    }
+  }
+
+  showOpponentDisconnectedScreen() {
+    const disconnectedScreen = document.createElement('div');
+    disconnectedScreen.style.backgroundColor = 'green';
+    disconnectedScreen.style.position = 'absolute';
+    disconnectedScreen.style.left = '25%';
+    disconnectedScreen.style.top = '25%';
+    disconnectedScreen.style.width = `${this.width / 2}px`;
+    disconnectedScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'Your Opponent disconnected';
+
+    disconnectedScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(disconnectedScreen);
+
+    this.disconnectedScreen = disconnectedScreen;
+  }
+
+  showTimeOverScreen() {
+    const timeOverScreen = document.createElement('div');
+    timeOverScreen.style.backgroundColor = 'blue';
+    timeOverScreen.style.position = 'absolute';
+    timeOverScreen.style.left = '25%';
+    timeOverScreen.style.top = '25%';
+    timeOverScreen.style.width = `${this.width / 2}px`;
+    timeOverScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'Time is over';
+
+    timeOverScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(timeOverScreen);
+
+    this.timeOverScreen = timeOverScreen;
+  }
 }
 
 export default View;
