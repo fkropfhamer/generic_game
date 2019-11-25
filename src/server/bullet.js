@@ -6,6 +6,7 @@ export default class Bullet {
     this.player = player;
     this.speed = 5;
     this.angle = player.angle;
+    this.color = player.color;
   }
 
   update() {

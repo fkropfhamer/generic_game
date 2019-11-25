@@ -11,7 +11,7 @@ class Game {
 
   draw() {
     this.view.reset();
-    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, 'blue'));
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
     this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.angle, 0.1);
     this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
     this.view.drawImageAtAngle(

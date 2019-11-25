@@ -8,9 +8,11 @@ export default class Game {
   start() {
     this.player1.x = 100; // Player 1 auf linker Seite der Arena
     this.player1.y = 100;
+    this.player1.color = 'blue';
 
     this.player2.x = 200; // Player 2 auf anderer Position
     this.player2.y = 200;
+    this.player2.color = 'red';
 
     this.player1.notifyStart(this.player2); // Countdown einblenden
     this.player2.notifyStart(this.player1); // oder sowas PLUS Info wo anderer Gegner steht
@@ -71,7 +73,12 @@ export default class Game {
     this.bullets.forEach((bullet) => bullet.update());
 
     const bullets = this.bullets.map((b) => {
-      return { x: b.x, y: b.y, angle: b.angle };
+      return {
+        x: b.x,
+        y: b.y,
+        angle: b.angle,
+        color: b.color,
+      };
     });
 
     this.player1.notifyUpdate(this.player2, bullets, this.timer);
