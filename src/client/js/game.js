@@ -120,6 +120,10 @@ class Game {
       this.view.showWaitingScreen();
       this.waiting = true;
     });
+    this.socket.on('opponent disconnected', () => {
+      console.log('opponent disconnected');
+      this.view.showOpponentDisconnectedScreen();
+    });
   }
 }
 

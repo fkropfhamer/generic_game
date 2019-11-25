@@ -21,11 +21,28 @@ export default class Game {
 
     this.player1.game = this;
     this.player2.game = this;
-    setInterval(this.loop.bind(this), 10);
+    this.player1.waiting = false;
+    this.player2.waiting = false;
+
+    this.interval = setInterval(this.loop.bind(this), 10);
   }
 
   addBullet(bullet) {
     this.bullets.push(bullet);
+  }
+
+  playerDisconnected(player) {
+    if (Object.is(player, this.player1)) {
+      this.player2.notifyOpponentDisconnected();
+    } else {
+      this.player1.notifyOpponentDisconnected();
+    }
+
+    this.end();
+  }
+
+  end() {
+    clearInterval(this.interval);
   }
 
   loop() {

@@ -2,8 +2,9 @@ import Bullet from './bullet';
 import Util from './util';
 
 export default class Player {
-  constructor(socket) {
+  constructor(socket, gameHandler) {
     this.socket = socket;
+    this.gameHandler = gameHandler;
     this.setupSocket();
     this.speed = 1;
     this.angle = 0;
@@ -22,6 +23,13 @@ export default class Player {
     });
     this.socket.on('update angle', (data) => {
       this.angle = data.angle;
+    });
+    this.socket.on('disconnect', () => {
+      if (this.waiting) {
+        this.gameHandler.waitingPlayer = false;
+      } else {
+        this.game.playerDisconnected(this);
+      }
     });
   }
 
@@ -42,6 +50,7 @@ export default class Player {
   }
 
   notifyWaiting() {
+    this.waiting = true;
     this.socket.emit('waiting');
   }
 
@@ -55,6 +64,10 @@ export default class Player {
       opponentAngle: opponent.angle,
       bullets,
     });
+  }
+
+  notifyOpponentDisconnected() {
+    this.socket.emit('opponent disconnected');
   }
 
   update() {

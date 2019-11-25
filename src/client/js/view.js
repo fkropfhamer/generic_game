@@ -98,6 +98,25 @@ class View {
       this.endScreen.style.display = 'none';
     }
   }
+
+  showOpponentDisconnectedScreen() {
+    const disconnectedScreen = document.createElement('div');
+    disconnectedScreen.style.backgroundColor = 'green';
+    disconnectedScreen.style.position = 'absolute';
+    disconnectedScreen.style.left = '25%';
+    disconnectedScreen.style.top = '25%';
+    disconnectedScreen.style.width = `${this.width / 2}px`;
+    disconnectedScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'Your Opponent disconnected';
+
+    disconnectedScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(disconnectedScreen);
+
+    this.disconnectedScreen = disconnectedScreen;
+  }
 }
 
 export default View;
