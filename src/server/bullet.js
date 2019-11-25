@@ -1,10 +1,12 @@
+import config from '../config';
+
 export default class Bullet {
   constructor(player) {
     this.x = player.x;
     this.y = player.y;
-    this.duration = 1000;
+    this.duration = config.bulletDuration;
     this.player = player;
-    this.speed = 5;
+    this.speed = config.bulletDuration;
     this.angle = player.angle;
     this.color = player.color;
   }

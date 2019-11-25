@@ -1,14 +1,15 @@
 import Bullet from './bullet';
 import Util from './util';
+import config from '../config';
 
 export default class Player {
   constructor(socket, gameHandler) {
     this.socket = socket;
     this.gameHandler = gameHandler;
     this.setupSocket();
-    this.speed = 1;
+    this.speed = config.playerSpeed;
     this.angle = 0;
-    this.radius = 60;
+    this.radius = config.playerRadius;
   }
 
   setupSocket() {
