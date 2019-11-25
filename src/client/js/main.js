@@ -5,7 +5,7 @@ import life2 from '../img/2 lives left.png';
 import life3 from '../img/3 lives left.png';
 import player1 from '../img/player1.png';
 import player4 from '../img/player4.png';
-import AssetLoader from './assetLoader';
+import AssetLoader from './assetloader';
 import Game from './game';
 
 const init = () => {
