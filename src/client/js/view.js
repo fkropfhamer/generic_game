@@ -49,6 +49,27 @@ class View {
     this.ctx.restore();
   }
 
+  showTimer(timer) {
+    if (!this.timerDisplay) {
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.left = '25%';
+      div.style.top = '75%';
+
+      const timerDisplay = document.createElement('h1');
+
+      timerDisplay.innerHTML = `${timer}`;
+
+      div.appendChild(timerDisplay);
+
+      document.getElementById('root').appendChild(div);
+
+      this.timerDisplay = timerDisplay;
+    } else if (timer.toString() !== this.timerDisplay.innerHTML) {
+      this.timerDisplay.innerHTML = `${timer}`;
+    }
+  }
+
   showWaitingScreen() {
     const waitingScreen = document.createElement('div');
     waitingScreen.style.backgroundColor = 'white';

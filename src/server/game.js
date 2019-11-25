@@ -6,6 +6,9 @@ export default class Game {
   }
 
   start() {
+    this.timer = 60;
+    this.count = 0;
+
     this.player1.x = 100; // Player 1 auf linker Seite der Arena
     this.player1.y = 100;
     this.player1.color = 'blue';
@@ -14,16 +17,13 @@ export default class Game {
     this.player2.y = 200;
     this.player2.color = 'red';
 
-    this.player1.notifyStart(this.player2); // Countdown einblenden
-    this.player2.notifyStart(this.player1); // oder sowas PLUS Info wo anderer Gegner steht
+    this.player1.notifyStart(this.player2, this.timer); // Countdown einblenden
+    this.player2.notifyStart(this.player1, this.timer);
 
     this.player1.game = this;
     this.player2.game = this;
     this.player1.waiting = false;
     this.player2.waiting = false;
-
-    this.timer = 60;
-    this.count = 0;
 
     this.interval = setInterval(this.loop.bind(this), 10);
   }

@@ -38,14 +38,16 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(opponent) {
+  notifyStart(opponent, timer) {
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
       angle: this.angle,
+      color: this.color,
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
+      timer,
     });
   }
 

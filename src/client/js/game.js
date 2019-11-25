@@ -11,6 +11,7 @@ class Game {
 
   draw() {
     this.view.reset();
+    this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
     this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.angle, 0.1);
     this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
@@ -94,7 +95,10 @@ class Game {
 
       this.x = data.x;
       this.y = data.y;
+      this.angle = data.angle;
+      this.color = data.color;
       this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.timer = data.timer;
       this.bullets = [];
       this.draw();
       this.setupKeyPressedEvents();
