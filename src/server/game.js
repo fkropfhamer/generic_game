@@ -49,6 +49,7 @@ export default class Game {
   }
 
   end() {
+    console.log('game ended');
     clearInterval(this.interval);
   }
 
