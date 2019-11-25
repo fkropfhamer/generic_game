@@ -117,6 +117,25 @@ class View {
 
     this.disconnectedScreen = disconnectedScreen;
   }
+
+  showTimeOverScreen() {
+    const timeOverScreen = document.createElement('div');
+    timeOverScreen.style.backgroundColor = 'blue';
+    timeOverScreen.style.position = 'absolute';
+    timeOverScreen.style.left = '25%';
+    timeOverScreen.style.top = '25%';
+    timeOverScreen.style.width = `${this.width / 2}px`;
+    timeOverScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'Time is over';
+
+    timeOverScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(timeOverScreen);
+
+    this.timeOverScreen = timeOverScreen;
+  }
 }
 
 export default View;

@@ -54,7 +54,7 @@ export default class Player {
     this.socket.emit('waiting');
   }
 
-  notifyUpdate(opponent, bullets) {
+  notifyUpdate(opponent, bullets, timer) {
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -63,11 +63,16 @@ export default class Player {
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
       bullets,
+      timer,
     });
   }
 
   notifyOpponentDisconnected() {
     this.socket.emit('opponent disconnected');
+  }
+
+  notifyTimeOver() {
+    this.socket.emit('time over');
   }
 
   update() {

@@ -107,6 +107,7 @@ class Game {
       this.angle = data.angle;
       this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
       this.bullets = data.bullets;
+      this.timer = data.timer;
       this.draw();
       this.socket.emit('keys', {
         up: this.pressedUp,
@@ -123,6 +124,9 @@ class Game {
     this.socket.on('opponent disconnected', () => {
       console.log('opponent disconnected');
       this.view.showOpponentDisconnectedScreen();
+    });
+    this.socket.on('time over', () => {
+      this.view.showTimeOverScreen();
     });
   }
 }
