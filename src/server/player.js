@@ -1,6 +1,6 @@
 import Bullet from './bullet';
 import Util from './util';
-import config from '../config';
+import config from './config';
 
 export default class Player {
   constructor(socket, gameHandler) {
@@ -82,13 +82,13 @@ export default class Player {
     if (this.pressedUp && this.y >= 0 + this.speed + this.radius) {
       this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-    if (this.pressedDown && this.y <= 400 - this.speed - this.radius) {
+    if (this.pressedDown && this.y <= config.fieldHeigth - this.speed - this.radius) {
       this.y += Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
     if (this.pressedLeft && this.x >= 0 + this.speed + this.radius) {
       this.x -= Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
     }
-    if (this.pressedRight && this.x <= 600 - this.speed - this.radius) {
+    if (this.pressedRight && this.x <= config.fieldWidth - this.speed - this.radius) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
     }
   }
