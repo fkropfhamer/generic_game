@@ -92,8 +92,74 @@ describe('player test', () => {
     expect(socket.emit.mock.calls[0][0]).toBe('time over');
   });
 
-  test('player update', () => {
+  test('player update no button in bound', () => {
+    player.x = 100;
+    player.y = 200;
     player.update();
-    // TODO
+
+    expect(player.x).toBe(100);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update up button', () => {
+    player.x = 100;
+    player.y = 200;
+    player.pressedUp = true;
+    player.update();
+
+    expect(player.x).toBe(100);
+    expect(player.y).toBe(199);
+  });
+
+  test('player update down button', () => {
+    player.x = 100;
+    player.y = 200;
+    player.pressedDown = true;
+    player.update();
+
+    expect(player.x).toBe(100);
+    expect(player.y).toBe(201);
+  });
+
+  test('player update left button', () => {
+    player.x = 100;
+    player.y = 200;
+    player.pressedLeft = true;
+    player.update();
+
+    expect(player.x).toBe(99);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update right button', () => {
+    player.x = 100;
+    player.y = 200;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(101);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update right button and up', () => {
+    player.x = 100;
+    player.y = 200;
+    player.pressedRight = true;
+    player.pressedUp = true;
+    player.update();
+
+    expect(player.x).toBe(100.5);
+    expect(player.y).toBe(199.5);
+  });
+
+  test('player update left button and down', () => {
+    player.x = 100;
+    player.y = 200;
+    player.pressedLeft = true;
+    player.pressedDown = true;
+    player.update();
+
+    expect(player.x).toBe(99.5);
+    expect(player.y).toBe(200.5);
   });
 });
