@@ -6,7 +6,7 @@ export default class Bullet {
     this.y = player.y;
     this.duration = config.bulletDuration;
     this.player = player;
-    this.speed = config.bulletDuration;
+    this.speed = config.bulletSpeed;
     this.angle = player.angle;
     this.color = player.color;
   }
