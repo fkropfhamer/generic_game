@@ -6,8 +6,20 @@ describe('game test', () => {
   let game;
 
   beforeEach(() => {
-    player1 = { notifyStart: jest.fn() };
-    player2 = { notifyStart: jest.fn() };
+    player1 = {
+      notifyStart: jest.fn(),
+      notifyOpponentDisconnected: jest.fn(),
+      notifyTimeOver: jest.fn(),
+      notifyUpdate: jest.fn(),
+      update: jest.fn(),
+    };
+    player2 = {
+      notifyStart: jest.fn(),
+      notifyOpponentDisconnected: jest.fn(),
+      notifyTimeOver: jest.fn(),
+      notifyUpdate: jest.fn(),
+      update: jest.fn(),
+    };
 
     game = new Game(player1, player2);
   });
@@ -52,5 +64,77 @@ describe('game test', () => {
     game.addBullet(bullet);
 
     expect(game.bullets).toEqual([bullet]);
+  });
+
+  test('game player1 disconnected', () => {
+    game.end = jest.fn();
+    game.playerDisconnected(player1);
+
+    expect(player2.notifyOpponentDisconnected.mock.calls.length).toBe(1);
+    expect(game.end.mock.calls.length).toBe(1);
+  });
+
+  test('game player2 disconnected', () => {
+    game.end = jest.fn();
+    game.playerDisconnected(player2);
+
+    expect(player1.notifyOpponentDisconnected.mock.calls.length).toBe(1);
+    expect(game.end.mock.calls.length).toBe(1);
+  });
+
+  test('game time is over', () => {
+    game.end = jest.fn();
+    game.timeIsOver();
+
+    expect(player1.notifyTimeOver.mock.calls.length).toBe(1);
+    expect(player2.notifyTimeOver.mock.calls.length).toBe(1);
+  });
+
+  test('game loop decrement count', () => {
+    game.update = jest.fn();
+    game.count = 100;
+    game.timer = 60;
+    game.loop();
+
+    expect(game.timer).toBe(59);
+    expect(game.count).toBe(101);
+    expect(game.update.mock.calls.length).toBe(1);
+  });
+
+  test('game loop decrement count end game', () => {
+    game.update = jest.fn();
+    game.timeIsOver = jest.fn();
+    game.count = 100;
+    game.timer = 1;
+    game.loop();
+
+    expect(game.timer).toBe(0);
+    expect(game.count).toBe(101);
+    expect(game.update.mock.calls.length).toBe(1);
+    expect(game.timeIsOver.mock.calls.length).toBe(1);
+  });
+
+  test('game loop', () => {
+    game.update = jest.fn();
+    game.timeIsOver = jest.fn();
+    game.count = 50;
+    game.timer = 10;
+    game.loop();
+
+    expect(game.timer).toBe(10);
+    expect(game.count).toBe(51);
+    expect(game.update.mock.calls.length).toBe(1);
+    expect(game.timeIsOver.mock.calls.length).toBe(0);
+  });
+
+  test('game update no bullets', () => {
+    game.bullets = [];
+    game.update();
+
+    expect(player1.update.mock.calls.length).toBe(1);
+    expect(player2.update.mock.calls.length).toBe(1);
+
+    expect(player1.notifyUpdate.mock.calls.length).toBe(1);
+    expect(player2.notifyUpdate.mock.calls.length).toBe(1);
   });
 });
