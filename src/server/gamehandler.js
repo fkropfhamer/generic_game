@@ -3,7 +3,7 @@ import server from './server';
 import Player from './player';
 import Game from './game';
 
-class Socket {
+class GameHandler {
   constructor() {
     this.waitingPlayer = false;
   }
@@ -19,7 +19,7 @@ class Socket {
     this.io.on('connection', (socket) => {
       // wenn sich jemand connected -> Dann erstelle einen neuen Player
       console.log('user connected');
-      const player = new Player(socket);
+      const player = new Player(socket, this);
       if (!this.waitingPlayer) {
         this.waitingPlayer = player;
         player.notifyWaiting();
@@ -34,4 +34,4 @@ class Socket {
   }
 }
 
-export default Socket;
+export default GameHandler;

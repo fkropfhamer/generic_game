@@ -9,24 +9,27 @@ class Game {
     this.pressedRight = false;
   }
 
+  drawPlayer(color, lifes, face, x, y, angle) {
+    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.1);
+    if (lifes < 3) {
+      this.view.drawImageAtAngle(this.assets[`${color}${lifes}life`], x, y, angle, 0.1);
+    }
+    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.1);
+  }
+
   draw() {
     this.view.reset();
-    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, 'blue'));
-    this.view.drawImageAtAngle(this.assets.life1, this.x, this.y, this.angle, 0.1);
-    this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
-    this.view.drawImageAtAngle(
-      this.assets.life2,
+    this.view.showTimer(this.timer);
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
+
+    this.drawPlayer(this.color, this.lifes, 'player1', this.x, this.y, this.angle);
+    this.drawPlayer(
+      this.opponent.color,
+      this.opponent.lifes,
+      'player4',
       this.opponent.x,
       this.opponent.y,
-      this.opponent.angle,
-      0.1
-    );
-    this.view.drawImageAtAngle(
-      this.assets.player4,
-      this.opponent.x,
-      this.opponent.y,
-      this.opponent.angle,
-      0.1
+      this.opponent.angle
     );
   }
 
@@ -87,10 +90,24 @@ class Game {
     });
     this.socket.on('start', (data) => {
       console.log('game starting!');
+      if (this.waiting) {
+        this.view.hideWaitingScreen();
+        this.waiting = false;
+      }
 
       this.x = data.x;
       this.y = data.y;
-      this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.angle = data.angle;
+      this.color = data.color;
+      this.lifes = data.lifes;
+      this.opponent = {
+        x: data.opponentX,
+        y: data.opponentY,
+        angle: data.opponentAngle,
+        color: data.opponentColor,
+        lifes: data.opponentLifes,
+      };
+      this.timer = data.timer;
       this.bullets = [];
       this.draw();
       this.setupKeyPressedEvents();
@@ -101,8 +118,13 @@ class Game {
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;
-      this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.opponent.x = data.opponentX;
+      this.opponent.y = data.opponentY;
+      this.opponent.angle = data.opponentAngle;
+      this.opponent.lifes = data.opponentLifes;
       this.bullets = data.bullets;
+      this.timer = data.timer;
+      this.lifes = data.lifes;
       this.draw();
       this.socket.emit('keys', {
         up: this.pressedUp,
@@ -113,7 +135,15 @@ class Game {
     });
     this.socket.on('waiting', () => {
       console.log('you must wait!');
+      this.view.showWaitingScreen();
       this.waiting = true;
+    });
+    this.socket.on('opponent disconnected', () => {
+      console.log('opponent disconnected');
+      this.view.showOpponentDisconnectedScreen();
+    });
+    this.socket.on('time over', () => {
+      this.view.showTimeOverScreen();
     });
   }
 }
