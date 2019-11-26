@@ -13,10 +13,10 @@ class Game {
     this.view.reset();
     this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
-    this.view.drawImageAtAngle(this.assets.red, this.x, this.y, this.angle, 0.1);
+    this.view.drawImageAtAngle(this.assets[this.color], this.x, this.y, this.angle, 0.1);
     this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
     this.view.drawImageAtAngle(
-      this.assets.blue,
+      this.assets[this.opponent.color],
       this.opponent.x,
       this.opponent.y,
       this.opponent.angle,
@@ -97,7 +97,12 @@ class Game {
       this.y = data.y;
       this.angle = data.angle;
       this.color = data.color;
-      this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.opponent = {
+        x: data.opponentX,
+        y: data.opponentY,
+        angle: data.opponentAngle,
+        color: data.opponentColor,
+      };
       this.timer = data.timer;
       this.bullets = [];
       this.draw();
@@ -109,7 +114,9 @@ class Game {
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;
-      this.opponent = { x: data.opponentX, y: data.opponentY, angle: data.opponentAngle };
+      this.opponent.x = data.opponentX;
+      this.opponent.y = data.opponentY;
+      this.opponent.angle = data.opponentAngle;
       this.bullets = data.bullets;
       this.timer = data.timer;
       this.draw();

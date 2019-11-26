@@ -48,6 +48,7 @@ export default class Player {
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
+      opponentColor: opponent.color,
       timer,
     });
   }
