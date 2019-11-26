@@ -9,45 +9,27 @@ class Game {
     this.pressedRight = false;
   }
 
+  drawPlayer(color, lifes, face, x, y, angle) {
+    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.1);
+    if (lifes < 3) {
+      this.view.drawImageAtAngle(this.assets[`${color}${lifes}life`], x, y, angle, 0.1);
+    }
+    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.1);
+  }
+
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
-    this.view.drawImageAtAngle(this.assets[this.color], this.x, this.y, this.angle, 0.1);
-    if (this.lifes < 3) {
-      this.view.drawImageAtAngle(
-        this.assets[`${this.color}${this.lifes}life`],
-        this.x,
-        this.y,
-        this.angle,
-        0.1
-      );
-    }
-    this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
 
-    this.view.drawImageAtAngle(
-      this.assets[this.opponent.color],
+    this.drawPlayer(this.color, this.lifes, 'player1', this.x, this.y, this.angle);
+    this.drawPlayer(
+      this.opponent.color,
+      this.opponent.lifes,
+      'player4',
       this.opponent.x,
       this.opponent.y,
-      this.opponent.angle,
-      0.1
-    );
-    if (this.opponent.lifes > 3) {
-      this.view.drawImageAtAngle(
-        this.assets[`${this.opponent.color}${this.opponent.lifes}life`],
-        this.opponent.x,
-        this.opponent.y,
-        this.opponent.angle,
-        0.1
-      );
-    }
-
-    this.view.drawImageAtAngle(
-      this.assets.player4,
-      this.opponent.x,
-      this.opponent.y,
-      this.opponent.angle,
-      0.1
+      this.opponent.angle
     );
   }
 
