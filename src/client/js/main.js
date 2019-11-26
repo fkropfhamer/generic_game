@@ -8,7 +8,7 @@ import player4 from '../img/player4.png';
 import AssetLoader from './assetloader';
 import Game from './game';
 
-const init = () => {
+window.onload = () => {
   const view = new View();
   AssetLoader.loadAssets([
     { name: 'life1', url: life1 },
@@ -21,5 +21,3 @@ const init = () => {
     new Game(view, assets);
   });
 };
-
-window.onload = init();
