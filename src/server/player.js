@@ -45,10 +45,12 @@ export default class Player {
       y: this.y,
       angle: this.angle,
       color: this.color,
+      lifes: this.lifes,
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
       opponentColor: opponent.color,
+      opponentLifes: opponent.lifes,
       timer,
     });
   }
@@ -63,9 +65,11 @@ export default class Player {
       x: this.x,
       y: this.y,
       angle: this.angle,
+      lifes: this.lifes,
       opponentX: opponent.x,
       opponentY: opponent.y,
       opponentAngle: opponent.angle,
+      opponentLifes: opponent.lifes,
       bullets,
       timer,
     });

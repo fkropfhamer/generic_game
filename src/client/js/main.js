@@ -1,10 +1,10 @@
 import '../css/index.css';
 import View from './view';
-import red33 from '../img/33%red.png';
-import red66 from '../img/66%red.png';
+import red1life from '../img/red1life.png';
+import red2life from '../img/red2life.png';
 import red from '../img/red.png';
-import blue33 from '../img/33%blue.png';
-import blue66 from '../img/66%blue.png';
+import blue1life from '../img/blue1life.png';
+import blue2life from '../img/blue2life.png';
 import blue from '../img/blue.png';
 import player1 from '../img/player1.png';
 import player4 from '../img/player4.png';
@@ -14,11 +14,11 @@ import Game from './game';
 window.onload = () => {
   const view = new View();
   AssetLoader.loadAssets([
-    { name: 'hitbyred', url: red33 },
-    { name: '2hitsbyred', url: red66 },
+    { name: 'red1life', url: red1life },
+    { name: 'red2life', url: red2life },
     { name: 'red', url: red },
-    { name: 'hitbyblue', url: blue33 },
-    { name: '2hitsbyblue', url: blue66 },
+    { name: 'blue1life', url: blue1life },
+    { name: 'blue2life', url: blue2life },
     { name: 'blue', url: blue },
     { name: 'player1', url: player1 },
     { name: 'player4', url: player4 },

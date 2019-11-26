@@ -14,7 +14,17 @@ class Game {
     this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
     this.view.drawImageAtAngle(this.assets[this.color], this.x, this.y, this.angle, 0.1);
+    if (this.lifes < 3) {
+      this.view.drawImageAtAngle(
+        this.assets[`${this.color}${this.lifes}life`],
+        this.x,
+        this.y,
+        this.angle,
+        0.1
+      );
+    }
     this.view.drawImageAtAngle(this.assets.player1, this.x, this.y, this.angle, 0.1);
+
     this.view.drawImageAtAngle(
       this.assets[this.opponent.color],
       this.opponent.x,
@@ -22,6 +32,16 @@ class Game {
       this.opponent.angle,
       0.1
     );
+    if (this.opponent.lifes > 3) {
+      this.view.drawImageAtAngle(
+        this.assets[`${this.opponent.color}${this.opponent.lifes}life`],
+        this.opponent.x,
+        this.opponent.y,
+        this.opponent.angle,
+        0.1
+      );
+    }
+
     this.view.drawImageAtAngle(
       this.assets.player4,
       this.opponent.x,
@@ -97,11 +117,13 @@ class Game {
       this.y = data.y;
       this.angle = data.angle;
       this.color = data.color;
+      this.lifes = data.lifes;
       this.opponent = {
         x: data.opponentX,
         y: data.opponentY,
         angle: data.opponentAngle,
         color: data.opponentColor,
+        lifes: data.opponentLifes,
       };
       this.timer = data.timer;
       this.bullets = [];
@@ -117,8 +139,10 @@ class Game {
       this.opponent.x = data.opponentX;
       this.opponent.y = data.opponentY;
       this.opponent.angle = data.opponentAngle;
+      this.opponent.lifes = data.opponentLifes;
       this.bullets = data.bullets;
       this.timer = data.timer;
+      this.lifes = data.lifes;
       this.draw();
       this.socket.emit('keys', {
         up: this.pressedUp,
