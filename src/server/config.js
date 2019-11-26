@@ -4,7 +4,7 @@ const config = {
   playerSpeed: 1,
   playerRadius: 55,
   gameDuration: 60,
-  playerLives: 3,
+  playerLifes: 3,
 
   fieldWidth: 1366,
   fieldHeigth: 768,
