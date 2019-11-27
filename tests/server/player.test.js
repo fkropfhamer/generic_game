@@ -15,7 +15,7 @@ describe('player test', () => {
     expect(player.socket).toBe(socket);
     expect(player.gameHandler).toBe(gameHandler);
     expect(player.speed).toBe(1);
-    expect(player.radius).toBe(60);
+    expect(player.radius).toBe(27.5);
     expect(player.angle).toBe(0);
     expect(socket.on.mock.calls.length).toBe(4);
     expect(socket.on.mock.calls[0][0]).toBe('keys');
