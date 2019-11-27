@@ -65,7 +65,7 @@
 -> run all tests with coverage report
 
 
-## packages:
+## dependencies:
 
 ### used packages:   
 - socket.io
