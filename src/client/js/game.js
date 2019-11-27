@@ -38,19 +38,26 @@ class Game {
     window.addEventListener('keyup', this.keyUp.bind(this));
     window.addEventListener('click', this.shoot.bind(this));
     window.addEventListener('mousemove', (e) => {
-      const angle = Math.atan2(
+      /* const angle = Math.atan2(
         e.clientY - this.view.canvas.offsetTop - this.y,
         e.clientX - this.view.canvas.offsetLeft - this.x
-      );
+      ); */
+      const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
       this.angle = angle;
 
       this.socket.emit('update angle', { angle });
     });
   }
 
+  calculateAngle(x1, y1, x2, y2) {
+    return Math.atan2(y1 - this.view.canvas.offsetTop - y2, x1 - this.view.canvas.offsetLeft - x2);
+  }
+
   shoot(e) {
     console.log('shoot', e.clientX, e.clientY);
-    this.socket.emit('shoot');
+    const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
+    this.angle = angle;
+    this.socket.emit('shoot', { angle });
   }
 
   keyPressed(e) {

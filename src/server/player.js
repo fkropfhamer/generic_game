@@ -19,7 +19,8 @@ export default class Player {
       this.pressedDown = data.down;
       this.pressedUp = data.up;
     });
-    this.socket.on('shoot', () => {
+    this.socket.on('shoot', (data) => {
+      this.angle = data.angle;
       this.createBullet();
     });
     this.socket.on('update angle', (data) => {
