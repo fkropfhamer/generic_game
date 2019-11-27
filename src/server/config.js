@@ -2,7 +2,7 @@ const config = {
   bulletSpeed: 5,
   bulletDuration: 1000,
   playerSpeed: 1,
-  playerRadius: 55,
+  playerRadius: 27.5,
   gameDuration: 60,
   playerLifes: 3,
 
