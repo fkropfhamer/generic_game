@@ -1,3 +1,5 @@
+import config from './config';
+
 export default class Game {
   constructor(player1, player2) {
     this.player1 = player1;
@@ -6,15 +8,17 @@ export default class Game {
   }
 
   start() {
-    this.timer = 60;
+    this.timer = config.gameDuration;
     this.count = 0;
 
     this.player1.x = 100; // Player 1 auf linker Seite der Arena
     this.player1.y = 100;
+    this.player1.lifes = config.playerLifes;
     this.player1.color = 'blue';
 
     this.player2.x = 200; // Player 2 auf anderer Position
     this.player2.y = 200;
+    this.player2.lifes = config.playerLifes;
     this.player2.color = 'red';
 
     this.player1.notifyStart(this.player2, this.timer); // Countdown einblenden
