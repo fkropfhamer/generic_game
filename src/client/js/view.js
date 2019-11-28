@@ -159,6 +159,44 @@ class View {
 
     this.timeOverScreen = timeOverScreen;
   }
+
+  showWinScreen() {
+    const winScreen = document.createElement('div');
+    winScreen.style.backgroundColor = 'blue';
+    winScreen.style.position = 'absolute';
+    winScreen.style.left = '25%';
+    winScreen.style.top = '25%';
+    winScreen.style.width = `${this.width / 2}px`;
+    winScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'You win! :D';
+
+    winScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(winScreen);
+
+    this.winScreen = winScreen;
+  }
+
+  showLoseScreen() {
+    const loseScreen = document.createElement('div');
+    loseScreen.style.backgroundColor = 'blue';
+    loseScreen.style.position = 'absolute';
+    loseScreen.style.left = '25%';
+    loseScreen.style.top = '25%';
+    loseScreen.style.width = `${this.width / 2}px`;
+    loseScreen.style.height = `${this.height / 2}px`;
+
+    const heading = document.createElement('h1');
+    heading.innerHTML = 'You lose :(';
+
+    loseScreen.appendChild(heading);
+
+    document.getElementById('root').appendChild(loseScreen);
+
+    this.loseScreen = loseScreen;
+  }
 }
 
 export default View;
