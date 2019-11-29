@@ -21,12 +21,12 @@ describe('game test', () => {
       update: jest.fn(),
     };
 
-    game = new Game(player1, player2);
+    game = new Game([player1, player2]);
   });
 
   test('test constructor', () => {
-    expect(game.player1).toBe(player1);
-    expect(game.player2).toBe(player2);
+    expect(game.players).toEqual([player1, player2]);
+    // expect(game.players[1]).toBe(player2);
     expect(game.bullets).toEqual([]);
   });
 
@@ -36,27 +36,27 @@ describe('game test', () => {
     expect(game.timer).toBe(60);
     expect(game.count).toBe(0);
 
-    expect(game.player1.x).toBe(100);
-    expect(game.player1.y).toBe(100);
-    expect(game.player1.color).toBe('blue');
+    expect(game.players[0].x).toBe(100);
+    expect(game.players[0].y).toBe(100);
+    expect(game.players[0].color).toBe('blue');
 
-    expect(game.player2.x).toBe(200);
-    expect(game.player2.y).toBe(200);
-    expect(game.player2.color).toBe('red');
+    expect(game.players[1].x).toBe(500);
+    expect(game.players[1].y).toBe(100);
+    expect(game.players[1].color).toBe('red');
 
-    expect(game.player1.notifyStart.mock.calls.length).toBe(1);
-    expect(game.player2.notifyStart.mock.calls.length).toBe(1);
+    expect(game.players[0].notifyStart.mock.calls.length).toBe(1);
+    expect(game.players[1].notifyStart.mock.calls.length).toBe(1);
 
-    expect(game.player1.notifyStart.mock.calls[0][0]).toBe(player2);
-    expect(game.player1.notifyStart.mock.calls[0][1]).toBe(60);
-    expect(game.player2.notifyStart.mock.calls[0][0]).toBe(player1);
-    expect(game.player2.notifyStart.mock.calls[0][1]).toBe(60);
+    expect(game.players[0].notifyStart.mock.calls[0][0]).toEqual([player2]);
+    expect(game.players[0].notifyStart.mock.calls[0][1]).toBe(60);
+    expect(game.players[1].notifyStart.mock.calls[0][0]).toEqual([player1]);
+    expect(game.players[1].notifyStart.mock.calls[0][1]).toBe(60);
 
-    expect(game.player1.game).toBe(game);
-    expect(game.player2.game).toBe(game);
+    expect(game.players[0].game).toBe(game);
+    expect(game.players[1].game).toBe(game);
 
-    expect(game.player1.waiting).toBe(false);
-    expect(game.player2.waiting).toBe(false);
+    expect(game.players[0].waiting).toBe(false);
+    expect(game.players[1].waiting).toBe(false);
   });
 
   test('game add bullet', () => {

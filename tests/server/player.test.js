@@ -17,7 +17,7 @@ describe('player test', () => {
     expect(player.speed).toBe(1);
     expect(player.radius).toBe(27.5);
     expect(player.angle).toBe(0);
-    expect(socket.on.mock.calls.length).toBe(4);
+    expect(socket.on.mock.calls.length).toBe(5);
     expect(socket.on.mock.calls[0][0]).toBe('keys');
     expect(socket.on.mock.calls[1][0]).toBe('shoot');
     expect(socket.on.mock.calls[2][0]).toBe('update angle');
@@ -34,19 +34,29 @@ describe('player test', () => {
     player.color = 'blue';
     player.x = 400;
     player.y = 300;
-    const opponent = { x: 100, y: 200, angle: Math.PI };
+    player.face = 'face2';
+    player.lifes = 3;
 
-    player.notifyStart(opponent, 30);
+    const opponent = {
+      x: 100,
+      y: 200,
+      angle: Math.PI,
+      color: 'blue',
+      face: 'face1',
+      lifes: 2,
+    };
+
+    player.notifyStart([opponent], 30);
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('start');
     expect(socket.emit.mock.calls[0][1]).toEqual({
       x: 400,
       y: 300,
+      face: 'face2',
+      lifes: 3,
       angle: 0,
       color: 'blue',
-      opponentX: 100,
-      opponentY: 200,
-      opponentAngle: Math.PI,
+      players: [opponent],
       timer: 30,
     });
   });
@@ -62,9 +72,17 @@ describe('player test', () => {
   test('player notify update', () => {
     player.x = 400;
     player.y = 300;
-    const opponent = { x: 100, y: 200, angle: Math.PI };
+    player.lifes = 1;
+    const opponent = {
+      x: 100,
+      y: 200,
+      angle: Math.PI,
+      face: 'face3',
+      color: 'blue',
+      lifes: 3,
+    };
 
-    player.notifyUpdate(opponent, [], 25);
+    player.notifyUpdate([opponent], [], 25);
 
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('update');
@@ -72,9 +90,8 @@ describe('player test', () => {
       x: 400,
       y: 300,
       angle: 0,
-      opponentX: opponent.x,
-      opponentY: opponent.y,
-      opponentAngle: opponent.angle,
+      lifes: 1,
+      players: [opponent],
       bullets: [],
       timer: 25,
     });
