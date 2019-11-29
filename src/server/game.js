@@ -15,10 +15,10 @@ export default class Game {
     this.players[0].lifes = config.playerLifes;
     this.players[0].color = 'blue';
 
-    this.players.x = 200; // Player 2 auf anderer Position
-    this.players.y = 200;
-    this.players.lifes = config.playerLifes;
-    this.players.color = 'red';
+    this.players[1].x = 200; // Player 2 auf anderer Position
+    this.players[1].y = 200;
+    this.players[1].lifes = config.playerLifes;
+    this.players[1].color = 'red';
 
     this.player1.notifyStart(this.player2, this.timer); // Countdown einblenden
     this.player2.notifyStart(this.player1, this.timer);
