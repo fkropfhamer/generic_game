@@ -1,35 +1,34 @@
-import Wall from './wall';
-
-// import Player from './player';
-// import View from '../client/js/view';
+import config from './config';
 
 export default class Game {
-  constructor(player1, player2) {
-    this.player1 = player1;
-    this.player2 = player2;
-    this.bulletz = [];
-    this.walls = [];
+  constructor(players) {
+    this.players = players;
+    this.bullets = [];
   }
 
   start() {
-    this.player1.x = 100; // Player 1 auf linker Seite der Arena
-    this.player1.y = 100;
-    this.player1.dx = 1;
-    this.player1.dy = 1;
+    this.timer = config.gameDuration;
+    this.count = 0;
 
-    this.player2.x = 200; // Player 2 auf anderer Position
-    this.player2.y = 200;
-    this.player2.dx = 1;
-    this.player2.dy = 1;
+    this.players.forEach((player, i) => {
+      player.x = config.playerstartingPositions[i].x;
+      player.y = config.playerstartingPositions[i].y;
+      player.lifes = config.playerLifes;
+      player.color = i % 2 === 0 ? 'blue' : 'red';
+      // player.face = `face${i + 1}`;
+    });
 
-    this.player1.notifyStart(this.player2); // Countdown einblenden
-    this.player2.notifyStart(this.player1); // oder sowas PLUS Info wo anderer Gegner steht
+    this.players.forEach((player) => {
+      player.notifyStart(this.getOtherPlayers(player), this.timer);
+      player.game = this;
+      player.waiting = false;
+    });
 
-    this.wallz = [];
+    this.interval = setInterval(this.loop.bind(this), 10);
+  }
 
-    this.player1.game = this;
-    this.player2.game = this;
-    setInterval(this.loop.bind(this), 100);
+  getOtherPlayers(player) {
+    return this.players.filter((p) => !Object.is(player, p));
   }
 
   addBullet(bullet) {
@@ -41,12 +40,55 @@ export default class Game {
     this.wallz.push(wall);
   }
 
-  loop() {
-    this.player1.update();
-    this.player2.update();
+  playerDisconnected(player) {
+    this.players.forEach((p) => {
+      if (!Object.is(p, player)) {
+        p.notifyOpponentDisconnected();
+      }
+    });
+    this.end();
+  }
 
-    // this.bullet.update();
-    this.player1.notifyUpdate(this.player2); // An beide alle Positionen senden
-    this.player2.notifyUpdate(this.player1); // -> Muss noch was übergeben werden
+  timeIsOver() {
+    this.players.forEach((player) => player.notifyTimeOver());
+    this.end();
+  }
+
+  end() {
+    console.log('game ended');
+    clearInterval(this.interval);
+  }
+
+  loop() {
+    if (this.count % 100 === 0) {
+      this.timer -= 1;
+      console.log(this.timer);
+      if (this.timer === 0) {
+        this.timeIsOver();
+      }
+    }
+
+    this.update();
+
+    this.count += 1;
+  }
+
+  update() {
+    this.players.forEach((player) => player.update());
+
+    this.bullets.forEach((bullet) => bullet.update());
+
+    const bullets = this.bullets.map((b) => {
+      return {
+        x: b.x,
+        y: b.y,
+        angle: b.angle,
+        color: b.color,
+      };
+    });
+
+    this.players.forEach((player) => {
+      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer);
+    });
   }
 }
