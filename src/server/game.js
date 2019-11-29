@@ -4,6 +4,7 @@ export default class Game {
   constructor(players) {
     this.players = players;
     this.bullets = [];
+    this.walls = [];
   }
 
   start() {
@@ -32,12 +33,7 @@ export default class Game {
   }
 
   addBullet(bullet) {
-    this.bulletz.push(bullet);
-  }
-
-  addWall(x, y, height, width) {
-    const wall = new Wall(x, y, height, width, this.socket);
-    this.wallz.push(wall);
+    this.bullets.push(bullet);
   }
 
   playerDisconnected(player) {
