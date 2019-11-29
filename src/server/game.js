@@ -15,7 +15,7 @@ export default class Game {
       player.y = config.playerstartingPositions[i].y;
       player.lifes = config.playerLifes;
       player.color = i % 2 === 0 ? 'blue' : 'red';
-      player.face = `face${i + 1}`;
+      // player.face = `face${i + 1}`;
     });
 
     this.players.forEach((player) => {

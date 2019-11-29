@@ -19,18 +19,22 @@ class GameHandler {
     this.io.on('connection', (socket) => {
       // wenn sich jemand connected -> Dann erstelle einen neuen Player
       console.log('user connected');
-      const player = new Player(socket, this);
-      if (!this.waitingPlayer) {
-        this.waitingPlayer = player;
-        player.notifyWaiting();
-        console.log('player is waiting');
-      } else {
-        const game = new Game([this.waitingPlayer, player]);
-        game.start();
-        console.log('game ist starting');
-        this.waitingPlayer = false;
-      }
+      // eslint-disable-next-line no-new
+      new Player(socket, this);
     });
+  }
+
+  playerIsReady(player) {
+    if (!this.waitingPlayer) {
+      this.waitingPlayer = player;
+      player.notifyWaiting();
+      console.log('player is waiting');
+    } else {
+      const game = new Game([this.waitingPlayer, player]);
+      game.start();
+      console.log('game ist starting');
+      this.waitingPlayer = false;
+    }
   }
 }
 

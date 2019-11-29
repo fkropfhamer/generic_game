@@ -2,6 +2,16 @@ class Game {
   constructor(view, assets) {
     this.view = view;
     this.assets = assets;
+
+    this.view.showStartScreen((face) => {
+      this.view.hideStartScreen();
+      console.log(face);
+      this.start();
+      this.socket.emit('ready', { face });
+    });
+  }
+
+  start() {
     this.setupSocket();
     this.pressedUp = false;
     this.pressedDown = false;

@@ -29,9 +29,13 @@ export default class Player {
     this.socket.on('disconnect', () => {
       if (this.waiting) {
         this.gameHandler.waitingPlayer = false;
-      } else {
+      } else if (this.game !== 'undefinded') {
         this.game.playerDisconnected(this);
       }
+    });
+    this.socket.on('ready', (data) => {
+      this.face = data.face;
+      this.gameHandler.playerIsReady(this);
     });
   }
 
