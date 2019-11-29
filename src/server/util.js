@@ -5,4 +5,17 @@ export default class Util {
     }
     return 1;
   }
+
+  static mapPlayers(players) {
+    return players.map((player) => {
+      return {
+        x: player.x,
+        y: player.y,
+        angle: player.angle,
+        color: player.color,
+        lifes: player.lifes,
+        face: player.face,
+      };
+    });
+  }
 }
