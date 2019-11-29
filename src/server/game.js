@@ -1,9 +1,8 @@
 import config from './config';
 
 export default class Game {
-  constructor(player1, player2) {
-    this.player1 = player1;
-    this.player2 = player2;
+  constructor(players) {
+    this.players = players;
     this.bullets = [];
   }
 
@@ -11,25 +10,25 @@ export default class Game {
     this.timer = config.gameDuration;
     this.count = 0;
 
-    this.player1.x = 100; // Player 1 auf linker Seite der Arena
-    this.player1.y = 100;
-    this.player1.lifes = config.playerLifes;
-    this.player1.color = 'blue';
+    this.players.forEach((player, i) => {
+      player.x = config.playerstartingPositions[i].x;
+      player.y = config.playerstartingPositions[i].y;
+      player.lifes = config.playerLifes;
+      player.color = i % 2 === 0 ? 'blue' : 'red';
+      // player.face = `face${i + 1}`;
+    });
 
-    this.player2.x = 200; // Player 2 auf anderer Position
-    this.player2.y = 200;
-    this.player2.lifes = config.playerLifes;
-    this.player2.color = 'red';
-
-    this.player1.notifyStart(this.player2, this.timer); // Countdown einblenden
-    this.player2.notifyStart(this.player1, this.timer);
-
-    this.player1.game = this;
-    this.player2.game = this;
-    this.player1.waiting = false;
-    this.player2.waiting = false;
+    this.players.forEach((player) => {
+      player.notifyStart(this.getOtherPlayers(player), this.timer);
+      player.game = this;
+      player.waiting = false;
+    });
 
     this.interval = setInterval(this.loop.bind(this), 10);
+  }
+
+  getOtherPlayers(player) {
+    return this.players.filter((p) => !Object.is(player, p));
   }
 
   addBullet(bullet) {
@@ -37,18 +36,16 @@ export default class Game {
   }
 
   playerDisconnected(player) {
-    if (Object.is(player, this.player1)) {
-      this.player2.notifyOpponentDisconnected();
-    } else {
-      this.player1.notifyOpponentDisconnected();
-    }
-
+    this.players.forEach((p) => {
+      if (!Object.is(p, player)) {
+        p.notifyOpponentDisconnected();
+      }
+    });
     this.end();
   }
 
   timeIsOver() {
-    this.player1.notifyTimeOver();
-    this.player2.notifyTimeOver();
+    this.players.forEach((player) => player.notifyTimeOver());
     this.end();
   }
 
@@ -72,8 +69,7 @@ export default class Game {
   }
 
   update() {
-    this.player1.update();
-    this.player2.update();
+    this.players.forEach((player) => player.update());
 
     this.bullets.forEach((bullet) => bullet.update());
 
@@ -86,7 +82,8 @@ export default class Game {
       };
     });
 
-    this.player1.notifyUpdate(this.player2, bullets, this.timer);
-    this.player2.notifyUpdate(this.player1, bullets, this.timer);
+    this.players.forEach((player) => {
+      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer);
+    });
   }
 }
