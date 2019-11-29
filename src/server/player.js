@@ -29,7 +29,7 @@ export default class Player {
     this.socket.on('disconnect', () => {
       if (this.waiting) {
         this.gameHandler.waitingPlayer = false;
-      } else if (this.game !== 'undefinded') {
+      } else if (typeof this.game !== 'undefined') {
         this.game.playerDisconnected(this);
       }
     });
