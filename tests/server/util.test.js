@@ -11,4 +11,31 @@ describe('Util test', () => {
   test('full if no other key is pressed', () => {
     expect(Util.halfIfAnotherKeyIsPressed(false, false)).toBe(1);
   });
+
+  test('mapPlayers empty', () => {
+    expect(Util.mapPlayers([])).toEqual([]);
+  });
+
+  test('mapPlayers', () => {
+    const players = [
+      {
+        x: 100,
+        y: 200,
+        angle: Math.PI,
+        color: 'red',
+        lifes: 4,
+        face: 'face1',
+      },
+      {
+        x: 300,
+        y: 500,
+        angle: 2 * Math.PI,
+        color: 'blue',
+        lifes: 1,
+        face: 'face3',
+      },
+    ];
+
+    expect(Util.mapPlayers(players)).toEqual(players);
+  });
 });
