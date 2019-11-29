@@ -15,10 +15,11 @@ export default class Game {
       player.y = config.playerstartingPositions[i].y;
       player.lifes = config.playerLifes;
       player.color = i % 2 === 0 ? 'blue' : 'red';
+      player.face = `face${i + 1}`;
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player)[0], this.timer);
+      player.notifyStart(this.getOtherPlayers(player), this.timer);
       player.game = this;
       player.waiting = false;
     });
@@ -82,7 +83,7 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyUpdate(this.getOtherPlayers()[0], bullets, this.timer);
+      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer);
     });
   }
 }

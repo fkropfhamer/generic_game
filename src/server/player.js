@@ -40,18 +40,16 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(opponent, timer) {
+  notifyStart(otherPlayers, timer) {
+    const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
       angle: this.angle,
       color: this.color,
       lifes: this.lifes,
-      opponentX: opponent.x,
-      opponentY: opponent.y,
-      opponentAngle: opponent.angle,
-      opponentColor: opponent.color,
-      opponentLifes: opponent.lifes,
+      face: this.face,
+      players: mappedPlayers,
       timer,
     });
   }
@@ -61,16 +59,14 @@ export default class Player {
     this.socket.emit('waiting');
   }
 
-  notifyUpdate(opponent, bullets, timer) {
+  notifyUpdate(players, bullets, timer) {
+    const mappedPlayers = Util.mapPlayers(players);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
       angle: this.angle,
       lifes: this.lifes,
-      opponentX: opponent.x,
-      opponentY: opponent.y,
-      opponentAngle: opponent.angle,
-      opponentLifes: opponent.lifes,
+      players: mappedPlayers,
       bullets,
       timer,
     });

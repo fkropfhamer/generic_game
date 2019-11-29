@@ -22,15 +22,10 @@ class Game {
     this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
 
-    this.drawPlayer(this.color, this.lifes, 'player1', this.x, this.y, this.angle);
-    this.drawPlayer(
-      this.opponent.color,
-      this.opponent.lifes,
-      'player4',
-      this.opponent.x,
-      this.opponent.y,
-      this.opponent.angle
-    );
+    this.drawPlayer(this.color, this.lifes, this.face, this.x, this.y, this.angle);
+    this.otherPlayers.forEach((player) => {
+      this.drawPlayer(player.color, player.lifes, player.face, player.x, player.y, player.angle);
+    });
   }
 
   setupKeyPressedEvents() {
@@ -107,13 +102,8 @@ class Game {
       this.angle = data.angle;
       this.color = data.color;
       this.lifes = data.lifes;
-      this.opponent = {
-        x: data.opponentX,
-        y: data.opponentY,
-        angle: data.opponentAngle,
-        color: data.opponentColor,
-        lifes: data.opponentLifes,
-      };
+      this.face = data.face;
+      this.otherPlayers = data.players;
       this.timer = data.timer;
       this.bullets = [];
       this.draw();
@@ -125,10 +115,7 @@ class Game {
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;
-      this.opponent.x = data.opponentX;
-      this.opponent.y = data.opponentY;
-      this.opponent.angle = data.opponentAngle;
-      this.opponent.lifes = data.opponentLifes;
+      this.otherPlayers = data.players;
       this.bullets = data.bullets;
       this.timer = data.timer;
       this.lifes = data.lifes;
