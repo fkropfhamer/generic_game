@@ -6,8 +6,10 @@ import red from '../img/red.png';
 import blue1life from '../img/blue1life.png';
 import blue2life from '../img/blue2life.png';
 import blue from '../img/blue.png';
-import player1 from '../img/player1.png';
-import player4 from '../img/player4.png';
+import face1 from '../img/face1.png';
+import face2 from '../img/face2.png';
+import face3 from '../img/face3.png';
+import face4 from '../img/face4.png';
 import AssetLoader from './assetloader';
 import Game from './game';
 
@@ -20,8 +22,10 @@ window.onload = () => {
     { name: 'blue1life', url: blue1life },
     { name: 'blue2life', url: blue2life },
     { name: 'blue', url: blue },
-    { name: 'player1', url: player1 },
-    { name: 'player4', url: player4 },
+    { name: 'face1', url: face1 },
+    { name: 'face2', url: face2 },
+    { name: 'face3', url: face3 },
+    { name: 'face4', url: face4 },
   ]).then((assets) => {
     // eslint-disable-next-line no-new
     new Game(view, assets);
