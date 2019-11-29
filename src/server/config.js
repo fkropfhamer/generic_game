@@ -9,8 +9,12 @@ const config = {
   fieldWidth: 1366,
   fieldHeigth: 768,
 
-  player1startingPos: { x: 100, y: 100 },
-  player2startingPos: { x: 300, y: 100 },
+  playerstartingPositions: [
+    { x: 100, y: 100 },
+    { x: 500, y: 100 },
+    { x: 100, y: 200 },
+    { x: 500, y: 200 },
+  ],
 };
 
 export default config;
