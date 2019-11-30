@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import config from './config';
 
 export default class Game {
@@ -44,6 +45,20 @@ export default class Game {
     this.end();
   }
 
+  isOverlapping(player1) {
+    this.players.forEach((player2) => {
+      if (!Object.is(player1, player2)) {
+        const playerDistance = Math.sqrt((player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2);
+        if (playerDistance <= config.playerRadius * 2) {
+          const alphaP1 = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
+          player1.x -= config.playerRepulsion * Math.cos(alphaP1);
+          player1.y -= config.playerRepulsion * Math.sin(alphaP1);
+          return true;
+        }
+      }
+    });
+  }
+
   timeIsOver() {
     this.players.forEach((player) => player.notifyTimeOver());
     this.end();
@@ -69,7 +84,11 @@ export default class Game {
   }
 
   update() {
-    this.players.forEach((player) => player.update());
+    this.players.forEach((player) => {
+      if (!this.isOverlapping(player)) {
+        player.update();
+      }
+    });
 
     this.bullets.forEach((bullet) => bullet.update());
 

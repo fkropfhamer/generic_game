@@ -3,7 +3,8 @@ const config = {
   bulletDuration: 1000,
   playerSpeed: 1,
   playerRadius: 27.5,
-  gameDuration: 60,
+  playerRepulsion: 10,
+  gameDuration: 100000,
   playerLifes: 3,
 
   fieldWidth: 1366,
