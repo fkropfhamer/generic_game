@@ -50,13 +50,11 @@ export default class Game {
       if (!Object.is(player1, player2)) {
         const playerDistance = Math.sqrt((player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2);
         if (playerDistance <= config.playerRadius * 2) {
-          console.log('Old player1.x', player1.x);
           const alphaP1 = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
           player1.x = player1.x + ((Math.sign(player1.x - player2.x)) * config.playerRepulsion * Math.cos(alphaP1));
           player1.y = player1.y + ((Math.sign(player1.y - player2.y)) * config.playerRepulsion * Math.sin(alphaP1));
           // player2.x = player2.x + ((Math.sign(player1.x - player2.x)) * config.playerRepulsion * Math.cos(alphaP1));
           // player2.y = player2.y + ((Math.sign(player1.y - player2.y)) * config.playerRepulsion * Math.sin(alphaP1));
-          console.log('New player1.x', player1.x);
           return true;
         }
       }
