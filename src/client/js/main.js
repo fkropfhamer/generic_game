@@ -16,9 +16,12 @@ import Game from './game';
 window.onload = () => {
   const view = new View();
   AssetLoader.loadAssets([
+
+    { name: 'red0life', url: blue },
     { name: 'red1life', url: red1life },
     { name: 'red2life', url: red2life },
     { name: 'red', url: red },
+    { name: 'blue0life', url: red },
     { name: 'blue1life', url: blue1life },
     { name: 'blue2life', url: blue2life },
     { name: 'blue', url: blue },

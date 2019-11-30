@@ -13,7 +13,7 @@ export default class Util {
         y: player.y,
         angle: player.angle,
         color: player.color,
-        lifes: player.lifes,
+        lives: player.lives,
         face: player.face,
       };
     });
