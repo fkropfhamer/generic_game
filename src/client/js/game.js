@@ -32,7 +32,9 @@ class Game {
     this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
 
-    this.walls.forEach((w) => this.view.drawRectangle(w.x, w.y, w.height, w.width, w.color));
+    this.walls.forEach((w) =>
+      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.color)
+    );
     this.drawPlayer(this.color, this.lifes, this.face, this.x, this.y, this.angle);
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(player.color, player.lifes, player.face, player.x, player.y, player.angle);

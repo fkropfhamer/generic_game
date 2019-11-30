@@ -29,15 +29,17 @@ class View {
     this.ctx.fill();
   }
 
-  drawRectangle(x, y, height, width, color) {
-    const w = width / 2;
-    const h = height / 2;
+  drawRectangle(x, y, height, width, angle, color) {
+    const wSin = (Math.sin(angle) * width) / 2;
+    const wCos = (Math.cos(angle) * width) / 2;
+    const hSin = (Math.sin(angle) * height) / 2;
+    const hCos = (Math.cos(angle) * height) / 2;
     this.ctx.beginPath();
-    this.ctx.moveTo(x - w, y - h);
-    this.ctx.lineTo(x + w, y - h);
-    this.ctx.lineTo(x + w, y + h);
-    this.ctx.lineTo(x - w, y + h);
-    this.ctx.lineTo(x - w, y - h);
+    this.ctx.moveTo(x - wCos + hSin, y - hCos - wSin);
+    this.ctx.lineTo(x + wCos + hSin, y - hCos + wSin);
+    this.ctx.lineTo(x + wCos - hSin, y + hCos + wSin);
+    this.ctx.lineTo(x - wCos - hSin, y + hCos - wSin);
+    this.ctx.lineTo(x - wCos + hSin, y - hCos - wSin);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
