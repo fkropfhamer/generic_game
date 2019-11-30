@@ -15,6 +15,12 @@ const config = {
     { x: 100, y: 200 },
     { x: 500, y: 200 },
   ],
+
+  walls: [
+    { x: 500, y: 10, height: 20, width: 50, color: 'white' },
+    { x: 500, y: 500, height: 20, width: 50, color: 'white' },
+  ],
 };
+
 
 export default config;

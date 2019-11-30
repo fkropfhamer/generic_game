@@ -29,6 +29,19 @@ class View {
     this.ctx.fill();
   }
 
+  drawRectangle(x, y, height, width, color) {
+    const w = width / 2;
+    const h = height / 2;
+    this.ctx.beginPath();
+    this.ctx.moveTo(x - w, y - h);
+    this.ctx.lineTo(x + w, y - h);
+    this.ctx.lineTo(x + w, y + h);
+    this.ctx.lineTo(x - w, y + h);
+    this.ctx.lineTo(x - w, y - h);
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
+  }
+
   drawImage(x, y, img) {
     console.log(img, img.width, img.height);
     this.ctx.drawImage(img, 0, 0);
