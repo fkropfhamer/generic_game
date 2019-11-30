@@ -1,4 +1,5 @@
 import config from './config';
+import { objectTypeAnnotation } from '@babel/types';
 
 export default class Game {
   constructor(players) {
@@ -13,7 +14,7 @@ export default class Game {
     this.players.forEach((player, i) => {
       player.x = config.playerstartingPositions[i].x;
       player.y = config.playerstartingPositions[i].y;
-      player.lifes = config.playerLifes;
+      player.lifes = config.playerLives;
       player.color = i % 2 === 0 ? 'blue' : 'red';
       // player.face = `face${i + 1}`;
     });
@@ -33,6 +34,21 @@ export default class Game {
 
   addBullet(bullet) {
     this.bullets.push(bullet);
+  }
+
+  bulletHitsPlayer() {
+    this.bullets.forEach((bullet) => {
+      this.players.forEach((player) => {
+        if (bullet.color !== player.color) {
+          const playerDistance = Math.sqrt((player.x - bullet.x) ** 2 + (player.y - bullet.y) ** 2);
+          const radiusDistance = config.bulletRadius + config.playerRadius;
+          if (playerDistance <= radiusDistance) {
+            this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
+            player.lifes -= 1;
+          }
+        }
+      });
+    });
   }
 
   playerDisconnected(player) {
@@ -85,5 +101,7 @@ export default class Game {
     this.players.forEach((player) => {
       player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer);
     });
+
+    this.bulletHitsPlayer();
   }
 }

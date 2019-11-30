@@ -1,3 +1,5 @@
+import config from "../../server/config";
+
 class Game {
   constructor(view, assets) {
     this.view = view;
@@ -30,7 +32,7 @@ class Game {
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
-    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.bulletRadius, b.color));
 
     this.drawPlayer(this.color, this.lifes, this.face, this.x, this.y, this.angle);
     this.otherPlayers.forEach((player) => {
