@@ -35,7 +35,7 @@ export default class Player {
     });
     this.socket.on('ready', (data) => {
       this.face = data.face;
-      this.gameHandler.playerIsReady(this);
+      this.gameHandler.playerIsReady(this, data.mode);
     });
   }
 

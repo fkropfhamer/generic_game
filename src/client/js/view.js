@@ -279,6 +279,10 @@ class View {
       }
     };
 
+    const teamCheckbox = document.createElement('input');
+    teamCheckbox.type = 'checkbox';
+    teamCheckbox.innerHTML = 'teams?';
+
     const startButton = document.createElement('button');
     startButton.innerHTML = 'start';
     startButton.onclick = () => {
@@ -300,7 +304,14 @@ class View {
         face = 'face1';
       }
 
-      callback(face);
+      let mode;
+      if (teamCheckbox.checked) {
+        mode = 'teams';
+      } else {
+        mode = 'normal';
+      }
+
+      callback(face, mode);
     };
 
     startScreen.appendChild(heading);
@@ -308,6 +319,7 @@ class View {
     startScreen.appendChild(checkbox2);
     startScreen.appendChild(checkbox3);
     startScreen.appendChild(checkbox4);
+    startScreen.appendChild(teamCheckbox);
     startScreen.appendChild(startButton);
 
     document.getElementById('root').appendChild(startScreen);
