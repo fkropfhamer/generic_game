@@ -1,5 +1,4 @@
 import config from './config';
-import { objectTypeAnnotation } from '@babel/types';
 
 export default class Game {
   constructor(players) {

@@ -1,4 +1,4 @@
-import config from "../../server/config";
+import config from '../../server/config';
 
 class Game {
   constructor(view, assets) {
@@ -22,11 +22,11 @@ class Game {
   }
 
   drawPlayer(color, lives, face, x, y, angle) {
-    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.1);
+    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
-      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle, 0.1);
+      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle, 0.5);
     }
-    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.1);
+    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
   }
 
   draw() {
