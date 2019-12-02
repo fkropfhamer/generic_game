@@ -1,4 +1,4 @@
-import config from "../../server/config";
+import config from '../../server/config';
 
 class Game {
   constructor(view, assets) {
