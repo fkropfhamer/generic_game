@@ -1,5 +1,3 @@
-// import config from '../../server/config';
-
 class View {
   constructor() {
     this.scale = 1;
