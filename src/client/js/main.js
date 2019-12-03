@@ -16,9 +16,11 @@ import Game from './game';
 window.onload = () => {
   const view = new View();
   AssetLoader.loadAssets([
+    { name: 'red0life', url: blue },
     { name: 'red1life', url: red1life },
     { name: 'red2life', url: red2life },
     { name: 'red', url: red },
+    { name: 'blue0life', url: red },
     { name: 'blue1life', url: blue1life },
     { name: 'blue2life', url: blue2life },
     { name: 'blue', url: blue },
@@ -27,6 +29,7 @@ window.onload = () => {
     { name: 'face3', url: face3 },
     { name: 'face4', url: face4 },
   ]).then((assets) => {
+    view.assets = assets;
     // eslint-disable-next-line no-new
     new Game(view, assets);
   });
