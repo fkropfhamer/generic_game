@@ -210,10 +210,45 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'Nice Game Title';
 
+    const faceChoice = document.createElement('div');
+    faceChoice.style.backgroundColor = 'white';
+
+    const faceChoiceHeading = document.createElement('h1');
+    faceChoiceHeading.innerHTML = 'Choose Face!';
+
+    const faceChoice1 = document.createElement('div');
+    faceChoice1.style.backgroundColor = 'grey';
+    faceChoice1.style.cssFloat = 'left';
+    faceChoice1.style.margin = '1%';
+    faceChoice1.style.padding = '1%';
+    const faceChoice2 = document.createElement('div');
+    faceChoice2.style.backgroundColor = 'grey';
+    faceChoice2.style.cssFloat = 'left';
+    faceChoice2.style.margin = '1%';
+    faceChoice2.style.padding = '1%';
+    const faceChoice3 = document.createElement('div');
+    faceChoice3.style.backgroundColor = 'grey';
+    faceChoice3.style.cssFloat = 'left';
+    faceChoice3.style.margin = '1%';
+    faceChoice3.style.padding = '1%';
+    const faceChoice4 = document.createElement('div');
+    faceChoice4.style.backgroundColor = 'grey';
+    faceChoice4.style.cssFloat = 'left';
+    faceChoice4.style.margin = '1%';
+    faceChoice4.style.padding = '1%';
+
     const checkbox1 = document.createElement('input');
     const checkbox2 = document.createElement('input');
     const checkbox3 = document.createElement('input');
     const checkbox4 = document.createElement('input');
+
+    const face1Img = this.assets.face1;
+
+    const face2Img = this.assets.face2;
+
+    const face3Img = this.assets.face3;
+
+    const face4Img = this.assets.face4;
 
     checkbox1.type = 'checkbox';
     checkbox1.checked = true;
@@ -281,6 +316,19 @@ class View {
 
     const startButton = document.createElement('button');
     startButton.innerHTML = 'start';
+    startButton.style.paddingLeft = '2%';
+    startButton.style.paddingRight = '6%';
+    startButton.style.paddingTop = '1%';
+    startButton.style.paddingBottom = '1%';
+    startButton.style.display = 'inline-block';
+    startButton.style.textAlign = 'center';
+    startButton.style.position = 'absolute';
+    startButton.style.backgroundColor = 'green';
+    startButton.style.color = 'white';
+    startButton.style.border = 'none';
+    startButton.style.top = '85%';
+    startButton.style.left = '10%';
+    // startButton.style.left = '100%';
     startButton.onclick = () => {
       let face;
       if (checkbox1.checked) {
@@ -304,10 +352,23 @@ class View {
     };
 
     startScreen.appendChild(heading);
-    startScreen.appendChild(checkbox1);
-    startScreen.appendChild(checkbox2);
-    startScreen.appendChild(checkbox3);
-    startScreen.appendChild(checkbox4);
+    faceChoice1.appendChild(face1Img);
+    faceChoice1.appendChild(checkbox1);
+    faceChoice2.appendChild(face2Img);
+    faceChoice2.appendChild(checkbox2);
+    faceChoice3.appendChild(face3Img);
+    faceChoice3.appendChild(checkbox3);
+    faceChoice4.appendChild(face4Img);
+    faceChoice4.appendChild(checkbox4);
+
+    faceChoice.appendChild(faceChoiceHeading);
+    faceChoice.appendChild(faceChoice1);
+    faceChoice.appendChild(faceChoice2);
+    faceChoice.appendChild(faceChoice3);
+    faceChoice.appendChild(faceChoice4);
+
+    startScreen.appendChild(faceChoice);
+
     startScreen.appendChild(startButton);
 
     document.getElementById('root').appendChild(startScreen);

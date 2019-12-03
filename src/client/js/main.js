@@ -29,6 +29,7 @@ window.onload = () => {
     { name: 'face3', url: face3 },
     { name: 'face4', url: face4 },
   ]).then((assets) => {
+    view.assets = assets;
     // eslint-disable-next-line no-new
     new Game(view, assets);
   });
