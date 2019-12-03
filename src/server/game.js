@@ -44,10 +44,37 @@ export default class Game {
           if (playerDistance <= radiusDistance) {
             this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
             player.lives -= 1;
+            if (player.lives <= 0) {
+              this.playerDied(player);
+              // player.notifyLose();
+              // const winner = this.players.filter((p) => !Object.is(p, player));
+              // winner.forEach((w) => w.notifyWin());
+              // this.end();
+            }
           }
         }
       });
     });
+  }
+
+  playerDied(player) {
+    const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
+    const teamBlue = remainingPlayers.filter((p) => p.color === 'blue');
+    const teamRed = remainingPlayers.filter((p) => p.color === 'red');
+
+    if (teamBlue.length === 0) {
+      teamBlue.forEach((p) => p.notifyLose());
+      player.notifyLose();
+      teamRed.forEach((p) => p.notifyWin());
+      this.end();
+    } else if (teamRed.length === 0) {
+      player.notifyLose();
+      teamRed.forEach((p) => p.notifyLose());
+      teamBlue.forEach((p) => p.notifyWin());
+      this.end();
+    } else {
+      this.players = remainingPlayers;
+    }
   }
 
   playerDisconnected(player) {

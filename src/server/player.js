@@ -84,6 +84,14 @@ export default class Player {
     this.socket.emit('time over');
   }
 
+  notifyWin() {
+    this.socket.emit('win');
+  }
+
+  notifyLose() {
+    this.socket.emit('lose');
+  }
+
   update() {
     if (this.pressedUp && this.y >= 0 + this.speed + this.radius) {
       this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;

@@ -152,10 +152,12 @@ class Game {
       this.view.showTimeOverScreen();
     });
     this.socket.on('win', () => {
-      this.view.showWinnerScreen();
+      console.log('win');
+      this.view.showWinScreen();
     });
     this.socket.on('lose', () => {
-      this.view.showLoseSreen();
+      console.log('lose');
+      this.view.showLoseScreen();
     });
   }
 }
