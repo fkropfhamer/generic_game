@@ -90,12 +90,7 @@ export default class Game {
   }
 
   playerDisconnected(player) {
-    this.players.forEach((p) => {
-      if (!Object.is(p, player)) {
-        p.notifyOpponentDisconnected();
-      }
-    });
-    this.end();
+    this.playerDied(player);
   }
 
   timeIsOver() {
