@@ -312,9 +312,15 @@ class View {
       }
     };
 
+    const teamChoiceHeading = document.createElement('h1');
+    teamChoiceHeading.innerHTML = 'teamgame?';
+
     const teamCheckbox = document.createElement('input');
     teamCheckbox.type = 'checkbox';
     teamCheckbox.innerHTML = 'teams?';
+
+    const teamChoice = document.createElement('div');
+    teamChoice.style.backgroundColor = 'brown';
 
     const startButton = document.createElement('button');
     startButton.innerHTML = 'start';
@@ -377,9 +383,12 @@ class View {
     faceChoice.appendChild(faceChoice3);
     faceChoice.appendChild(faceChoice4);
 
+    teamChoice.appendChild(teamChoiceHeading);
+    teamChoice.appendChild(teamCheckbox);
+
     startScreen.appendChild(faceChoice);
 
-    startScreen.appendChild(teamCheckbox);
+    startScreen.appendChild(teamChoice);
 
     startScreen.appendChild(startButton);
 
