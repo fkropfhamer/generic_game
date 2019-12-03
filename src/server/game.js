@@ -4,6 +4,7 @@ export default class Game {
   constructor(players) {
     this.players = players;
     this.bullets = [];
+    this.deadPlayers = [];
   }
 
   start() {
@@ -58,18 +59,29 @@ export default class Game {
   }
 
   playerDied(player) {
+    this.deadPlayers.push(player);
     const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
     const teamBlue = remainingPlayers.filter((p) => p.color === 'blue');
     const teamRed = remainingPlayers.filter((p) => p.color === 'red');
 
     if (teamBlue.length === 0) {
-      teamBlue.forEach((p) => p.notifyLose());
-      player.notifyLose();
+      this.deadPlayers.forEach((p) => {
+        if (p.color === 'blue') {
+          p.notifyLose();
+        } else {
+          p.notifyWin();
+        }
+      });
       teamRed.forEach((p) => p.notifyWin());
       this.end();
     } else if (teamRed.length === 0) {
-      player.notifyLose();
-      teamRed.forEach((p) => p.notifyLose());
+      this.deadPlayers.forEach((p) => {
+        if (p.color === 'red') {
+          p.notifyLose();
+        } else {
+          p.notifyWin();
+        }
+      });
       teamBlue.forEach((p) => p.notifyWin());
       this.end();
     } else {
