@@ -1,13 +1,15 @@
+import config from '../../server/config';
+
 class Game {
   constructor(view, assets) {
     this.view = view;
     this.assets = assets;
 
-    this.view.showStartScreen((face) => {
+    this.view.showStartScreen((face, mode) => {
       this.view.hideStartScreen();
-      console.log(face);
+      console.log(face, mode);
       this.start();
-      this.socket.emit('ready', { face });
+      this.socket.emit('ready', { face, mode });
     });
   }
 
@@ -19,22 +21,26 @@ class Game {
     this.pressedRight = false;
   }
 
-  drawPlayer(color, lifes, face, x, y, angle) {
-    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.1);
-    if (lifes < 3) {
-      this.view.drawImageAtAngle(this.assets[`${color}${lifes}life`], x, y, angle, 0.1);
+  drawPlayer(color, lives, face, x, y, angle) {
+    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
+    if (lives < 3) {
+      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle, 0.5);
     }
-    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.1);
+    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
   }
 
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
-    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, 10, b.color));
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.bulletRadius, b.color));
 
-    this.drawPlayer(this.color, this.lifes, this.face, this.x, this.y, this.angle);
+    this.walls.forEach((w) =>
+      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.color)
+    );
+
+    this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
     this.otherPlayers.forEach((player) => {
-      this.drawPlayer(player.color, player.lifes, player.face, player.x, player.y, player.angle);
+      this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
     });
   }
 
@@ -43,10 +49,6 @@ class Game {
     window.addEventListener('keyup', this.keyUp.bind(this));
     window.addEventListener('click', this.shoot.bind(this));
     window.addEventListener('mousemove', (e) => {
-      /* const angle = Math.atan2(
-        e.clientY - this.view.canvas.offsetTop - this.y,
-        e.clientX - this.view.canvas.offsetLeft - this.x
-      ); */
       const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
       this.angle = angle;
 
@@ -111,24 +113,23 @@ class Game {
       this.y = data.y;
       this.angle = data.angle;
       this.color = data.color;
-      this.lifes = data.lifes;
+      this.lives = data.lives;
       this.face = data.face;
       this.otherPlayers = data.players;
       this.timer = data.timer;
       this.bullets = [];
+      this.walls = data.walls;
       this.draw();
       this.setupKeyPressedEvents();
     });
     this.socket.on('update', (data) => {
-      console.log('update', data);
-
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;
       this.otherPlayers = data.players;
       this.bullets = data.bullets;
       this.timer = data.timer;
-      this.lifes = data.lifes;
+      this.lives = data.lives;
       this.draw();
       this.socket.emit('keys', {
         up: this.pressedUp,
@@ -150,10 +151,12 @@ class Game {
       this.view.showTimeOverScreen();
     });
     this.socket.on('win', () => {
-      this.view.showWinnerScreen();
+      console.log('win');
+      this.view.showWinScreen();
     });
     this.socket.on('lose', () => {
-      this.view.showLoseSreen();
+      console.log('lose');
+      this.view.showLoseScreen();
     });
   }
 }

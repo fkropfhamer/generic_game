@@ -6,6 +6,7 @@ import Game from './game';
 class GameHandler {
   constructor() {
     this.waitingPlayer = false;
+    this.waitingPlayers = [];
   }
 
   listen(port) {
@@ -24,16 +25,27 @@ class GameHandler {
     });
   }
 
-  playerIsReady(player) {
-    if (!this.waitingPlayer) {
-      this.waitingPlayer = player;
-      player.notifyWaiting();
-      console.log('player is waiting');
-    } else {
-      const game = new Game([this.waitingPlayer, player]);
-      game.start();
-      console.log('game ist starting');
-      this.waitingPlayer = false;
+  playerIsReady(player, mode) {
+    if (mode === 'normal') {
+      if (!this.waitingPlayer) {
+        this.waitingPlayer = player;
+        player.notifyWaiting();
+        console.log('player is waiting');
+      } else {
+        const game = new Game([this.waitingPlayer, player]);
+        game.start();
+        console.log('game ist starting');
+        this.waitingPlayer = false;
+      }
+    } else if (mode === 'teams') {
+      if (this.waitingPlayers.length === 3) {
+        const game = new Game([player, ...this.waitingPlayers]);
+        game.start();
+        this.waitingPlayers = [];
+      } else {
+        this.waitingPlayers.push(player);
+        player.notifyWaiting();
+      }
     }
   }
 }
