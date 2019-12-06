@@ -49,10 +49,6 @@ class Game {
     window.addEventListener('keyup', this.keyUp.bind(this));
     window.addEventListener('click', this.shoot.bind(this));
     window.addEventListener('mousemove', (e) => {
-      /* const angle = Math.atan2(
-        e.clientY - this.view.canvas.offsetTop - this.y,
-        e.clientX - this.view.canvas.offsetLeft - this.x
-      ); */
       const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
       this.angle = angle;
 

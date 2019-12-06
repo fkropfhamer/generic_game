@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import config from './config';
 
 export default class Game {
@@ -18,7 +17,6 @@ export default class Game {
       player.y = config.playerstartingPositions[i].y;
       player.lives = config.playerLives;
       player.color = i % 2 === 0 ? 'blue' : 'red';
-      // player.face = `face${i + 1}`;
     });
 
     this.players.forEach((player) => {
@@ -49,10 +47,6 @@ export default class Game {
             player.lives -= 1;
             if (player.lives <= 0) {
               this.playerDied(player);
-              // player.notifyLose();
-              // const winner = this.players.filter((p) => !Object.is(p, player));
-              // winner.forEach((w) => w.notifyWin());
-              // this.end();
             }
           }
         }
