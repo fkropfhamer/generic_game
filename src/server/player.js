@@ -51,7 +51,7 @@ export default class Player {
       y: this.y,
       angle: this.angle,
       color: this.color,
-      lifes: this.lifes,
+      lives: this.lives,
       face: this.face,
       players: mappedPlayers,
       timer,
@@ -70,7 +70,7 @@ export default class Player {
       x: this.x,
       y: this.y,
       angle: this.angle,
-      lifes: this.lifes,
+      lives: this.lives,
       players: mappedPlayers,
       bullets,
       timer,
@@ -83,6 +83,14 @@ export default class Player {
 
   notifyTimeOver() {
     this.socket.emit('time over');
+  }
+
+  notifyWin() {
+    this.socket.emit('win');
+  }
+
+  notifyLose() {
+    this.socket.emit('lose');
   }
 
   update() {
