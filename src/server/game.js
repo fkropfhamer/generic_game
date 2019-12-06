@@ -4,6 +4,7 @@ export default class Game {
   constructor(players) {
     this.players = players;
     this.bullets = [];
+    this.walls = config.walls;
   }
 
   start() {
@@ -19,7 +20,7 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player), this.timer);
+      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
       player.game = this;
       player.waiting = false;
     });
