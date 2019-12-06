@@ -64,6 +64,18 @@
 - `npm run test:coverage`
 -> run all tests with coverage report
 
+### for docker
+
+- `docker build -t gg .`
+-> build docker image
+
+- `docker run -it -p 8080:8080 gg:latest`
+-> run docker container interactive
+
+- `docker run -it -p 8080:8080 -d gg:latest`
+-> run docker container in background
+
+
 
 ## dependencies:
 

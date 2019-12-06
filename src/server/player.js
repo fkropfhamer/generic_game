@@ -27,15 +27,21 @@ export default class Player {
       this.angle = data.angle;
     });
     this.socket.on('disconnect', () => {
-      if (this.waiting) {
+      if (this.waiting && this.mode === 'normal') {
         this.gameHandler.waitingPlayer = false;
-      } else if (this.game !== 'undefinded') {
+      } else if (this.waiting && this.mode === 'teams') {
+        this.gameHandler.waitingPlayers = this.gameHandler.waitingPlayers.filter(
+          (player) => !Object.is(player, this)
+        );
+        console.log(this.gameHandler.waitingPlayers.length);
+      } else if (typeof this.game !== 'undefined') {
         this.game.playerDisconnected(this);
       }
     });
     this.socket.on('ready', (data) => {
       this.face = data.face;
-      this.gameHandler.playerIsReady(this);
+      this.mode = data.mode;
+      this.gameHandler.playerIsReady(this, data.mode);
     });
   }
 
@@ -44,17 +50,18 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer) {
+  notifyStart(otherPlayers, timer, walls) {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
       angle: this.angle,
       color: this.color,
-      lifes: this.lifes,
+      lives: this.lives,
       face: this.face,
       players: mappedPlayers,
       timer,
+      walls,
     });
   }
 
@@ -69,7 +76,7 @@ export default class Player {
       x: this.x,
       y: this.y,
       angle: this.angle,
-      lifes: this.lifes,
+      lives: this.lives,
       players: mappedPlayers,
       bullets,
       timer,
@@ -84,18 +91,42 @@ export default class Player {
     this.socket.emit('time over');
   }
 
+  notifyWin() {
+    this.socket.emit('win');
+  }
+
+  notifyLose() {
+    this.socket.emit('lose');
+  }
+
   update() {
-    if (this.pressedUp && this.y >= 0 + this.speed + this.radius) {
+    if (this.pressedUp) {
       this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-    if (this.pressedDown && this.y <= config.fieldHeigth - this.speed - this.radius) {
+    if (this.pressedDown) {
       this.y += Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-    if (this.pressedLeft && this.x >= 0 + this.speed + this.radius) {
+    if (this.pressedLeft) {
       this.x -= Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
     }
-    if (this.pressedRight && this.x <= config.fieldWidth - this.speed - this.radius) {
+    if (this.pressedRight) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
+    }
+
+    if (this.x > config.fieldWidth - this.radius) {
+      this.x = config.fieldWidth - this.radius;
+    }
+
+    if (this.x < 0 + this.radius) {
+      this.x = 0 + this.radius;
+    }
+
+    if (this.y > config.fieldHeigth - this.radius) {
+      this.y = config.fieldHeigth - this.radius;
+    }
+
+    if (this.y < 0 + this.radius) {
+      this.y = 0 + this.radius;
     }
   }
 }
