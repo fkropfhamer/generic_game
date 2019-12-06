@@ -120,8 +120,6 @@ class Game {
       this.setupKeyPressedEvents();
     });
     this.socket.on('update', (data) => {
-      //console.log('update', data);
-
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;
