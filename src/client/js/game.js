@@ -34,6 +34,10 @@ class Game {
     this.view.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.bulletRadius, b.color));
 
+    this.walls.forEach((w) =>
+      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.color)
+    );
+
     this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
@@ -118,12 +122,11 @@ class Game {
       this.otherPlayers = data.players;
       this.timer = data.timer;
       this.bullets = [];
+      this.walls = data.walls;
       this.draw();
       this.setupKeyPressedEvents();
     });
     this.socket.on('update', (data) => {
-      console.log('update', data);
-
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;

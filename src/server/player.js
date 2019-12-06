@@ -50,7 +50,7 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer) {
+  notifyStart(otherPlayers, timer, walls) {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,
@@ -61,6 +61,7 @@ export default class Player {
       face: this.face,
       players: mappedPlayers,
       timer,
+      walls,
     });
   }
 
@@ -99,17 +100,33 @@ export default class Player {
   }
 
   update() {
-    if (this.pressedUp && this.y >= 0 + this.speed + this.radius) {
+    if (this.pressedUp) {
       this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-    if (this.pressedDown && this.y <= config.fieldHeigth - this.speed - this.radius) {
+    if (this.pressedDown) {
       this.y += Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
-    if (this.pressedLeft && this.x >= 0 + this.speed + this.radius) {
+    if (this.pressedLeft) {
       this.x -= Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
     }
-    if (this.pressedRight && this.x <= config.fieldWidth - this.speed - this.radius) {
+    if (this.pressedRight) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
+    }
+
+    if (this.x > config.fieldWidth - this.radius) {
+      this.x = config.fieldWidth - this.radius;
+    }
+
+    if (this.x < 0 + this.radius) {
+      this.x = 0 + this.radius;
+    }
+
+    if (this.y > config.fieldHeigth - this.radius) {
+      this.y = config.fieldHeigth - this.radius;
+    }
+
+    if (this.y < 0 + this.radius) {
+      this.y = 0 + this.radius;
     }
   }
 }

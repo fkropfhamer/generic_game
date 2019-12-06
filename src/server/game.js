@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import config from './config';
 
 export default class Game {
@@ -5,6 +6,8 @@ export default class Game {
     this.players = players;
     this.bullets = [];
     this.deadPlayers = [];
+    this.walls = config.walls;
+
   }
 
   start() {
@@ -20,7 +23,7 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player), this.timer);
+      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
       player.game = this;
       player.waiting = false;
     });
@@ -93,6 +96,21 @@ export default class Game {
     this.playerDied(player);
   }
 
+  isOverlapping(player1) {
+    this.players.forEach((player2) => {
+      if (!Object.is(player1, player2)) {
+        const playerDistance = Math.sqrt(
+          (player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2
+        );
+        if (playerDistance <= config.playerRadius * 2) {
+          const alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
+          player1.x += Math.sign(player1.x - player2.x) * config.playerRepulsion * Math.cos(alpha);
+          player1.y += Math.sign(player1.y - player2.y) * config.playerRepulsion * Math.sin(alpha);
+        }
+      }
+    });
+  }
+
   timeIsOver() {
     this.players.forEach((player) => player.notifyTimeOver());
     this.end();
@@ -118,7 +136,10 @@ export default class Game {
   }
 
   update() {
-    this.players.forEach((player) => player.update());
+    this.players.forEach((player) => {
+      this.isOverlapping(player);
+      player.update();
+    });
 
     this.bullets.forEach((bullet) => bullet.update());
 
