@@ -44,17 +44,18 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer) {
+  notifyStart(otherPlayers, timer, walls) {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
       angle: this.angle,
       color: this.color,
-      lifes: this.lifes,
+      lives: this.lives,
       face: this.face,
       players: mappedPlayers,
       timer,
+      walls,
     });
   }
 
@@ -69,7 +70,7 @@ export default class Player {
       x: this.x,
       y: this.y,
       angle: this.angle,
-      lifes: this.lifes,
+      lives: this.lives,
       players: mappedPlayers,
       bullets,
       timer,
@@ -82,6 +83,14 @@ export default class Player {
 
   notifyTimeOver() {
     this.socket.emit('time over');
+  }
+
+  notifyWin() {
+    this.socket.emit('win');
+  }
+
+  notifyLose() {
+    this.socket.emit('lose');
   }
 
   update() {
