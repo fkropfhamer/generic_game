@@ -7,7 +7,6 @@ export default class Game {
     this.bullets = [];
     this.deadPlayers = [];
     this.walls = config.walls;
-
   }
 
   start() {
