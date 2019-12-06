@@ -7,7 +7,7 @@ class Game {
 
     this.view.showStartScreen((face) => {
       this.view.hideStartScreen();
-      console.log(face);
+      // console.log(face);
       this.start();
       this.socket.emit('ready', { face });
     });
@@ -127,8 +127,6 @@ class Game {
       this.setupKeyPressedEvents();
     });
     this.socket.on('update', (data) => {
-      console.log('update', data);
-
       this.x = data.x;
       this.y = data.y;
       this.angle = data.angle;
