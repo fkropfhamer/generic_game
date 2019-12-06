@@ -27,15 +27,21 @@ export default class Player {
       this.angle = data.angle;
     });
     this.socket.on('disconnect', () => {
-      if (this.waiting) {
+      if (this.waiting && this.mode === 'normal') {
         this.gameHandler.waitingPlayer = false;
+      } else if (this.waiting && this.mode === 'teams') {
+        this.gameHandler.waitingPlayers = this.gameHandler.waitingPlayers.filter(
+          (player) => !Object.is(player, this)
+        );
+        console.log(this.gameHandler.waitingPlayers.length);
       } else if (typeof this.game !== 'undefined') {
         this.game.playerDisconnected(this);
       }
     });
     this.socket.on('ready', (data) => {
       this.face = data.face;
-      this.gameHandler.playerIsReady(this);
+      this.mode = data.mode;
+      this.gameHandler.playerIsReady(this, data.mode);
     });
   }
 

@@ -5,11 +5,11 @@ class Game {
     this.view = view;
     this.assets = assets;
 
-    this.view.showStartScreen((face) => {
+    this.view.showStartScreen((face, mode) => {
       this.view.hideStartScreen();
-      // console.log(face);
+      console.log(face, mode);
       this.start();
-      this.socket.emit('ready', { face });
+      this.socket.emit('ready', { face, mode });
     });
   }
 

@@ -327,6 +327,16 @@ class View {
       }
     };
 
+    const teamChoiceHeading = document.createElement('h1');
+    teamChoiceHeading.innerHTML = 'teamgame?';
+
+    const teamCheckbox = document.createElement('input');
+    teamCheckbox.type = 'checkbox';
+    teamCheckbox.innerHTML = 'teams?';
+
+    const teamChoice = document.createElement('div');
+    teamChoice.style.backgroundColor = 'brown';
+
     const startButton = document.createElement('button');
     startButton.innerHTML = 'start';
     startButton.style.paddingLeft = '2%';
@@ -361,10 +371,18 @@ class View {
         face = 'face1';
       }
 
-      callback(face);
+      let mode;
+      if (teamCheckbox.checked) {
+        mode = 'teams';
+      } else {
+        mode = 'normal';
+      }
+
+      callback(face, mode);
     };
 
     startScreen.appendChild(heading);
+
     faceChoice1.appendChild(face1Img);
     faceChoice1.appendChild(checkbox1);
     faceChoice2.appendChild(face2Img);
@@ -380,7 +398,12 @@ class View {
     faceChoice.appendChild(faceChoice3);
     faceChoice.appendChild(faceChoice4);
 
+    teamChoice.appendChild(teamChoiceHeading);
+    teamChoice.appendChild(teamCheckbox);
+
     startScreen.appendChild(faceChoice);
+
+    startScreen.appendChild(teamChoice);
 
     startScreen.appendChild(startButton);
 
