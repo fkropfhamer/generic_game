@@ -37,7 +37,7 @@ class Game {
     this.walls.forEach((w) =>
       this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.color)
     );
-    
+
     this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
