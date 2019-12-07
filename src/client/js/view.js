@@ -7,14 +7,16 @@ class View {
     this.windowWidth = window.innerWidth;
     this.color = '#232529';
 
+    this.canvas = document.createElement('canvas');
+    document.getElementById('root').appendChild(this.canvas);
     this.setupCanvas();
+
+    window.addEventListener('resize', this.resize.bind(this));
 
     this.ctx = this.canvas.getContext('2d');
   }
 
   setupCanvas() {
-    this.canvas = document.createElement('canvas');
-
     if (this.windowWidth !== config.fieldWidth) {
       this.scale = this.windowWidth / config.fieldWidth;
       if (config.fieldWidth * this.scale > this.windowHeight) {
@@ -31,7 +33,13 @@ class View {
     this.canvas.height = this.height;
 
     this.canvas.style.backgroundColor = this.color;
-    document.getElementById('root').appendChild(this.canvas);
+  }
+
+  resize() {
+    this.windowHeight = window.innerHeight;
+    this.windowWidth = window.innerWidth;
+
+    this.setupCanvas();
   }
 
   drawCircle(x, y, radius, color) {
