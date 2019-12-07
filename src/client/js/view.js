@@ -19,8 +19,9 @@ class View {
   setupCanvas() {
     if (this.windowWidth !== config.fieldWidth) {
       this.scale = this.windowWidth / config.fieldWidth;
-      if (config.fieldWidth * this.scale > this.windowHeight) {
+      if (config.fieldHeigth * this.scale > this.windowHeight) {
         this.scale = this.windowHeight / config.fieldHeigth;
+        console.log('test');
       }
     }
 
