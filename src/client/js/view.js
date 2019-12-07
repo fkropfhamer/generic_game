@@ -1,8 +1,10 @@
+import config from '../../server/config';
+
 class View {
   constructor() {
     this.scale = 1;
-    this.height = window.innerHeight;
-    this.width = window.innerWidth;
+    this.windowHeight = window.innerHeight;
+    this.windowWidth = window.innerWidth;
     this.color = '#232529';
 
     this.setupCanvas();
@@ -13,6 +15,18 @@ class View {
   setupCanvas() {
     this.canvas = document.createElement('canvas');
 
+    if (this.windowWidth !== config.fieldWidth) {
+      this.scale = this.windowWidth / config.fieldWidth;
+      if (config.fieldWidth * this.scale > this.windowHeight) {
+        this.scale = this.windowHeight / config.fieldHeigth;
+      }
+    }
+
+    console.log(this.scale);
+
+    this.width = config.fieldWidth * this.scale;
+    this.height = config.fieldHeigth * this.scale;
+
     this.canvas.width = this.width;
     this.canvas.height = this.height;
 
@@ -22,7 +36,7 @@ class View {
 
   drawCircle(x, y, radius, color) {
     this.ctx.beginPath();
-    this.ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+    this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
@@ -33,11 +47,11 @@ class View {
     const hSin = (Math.sin(angle) * height) / 2;
     const hCos = (Math.cos(angle) * height) / 2;
     this.ctx.beginPath();
-    this.ctx.moveTo(x - wCos + hSin, y - hCos - wSin);
-    this.ctx.lineTo(x + wCos + hSin, y - hCos + wSin);
-    this.ctx.lineTo(x + wCos - hSin, y + hCos + wSin);
-    this.ctx.lineTo(x - wCos - hSin, y + hCos - wSin);
-    this.ctx.lineTo(x - wCos + hSin, y - hCos - wSin);
+    this.ctx.moveTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
+    this.ctx.lineTo((x + wCos + hSin) * this.scale, (y - hCos + wSin) * this.scale);
+    this.ctx.lineTo((x + wCos - hSin) * this.scale, (y + hCos + wSin) * this.scale);
+    this.ctx.lineTo((x - wCos - hSin) * this.scale, (y + hCos - wSin) * this.scale);
+    this.ctx.lineTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
@@ -53,11 +67,11 @@ class View {
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
-    const imgWidth = image.width * scale;
-    const imgHeight = image.height * scale;
+    const imgWidth = image.width * scale * this.scale;
+    const imgHeight = image.height * scale * this.scale;
 
     this.ctx.save();
-    this.ctx.translate(x, y);
+    this.ctx.translate(x * this.scale, y * this.scale);
     this.ctx.rotate(angle);
 
     this.ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
