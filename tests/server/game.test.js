@@ -7,17 +7,23 @@ describe('game test', () => {
 
   beforeEach(() => {
     player1 = {
+      color: 'blue',
       notifyStart: jest.fn(),
       notifyOpponentDisconnected: jest.fn(),
       notifyTimeOver: jest.fn(),
       notifyUpdate: jest.fn(),
+      notifyWin: jest.fn(),
+      notifyLose: jest.fn(),
       update: jest.fn(),
     };
     player2 = {
+      color: 'red',
       notifyStart: jest.fn(),
       notifyOpponentDisconnected: jest.fn(),
       notifyTimeOver: jest.fn(),
       notifyUpdate: jest.fn(),
+      notifyWin: jest.fn(),
+      notifyLose: jest.fn(),
       update: jest.fn(),
     };
 
@@ -70,7 +76,8 @@ describe('game test', () => {
     game.end = jest.fn();
     game.playerDisconnected(player1);
 
-    expect(player2.notifyOpponentDisconnected.mock.calls.length).toBe(1);
+    expect(player2.notifyWin.mock.calls.length).toBe(1);
+    expect(player1.notifyLose.mock.calls.length).toBe(1);
     expect(game.end.mock.calls.length).toBe(1);
   });
 
@@ -78,7 +85,8 @@ describe('game test', () => {
     game.end = jest.fn();
     game.playerDisconnected(player2);
 
-    expect(player1.notifyOpponentDisconnected.mock.calls.length).toBe(1);
+    expect(player1.notifyWin.mock.calls.length).toBe(1);
+    expect(player2.notifyLose.mock.calls.length).toBe(1);
     expect(game.end.mock.calls.length).toBe(1);
   });
 

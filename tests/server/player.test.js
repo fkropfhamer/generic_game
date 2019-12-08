@@ -35,7 +35,7 @@ describe('player test', () => {
     player.x = 400;
     player.y = 300;
     player.face = 'face2';
-    player.lifes = 3;
+    player.lives = 3;
 
     const opponent = {
       x: 100,
@@ -43,7 +43,7 @@ describe('player test', () => {
       angle: Math.PI,
       color: 'blue',
       face: 'face1',
-      lifes: 2,
+      lives: 2,
     };
 
     player.notifyStart([opponent], 30);
@@ -53,7 +53,7 @@ describe('player test', () => {
       x: 400,
       y: 300,
       face: 'face2',
-      lifes: 3,
+      lives: 3,
       angle: 0,
       color: 'blue',
       players: [opponent],
@@ -72,14 +72,14 @@ describe('player test', () => {
   test('player notify update', () => {
     player.x = 400;
     player.y = 300;
-    player.lifes = 1;
+    player.lives = 1;
     const opponent = {
       x: 100,
       y: 200,
       angle: Math.PI,
       face: 'face3',
       color: 'blue',
-      lifes: 3,
+      lives: 3,
     };
 
     player.notifyUpdate([opponent], [], 25);
@@ -90,7 +90,7 @@ describe('player test', () => {
       x: 400,
       y: 300,
       angle: 0,
-      lifes: 1,
+      lives: 1,
       players: [opponent],
       bullets: [],
       timer: 25,

@@ -23,7 +23,7 @@ describe('Util test', () => {
         y: 200,
         angle: Math.PI,
         color: 'red',
-        lifes: 4,
+        lives: 4,
         face: 'face1',
       },
       {
@@ -31,7 +31,7 @@ describe('Util test', () => {
         y: 500,
         angle: 2 * Math.PI,
         color: 'blue',
-        lifes: 1,
+        lives: 1,
         face: 'face3',
       },
     ];
