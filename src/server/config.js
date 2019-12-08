@@ -9,6 +9,7 @@ const config = {
   bulletRadius: 10,
   fieldWidth: 1366,
   fieldHeigth: 768,
+  shootingRate: 100,
 
   playerstartingPositions: [
     { x: 100, y: 100 },
