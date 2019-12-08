@@ -96,7 +96,8 @@ export default class Game {
           (player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2
         );
         if (playerDistance <= config.playerRadius * 2) {
-          const alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
+          let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
+          alpha = alpha || 0;
           player1.x += Math.sign(player1.x - player2.x) * config.playerRepulsion * Math.cos(alpha);
           player1.y += Math.sign(player1.y - player2.y) * config.playerRepulsion * Math.sin(alpha);
         }
