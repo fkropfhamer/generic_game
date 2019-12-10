@@ -57,7 +57,12 @@ class Game {
   }
 
   calculateAngle(x1, y1, x2, y2) {
-    return Math.atan2(y1 - this.view.canvas.offsetTop - y2, x1 - this.view.canvas.offsetLeft - x2);
+    const scaledx2 = x2 * this.view.scale;
+    const scaledy2 = y2 * this.view.scale;
+    return Math.atan2(
+      y1 - this.view.canvas.offsetTop - scaledy2,
+      x1 - this.view.canvas.offsetLeft - scaledx2
+    );
   }
 
   shoot(e) {
