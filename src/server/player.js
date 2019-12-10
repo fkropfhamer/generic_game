@@ -10,6 +10,7 @@ export default class Player {
     this.speed = config.playerSpeed;
     this.angle = 0;
     this.radius = config.playerRadius;
+    this.shootingCount = 0;
   }
 
   setupSocket() {
@@ -20,8 +21,11 @@ export default class Player {
       this.pressedUp = data.up;
     });
     this.socket.on('shoot', (data) => {
-      this.angle = data.angle;
-      this.createBullet();
+      if (this.shootingCount === 0) {
+        this.angle = data.angle;
+        this.createBullet();
+        this.shootingCount = config.shootingRate;
+      }
     });
     this.socket.on('update angle', (data) => {
       this.angle = data.angle;
@@ -100,6 +104,8 @@ export default class Player {
   }
 
   update() {
+    if (this.shootingCount > 0) this.shootingCount -= 1;
+
     if (this.pressedUp) {
       this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }

@@ -7,8 +7,10 @@ const config = {
   gameDuration: 60,
   playerLives: 3,
   bulletRadius: 10,
+
   fieldWidth: 1280, // 16:9
   fieldHeigth: 720,
+  shootingRate: 100,
 
   playerstartingPositions: [
     { x: 100, y: 100 },
