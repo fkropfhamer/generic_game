@@ -1,4 +1,5 @@
 import config from './config';
+import Util from './util';
 
 export default class Game {
   constructor(players) {
@@ -49,6 +50,44 @@ export default class Game {
               this.playerDied(player);
             }
           }
+        }
+      });
+    });
+  }
+
+  checkWallCollision() {
+    this.players.forEach((player) => {
+      this.walls.forEach((wall) => {
+        const playerCollides = Util.collisionRectCircle(wall, player);
+        if (playerCollides) {
+          const v1 = { x: playerCollides.x - player.x, y: playerCollides.y - player.y };
+          const v2 = { x: 1, y: 0 };
+
+          let angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x) + wall.angle;
+          
+
+          const dis = config.playerRadius - Util.pointDistance(player, playerCollides);
+          
+          if (playerCollides.t) {
+            angle -= Math.PI;
+          }
+          player.x += dis * Math.cos(angle);
+          player.y += dis * Math.sin(angle);
+          
+          console.log(angle, dis);
+          /*
+          if (player.x > playerCollides.x) {
+            player.x = playerCollides.x + config.playerRadius;
+          } else {
+            player.x = playerCollides.x - config.playerRadius;
+          }
+
+          if (player.y > playerCollides.y) {
+            player.y = playerCollides.y + config.playerRadius;
+          } else {
+            player.y = playerCollides.y - config.playerRadius;
+          }
+          */
         }
       });
     });
@@ -134,6 +173,8 @@ export default class Game {
       this.isOverlapping(player);
       player.update();
     });
+
+    this.checkWallCollision();
 
     this.bullets.forEach((bullet) => bullet.update());
 
