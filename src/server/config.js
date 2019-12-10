@@ -27,6 +27,14 @@ const config = {
     angle: 0,
     color: 'white',
   },
+  barrierWalls: {
+    x: 50,
+    y: 10,
+    height: 20,
+    width: 100,
+    angle: 0,
+    color: 'white',
+  },
 };
 
 export default config;
