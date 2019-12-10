@@ -7,6 +7,7 @@ export default class Game {
     this.deadPlayers = [];
     this.walls = [];
     this.addConstraintWalls();
+    this.addBarrierWalls();
   }
 
   start() {
@@ -46,20 +47,38 @@ export default class Game {
       this.walls.push({
         ...config.constraintWalls,
         x: config.constraintWalls.x + i,
-        y: config.fieldHeigth - 10,
+        y: config.fieldHeight - 10,
       });
-      this.walls.push({ 
+      this.walls.push({
         ...config.constraintWalls,
         x: 10,
         y: 50 + i,
         angle: Math.PI / 2,
       });
-      this.walls.push({ 
+      this.walls.push({
         ...config.constraintWalls,
         x: config.fieldWidth - 10,
         y: 50 + i,
         angle: Math.PI / 2,
       });
+    }
+  }
+
+  addBarrierWalls() {
+    for (let i = 1; i <= 3; i += 1) {
+      for (let j = 1; j <= 3; j += 1) {
+        this.walls.push({
+          ...config.barrierWalls,
+          x: config.fieldWidth * 1/4 * i,
+          y: config.fieldHeight * 1/4 * j,
+        });
+        this.walls.push({
+          ...config.barrierWalls,
+          x: config.fieldWidth * 1/4 * i,
+          y: config.fieldHeight * 1/4 * j,
+          angle: -config.barrierWalls.angle,
+        });
+      }
     }
   }
 

@@ -19,12 +19,12 @@ class View {
   setupCanvas() {
     if (this.windowWidth !== config.fieldWidth) {
       this.scale = this.windowWidth / config.fieldWidth;
-      if (config.fieldHeigth * this.scale > this.windowHeight) {
-        this.scale = this.windowHeight / config.fieldHeigth;
+      if (config.fieldHeight * this.scale > this.windowHeight) {
+        this.scale = this.windowHeight / config.fieldHeight;
       }
     }
     this.width = config.fieldWidth * this.scale;
-    this.height = config.fieldHeigth * this.scale;
+    this.height = config.fieldHeight * this.scale;
 
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -46,7 +46,7 @@ class View {
     this.ctx.fill();
   }
 
-  drawRectangle(x, y, height, width, angle, color) {
+  drawRectangle(x, y, height, width, angle, fillColor, strokeColor) {
     const wSin = (Math.sin(angle) * width) / 2;
     const wCos = (Math.cos(angle) * width) / 2;
     const hSin = (Math.sin(angle) * height) / 2;
@@ -57,8 +57,8 @@ class View {
     this.ctx.lineTo((x + wCos - hSin) * this.scale, (y + hCos + wSin) * this.scale);
     this.ctx.lineTo((x - wCos - hSin) * this.scale, (y + hCos - wSin) * this.scale);
     this.ctx.lineTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
-    this.ctx.fillStyle = color;
-    this.ctx.strokeStyle = 'black';
+    this.ctx.fillStyle = fillColor;
+    this.ctx.strokeStyle = strokeColor;
     this.ctx.lineWidth = 3;
     this.ctx.fill();
     this.ctx.stroke();

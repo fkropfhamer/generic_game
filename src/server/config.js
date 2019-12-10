@@ -9,7 +9,7 @@ const config = {
   bulletRadius: 10,
 
   fieldWidth: 1280, // 16:9
-  fieldHeigth: 625,
+  fieldHeight: 625,
   shootingRate: 100,
 
   playerstartingPositions: [
@@ -25,15 +25,17 @@ const config = {
     height: 20,
     width: 100,
     angle: 0,
-    color: 'white',
+    fillColor: 'white',
+    strokeColor: 'black',
   },
   barrierWalls: {
     x: 50,
     y: 10,
     height: 20,
-    width: 100,
-    angle: 0,
-    color: 'white',
+    width: 60,
+    angle: Math.PI / 4,
+    fillColor: 'white',
+    strokeColor: 'white',
   },
 };
 
