@@ -104,6 +104,26 @@ class View {
     }
   }
 
+  showPlayerColorInfo(playerColor) {
+    const playerColorInfo = document.createElement('div');
+    playerColorInfo.style.backgroundColor = this.color;
+    playerColorInfo.style.position = 'absolute';
+    playerColorInfo.style.left = '75%';
+    playerColorInfo.style.top = '25%';
+    playerColorInfo.style.width = '5px';
+    playerColorInfo.style.height = '5px';
+
+    const colorInfoText = document.createElement('h1');
+    colorInfoText.style.fontSize = '30px';
+    colorInfoText.innerHTML = `Your colour is ${playerColor}`;
+
+    playerColorInfo.appendChild(colorInfoText);
+
+    document.getElementById('root').appendChild(playerColorInfo);
+
+    this.colorInfoText = colorInfoText;
+  }
+
   showWaitingScreen() {
     const waitingScreen = document.createElement('div');
     waitingScreen.style.backgroundColor = 'white';

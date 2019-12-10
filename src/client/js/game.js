@@ -39,6 +39,7 @@ class Game {
     );
 
     this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
+    this.view.showPlayerColorInfo(this.color);
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
     });
