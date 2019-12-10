@@ -58,7 +58,10 @@ class View {
     this.ctx.lineTo((x - wCos - hSin) * this.scale, (y + hCos - wSin) * this.scale);
     this.ctx.lineTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
     this.ctx.fillStyle = color;
+    this.ctx.strokeStyle = 'black';
+    this.ctx.lineWidth = 3;
     this.ctx.fill();
+    this.ctx.stroke();
   }
 
   drawImage(x, y, img) {
