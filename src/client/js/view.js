@@ -1,3 +1,4 @@
+/* eslint-disable vars-on-top */
 import config from '../../server/config';
 
 class View {
@@ -115,13 +116,20 @@ class View {
 
     const colorInfoText = document.createElement('h1');
     colorInfoText.style.fontSize = '30px';
+    colorInfoText.style.color = '#FFFFFF';
     colorInfoText.innerHTML = `Your colour is ${playerColor}`;
 
     playerColorInfo.appendChild(colorInfoText);
 
     document.getElementById('root').appendChild(playerColorInfo);
 
-    this.colorInfoText = colorInfoText;
+    this.playerColorInfo = playerColorInfo;
+  }
+
+  hidePlayerColorInfo() {
+    if (this.playerColorInfo) {
+      this.playerColorInfo.style.display = 'none';
+    }
   }
 
   showWaitingScreen() {

@@ -39,7 +39,7 @@ class Game {
     );
 
     this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
-    this.view.showPlayerColorInfo(this.color);
+    this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
     });
@@ -55,6 +55,19 @@ class Game {
 
       this.socket.emit('update angle', { angle });
     });
+  }
+
+  displayPlayerColorInfo() {
+    const displayTimeColorInfoUntil = 50;
+    if (!this.view.playerColorInfo) {
+      if (this.timer <= displayTimeColorInfoUntil) {
+        this.view.hidePlayerColorInfo();
+      } else {
+        this.view.showPlayerColorInfo(this.color);
+      }
+    } else if (this.timer <= displayTimeColorInfoUntil) {
+      this.view.hidePlayerColorInfo();
+    }
   }
 
   calculateAngle(x1, y1, x2, y2) {
