@@ -21,10 +21,10 @@ class Game {
     this.pressedRight = false;
   }
 
-  drawPlayer(color, lives, face, x, y, angle) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle) {
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
-      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle, 0.5);
+      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
     this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
   }
@@ -38,11 +38,19 @@ class Game {
       this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
     );
 
-    this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
+    this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle, this.hitAngle);
     this.drawPlayerIndicator();
     this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
-      this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
+      this.drawPlayer(
+        player.color,
+        player.lives,
+        player.face,
+        player.x,
+        player.y,
+        player.angle,
+        player.hitAngle
+      );
     });
   }
 
@@ -154,6 +162,7 @@ class Game {
       this.bullets = data.bullets;
       this.timer = data.timer;
       this.lives = data.lives;
+      this.hitAngle = data.hitAngle;
       this.draw();
       this.socket.emit('keys', {
         up: this.pressedUp,

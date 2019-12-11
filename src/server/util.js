@@ -15,6 +15,7 @@ export default class Util {
         color: player.color,
         lives: player.lives,
         face: player.face,
+        hitAngle: player.hitAngle,
       };
     });
   }

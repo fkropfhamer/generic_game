@@ -1,4 +1,3 @@
-/* eslint-disable vars-on-top */
 import config from '../../server/config';
 
 class View {
