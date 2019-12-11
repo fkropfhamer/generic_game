@@ -9,21 +9,23 @@ const config = {
   bulletRadius: 10,
 
   fieldWidth: 1280, // 16:9
-  fieldHeight: 625,
+  fieldHeight: 720,
   shootingRate: 100,
 
   playerstartingPositions: [
     { x: 100, y: 100 },
+    { x: 1180, y: 620 },
+    { x: 100, y: 620 },
     { x: 1180, y: 100 },
-    { x: 100, y: 200 },
-    { x: 1180, y: 200 },
   ],
 
   walls: [],
+  numberOfVerticalWalls: 10,
+  numberOfHorizontalWalls: 12,
 };
 
 const constraintWalls = {
-  x: 50,
+  x: 0,
   y: 10,
   height: 20,
   width: 100,
@@ -41,33 +43,41 @@ const barrierWalls = {
   strokeColor: 'white',
 };
 
-function addConstraintWalls() {
-  for (let i = 0; i < config.fieldWidth; i += 100) {
+function setupConstraintWalls() {
+  const horizontalWidth = config.fieldWidth / config.numberOfHorizontalWalls;
+  for (let i = horizontalWidth / 2; i < config.fieldWidth; i += horizontalWidth) {
     config.walls.push({
       ...constraintWalls,
-      x: constraintWalls.x + i,
+      x: i,
+      width: horizontalWidth,
     });
     config.walls.push({
       ...constraintWalls,
-      x: constraintWalls.x + i,
+      x: i,
+      width: horizontalWidth,
       y: config.fieldHeight - 10,
-    });
-    config.walls.push({
-      ...constraintWalls,
-      x: 10,
-      y: 50 + i,
-      angle: Math.PI / 2,
-    });
-    config.walls.push({
-      ...constraintWalls,
-      x: config.fieldWidth - 10,
-      y: 50 + i,
-      angle: Math.PI / 2,
     });
   }
 }
+const veritcalWidth = config.fieldHeight / config.numberOfVerticalWalls;
+for (let i = veritcalWidth / 2; i < config.fieldHeight; i += veritcalWidth) {
+  config.walls.push({
+    ...constraintWalls,
+    x: 10,
+    y: i,
+    width: veritcalWidth,
+    angle: Math.PI / 2,
+  });
+  config.walls.push({
+    ...constraintWalls,
+    x: config.fieldWidth - 10,
+    y: i,
+    width: veritcalWidth,
+    angle: Math.PI / 2,
+  });
+}
 
-function addBarrierWalls() {
+function setupBarrierWalls() {
   for (let i = 1; i <= 3; i += 1) {
     for (let j = 1; j <= 3; j += 1) {
       config.walls.push({
@@ -85,7 +95,7 @@ function addBarrierWalls() {
   }
 }
 
-addBarrierWalls();
-addConstraintWalls();
+setupBarrierWalls();
+setupConstraintWalls();
 
 export default config;
