@@ -1,5 +1,3 @@
-import config from './config';
-
 export default class Util {
   static halfIfAnotherKeyIsPressed(key1, key2) {
     if (key1 || key2) {
@@ -95,46 +93,35 @@ export default class Util {
 
   static collisionRectCircle(rect, circle) {
     const corners = this.calculateCornerPoints(rect);
+
     const rotatedA = this.rotatePointAroundPoint(corners.a, rect, rect.angle);
-
     const rotatedB = this.rotatePointAroundPoint(corners.b, rect, rect.angle);
-
     const rotatedC = this.rotatePointAroundPoint(corners.c, rect, rect.angle);
-
     const rotatedD = this.rotatePointAroundPoint(corners.d, rect, rect.angle);
 
     const closestAB = this.getClosestPointFromLine(circle, rotatedA, rotatedB);
-    closestAB.p = corners.a;
-
     const closestBC = this.getClosestPointFromLine(circle, rotatedB, rotatedC);
-    closestBC.t = true;
-    closestBC.p = corners.b;
-
     const closestCD = this.getClosestPointFromLine(circle, rotatedC, rotatedD);
-    closestCD.p = corners.c;
-
     const closestDA = this.getClosestPointFromLine(circle, rotatedD, rotatedA);
-    closestDA.t = true;
-    closestDA.p = corners.d;
 
     const distanceAB = this.pointDistance(closestAB, circle);
     const distanceBC = this.pointDistance(closestBC, circle);
     const distanceCD = this.pointDistance(closestCD, circle);
     const distanceDA = this.pointDistance(closestDA, circle);
 
-    if (distanceAB < config.playerRadius) {
+    if (distanceAB < circle.radius) {
       return { angle: 1.5 * Math.PI, dis: distanceAB };
     }
 
-    if (distanceBC < config.playerRadius) {
+    if (distanceBC < circle.radius) {
       return { angle: 0, dis: distanceBC };
     }
 
-    if (distanceCD < config.playerRadius) {
+    if (distanceCD < circle.radius) {
       return { angle: Math.PI / 2, dis: distanceCD };
     }
 
-    if (distanceDA < config.playerRadius) {
+    if (distanceDA < circle.radius) {
       return { angle: Math.PI, dis: distanceDA };
     }
 

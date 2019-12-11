@@ -70,13 +70,13 @@ export default class Game {
       for (let j = 1; j <= 3; j += 1) {
         this.walls.push({
           ...config.barrierWalls,
-          x: config.fieldWidth * 1/4 * i,
-          y: config.fieldHeight * 1/4 * j,
+          x: ((config.fieldWidth * 1) / 4) * i,
+          y: ((config.fieldHeight * 1) / 4) * j,
         });
         this.walls.push({
           ...config.barrierWalls,
-          x: config.fieldWidth * 1/4 * i,
-          y: config.fieldHeight * 1/4 * j,
+          x: ((config.fieldWidth * 1) / 4) * i,
+          y: ((config.fieldHeight * 1) / 4) * j,
           angle: -config.barrierWalls.angle,
         });
       }
@@ -101,7 +101,7 @@ export default class Game {
     });
   }
 
-  checkWallCollision() {
+  checkWallCollisionPlayer() {
     this.players.forEach((player) => {
       this.walls.forEach((wall) => {
         const playerCollides = Util.collisionRectCircle(wall, player);
@@ -111,6 +111,17 @@ export default class Game {
 
           player.x += dis * Math.cos(angle);
           player.y += dis * Math.sin(angle);
+        }
+      });
+    });
+  }
+
+  checkWallCollisionBullet() {
+    this.bullets.forEach((bullet) => {
+      this.walls.forEach((wall) => {
+        const bulletCollides = Util.collisionRectCircle(wall, bullet);
+        if (bulletCollides) {
+          this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         }
       });
     });
@@ -197,7 +208,8 @@ export default class Game {
       player.update();
     });
 
-    this.checkWallCollision();
+    this.checkWallCollisionPlayer();
+    this.checkWallCollisionBullet();
 
     this.bullets.forEach((bullet) => bullet.update());
 

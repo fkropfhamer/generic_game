@@ -9,6 +9,7 @@ export default class Bullet {
     this.speed = config.bulletSpeed;
     this.angle = player.angle;
     this.color = player.color;
+    this.radius = config.bulletRadius;
   }
 
   update() {

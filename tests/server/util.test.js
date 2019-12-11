@@ -36,17 +36,6 @@ describe('Util test', () => {
     expect(closestPoint.y).toBe(1);
   });
 
-  test('test', () => {
-    const point1 = { x: 20, y: 6 };
-    const point2 = { x: 1, y: 1 };
-    const point3 = { x: 7, y: 1 };
-
-    const closestPoint = Util.getClosestPointFromLine(point1, point2, point3);
-
-    expect(closestPoint.x).toBe(20);
-    expect(closestPoint.y).toBe(1);
-  });
-
   test('calculate corner points', () => {
     const rect = {
       x: 10,
@@ -82,7 +71,6 @@ describe('Util test', () => {
     const circle = { x: config.playerRadius + 15, y: config.playerRadius + 15 };
 
     expect(Util.collisionRectCircle(rect, circle)).toBe(false);
-
 
     const circle2 = { x: config.playerRadius + 14, y: config.playerRadius + 14 };
 
