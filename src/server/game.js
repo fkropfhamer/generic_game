@@ -1,4 +1,5 @@
 import config from './config';
+import Util from './util';
 
 export default class Game {
   constructor(players) {
@@ -54,6 +55,32 @@ export default class Game {
     });
   }
 
+  checkWallCollisionPlayer() {
+    this.players.forEach((player) => {
+      this.walls.forEach((wall) => {
+        const playerCollides = Util.collisionRectCircle(wall, player);
+        if (playerCollides) {
+          const angle = playerCollides.angle + wall.angle;
+          const dis = config.playerRadius - playerCollides.dis;
+
+          player.x += dis * Math.cos(angle);
+          player.y += dis * Math.sin(angle);
+        }
+      });
+    });
+  }
+
+  checkWallCollisionBullet() {
+    this.bullets.forEach((bullet) => {
+      this.walls.forEach((wall) => {
+        const bulletCollides = Util.collisionRectCircle(wall, bullet);
+        if (bulletCollides) {
+          this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
+        }
+      });
+    });
+  }
+
   playerDied(player) {
     this.deadPlayers.push(player);
     const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
@@ -86,7 +113,9 @@ export default class Game {
   }
 
   playerDisconnected(player) {
-    this.playerDied(player);
+    if (!this.ended) {
+      this.playerDied(player);
+    }
   }
 
   isOverlapping(player1) {
@@ -96,7 +125,8 @@ export default class Game {
           (player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2
         );
         if (playerDistance <= config.playerRadius * 2) {
-          const alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
+          let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
+          alpha = alpha || 0;
           player1.x += Math.sign(player1.x - player2.x) * config.playerRepulsion * Math.cos(alpha);
           player1.y += Math.sign(player1.y - player2.y) * config.playerRepulsion * Math.sin(alpha);
         }
@@ -110,6 +140,7 @@ export default class Game {
   }
 
   end() {
+    this.ended = true;
     console.log('game ended');
     clearInterval(this.interval);
   }
@@ -133,6 +164,9 @@ export default class Game {
       this.isOverlapping(player);
       player.update();
     });
+
+    this.checkWallCollisionPlayer();
+    this.checkWallCollisionBullet();
 
     this.bullets.forEach((bullet) => bullet.update());
 

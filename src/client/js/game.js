@@ -35,13 +35,19 @@ class Game {
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.bulletRadius, b.color));
 
     this.walls.forEach((w) =>
-      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.color)
+      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
     );
 
     this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle);
+    this.drawPlayerIndicator();
+    this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(player.color, player.lives, player.face, player.x, player.y, player.angle);
     });
+  }
+
+  drawPlayerIndicator() {
+    this.view.drawPlayerIndicator(this.x, this.y);
   }
 
   setupKeyPressedEvents() {
@@ -56,8 +62,26 @@ class Game {
     });
   }
 
+  displayPlayerColorInfo() {
+    const displayTimeColorInfoUntil = 50;
+    if (!this.view.playerColorInfo) {
+      if (this.timer <= displayTimeColorInfoUntil) {
+        this.view.hidePlayerColorInfo();
+      } else {
+        this.view.showPlayerColorInfo(this.color);
+      }
+    } else if (this.timer <= displayTimeColorInfoUntil) {
+      this.view.hidePlayerColorInfo();
+    }
+  }
+
   calculateAngle(x1, y1, x2, y2) {
-    return Math.atan2(y1 - this.view.canvas.offsetTop - y2, x1 - this.view.canvas.offsetLeft - x2);
+    const scaledx2 = x2 * this.view.scale;
+    const scaledy2 = y2 * this.view.scale;
+    return Math.atan2(
+      y1 - this.view.canvas.offsetTop - scaledy2,
+      x1 - this.view.canvas.offsetLeft - scaledx2
+    );
   }
 
   shoot(e) {
@@ -138,9 +162,9 @@ class Game {
         right: this.pressedRight,
       });
     });
-    this.socket.on('waiting', () => {
+    this.socket.on('waiting', (data) => {
       console.log('you must wait!');
-      this.view.showWaitingScreen();
+      this.view.showWaitingScreen(data.numberOfPlayers);
       this.waiting = true;
     });
     this.socket.on('opponent disconnected', () => {
