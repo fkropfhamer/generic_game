@@ -75,19 +75,19 @@ export default class Util {
     let y = a.y + ab.y * t;
 
     if (x > a.x && x > b.x) {
-      x = Math.max([a.x, b.x]);
+      x = Math.max(a.x, b.x);
     }
 
     if (x < a.x && x < b.x) {
-      x = Math.min([a.x, b.x]);
+      x = Math.min(a.x, b.x);
     }
 
     if (y > a.y && y > b.y) {
-      y = Math.max([a.y, b.y]);
+      y = Math.max(a.y, b.y);
     }
 
     if (y < a.y && y < b.y) {
-      y = Math.min([a.y, b.y]);
+      y = Math.min(a.y, b.y);
     }
 
     return { x, y };
@@ -103,41 +103,39 @@ export default class Util {
 
     const rotatedD = this.rotatePointAroundPoint(corners.d, rect, rect.angle);
 
-    //console.log(corners, rotatedA);
-
     const closestAB = this.getClosestPointFromLine(circle, rotatedA, rotatedB);
+    closestAB.p = corners.a;
 
     const closestBC = this.getClosestPointFromLine(circle, rotatedB, rotatedC);
     closestBC.t = true;
+    closestBC.p = corners.b;
 
     const closestCD = this.getClosestPointFromLine(circle, rotatedC, rotatedD);
+    closestCD.p = corners.c;
 
     const closestDA = this.getClosestPointFromLine(circle, rotatedD, rotatedA);
     closestDA.t = true;
-
-    //console.log(corners, rotatedA, closestAB);
+    closestDA.p = corners.d;
 
     const distanceAB = this.pointDistance(closestAB, circle);
     const distanceBC = this.pointDistance(closestBC, circle);
     const distanceCD = this.pointDistance(closestCD, circle);
     const distanceDA = this.pointDistance(closestDA, circle);
 
-    // console.log(distanceAB, distanceBC, distanceCD, distanceDA);
-
     if (distanceAB < config.playerRadius) {
-      return closestAB;
+      return { angle: 1.5 * Math.PI, dis: distanceAB };
     }
 
     if (distanceBC < config.playerRadius) {
-      return closestBC;
+      return { angle: 0, dis: distanceBC };
     }
 
     if (distanceCD < config.playerRadius) {
-      return closestCD;
+      return { angle: Math.PI / 2, dis: distanceCD };
     }
 
     if (distanceDA < config.playerRadius) {
-      return closestDA;
+      return { angle: Math.PI, dis: distanceDA };
     }
 
     return false;

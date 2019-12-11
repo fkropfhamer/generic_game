@@ -45,6 +45,15 @@ const config = {
       angle: 0,
       color: 'white',
     },
+
+    {
+      x: 200,
+      y: 200,
+      height: 20,
+      width: 100,
+      angle: Math.PI / 2,
+      color: 'white',
+    },
   ],
 };
 
