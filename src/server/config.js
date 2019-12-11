@@ -19,24 +19,73 @@ const config = {
     { x: 1180, y: 200 },
   ],
 
-  constraintWalls: {
-    x: 50,
-    y: 10,
-    height: 20,
-    width: 100,
-    angle: 0,
-    fillColor: 'white',
-    strokeColor: 'black',
-  },
-  barrierWalls: {
-    x: 50,
-    y: 10,
-    height: 20,
-    width: 60,
-    angle: Math.PI / 4,
-    fillColor: 'white',
-    strokeColor: 'white',
-  },
+  walls: [],
 };
+
+const constraintWalls = {
+  x: 50,
+  y: 10,
+  height: 20,
+  width: 100,
+  angle: 0,
+  fillColor: 'white',
+  strokeColor: 'black',
+};
+const barrierWalls = {
+  x: 50,
+  y: 10,
+  height: 20,
+  width: 60,
+  angle: Math.PI / 4,
+  fillColor: 'white',
+  strokeColor: 'white',
+};
+
+function addConstraintWalls() {
+  for (let i = 0; i < config.fieldWidth; i += 100) {
+    config.walls.push({
+      ...constraintWalls,
+      x: constraintWalls.x + i,
+    });
+    config.walls.push({
+      ...constraintWalls,
+      x: constraintWalls.x + i,
+      y: config.fieldHeight - 10,
+    });
+    config.walls.push({
+      ...constraintWalls,
+      x: 10,
+      y: 50 + i,
+      angle: Math.PI / 2,
+    });
+    config.walls.push({
+      ...constraintWalls,
+      x: config.fieldWidth - 10,
+      y: 50 + i,
+      angle: Math.PI / 2,
+    });
+  }
+}
+
+function addBarrierWalls() {
+  for (let i = 1; i <= 3; i += 1) {
+    for (let j = 1; j <= 3; j += 1) {
+      config.walls.push({
+        ...barrierWalls,
+        x: ((config.fieldWidth * 1) / 4) * i,
+        y: ((config.fieldHeight * 1) / 4) * j,
+      });
+      config.walls.push({
+        ...barrierWalls,
+        x: ((config.fieldWidth * 1) / 4) * i,
+        y: ((config.fieldHeight * 1) / 4) * j,
+        angle: -barrierWalls.angle,
+      });
+    }
+  }
+}
+
+addBarrierWalls();
+addConstraintWalls();
 
 export default config;
