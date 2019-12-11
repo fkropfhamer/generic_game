@@ -1,4 +1,5 @@
 import config from './config';
+import Util from './util';
 
 export default class Game {
   constructor(players) {
@@ -49,6 +50,32 @@ export default class Game {
               this.playerDied(player);
             }
           }
+        }
+      });
+    });
+  }
+
+  checkWallCollisionPlayer() {
+    this.players.forEach((player) => {
+      this.walls.forEach((wall) => {
+        const playerCollides = Util.collisionRectCircle(wall, player);
+        if (playerCollides) {
+          const angle = playerCollides.angle + wall.angle;
+          const dis = config.playerRadius - playerCollides.dis;
+
+          player.x += dis * Math.cos(angle);
+          player.y += dis * Math.sin(angle);
+        }
+      });
+    });
+  }
+
+  checkWallCollisionBullet() {
+    this.bullets.forEach((bullet) => {
+      this.walls.forEach((wall) => {
+        const bulletCollides = Util.collisionRectCircle(wall, bullet);
+        if (bulletCollides) {
+          this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         }
       });
     });
@@ -134,6 +161,9 @@ export default class Game {
       this.isOverlapping(player);
       player.update();
     });
+
+    this.checkWallCollisionPlayer();
+    this.checkWallCollisionBullet();
 
     this.bullets.forEach((bullet) => bullet.update());
 
