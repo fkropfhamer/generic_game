@@ -122,6 +122,7 @@ export default class Game {
         const bulletCollides = Util.collisionRectCircle(wall, bullet);
         if (bulletCollides) {
           this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
+          wall.fillColor = bullet.color;
         }
       });
     });
@@ -162,7 +163,7 @@ export default class Game {
     this.playerDied(player);
   }
 
-  isOverlapping(player1) {
+  checkPlayerCollisionPlayer(player1) {
     this.players.forEach((player2) => {
       if (!Object.is(player1, player2)) {
         const playerDistance = Math.sqrt(
@@ -204,7 +205,7 @@ export default class Game {
 
   update() {
     this.players.forEach((player) => {
-      this.isOverlapping(player);
+      this.checkPlayerCollisionPlayer(player);
       player.update();
     });
 
@@ -223,7 +224,7 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer);
+      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer, this.walls);
     });
 
     this.bulletHitsPlayer();
