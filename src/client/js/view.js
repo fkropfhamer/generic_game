@@ -87,6 +87,18 @@ class View {
     this.ctx.restore();
   }
 
+  drawPlayerIndicator(x, y) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.lineTo((x - 10) * this.scale, (y - 35) * this.scale);
+    this.ctx.lineTo((x + 10) * this.scale, (y - 35) * this.scale);
+    this.ctx.lineTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.closePath();
+
+    this.ctx.fillStyle = 'yellow';
+    this.ctx.fill();
+  }
+
   showTimer(timer) {
     if (!this.timerDisplay) {
       const div = document.createElement('div');
