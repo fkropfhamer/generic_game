@@ -229,7 +229,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'Time is over';
 
+    const reloadButton = View.reloadButton();
+
     timeOverScreen.appendChild(heading);
+    timeOverScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(timeOverScreen);
 
@@ -248,10 +251,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You win! :D';
 
-    const relodadButton = View.reloadButton();
+    const reloadButton = View.reloadButton();
 
     winScreen.appendChild(heading);
-    winScreen.appendChild(relodadButton);
+    winScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(winScreen);
 
@@ -270,10 +273,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You lose :(';
 
-    const relodadButton = View.reloadButton();
+    const reloadButton = View.reloadButton();
 
     loseScreen.appendChild(heading);
-    loseScreen.appendChild(relodadButton);
+    loseScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(loseScreen);
 

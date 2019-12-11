@@ -113,7 +113,9 @@ export default class Game {
   }
 
   playerDisconnected(player) {
-    this.playerDied(player);
+    if (!this.ended) {
+      this.playerDied(player);
+    }
   }
 
   isOverlapping(player1) {
@@ -138,6 +140,7 @@ export default class Game {
   }
 
   end() {
+    this.ended = true;
     console.log('game ended');
     clearInterval(this.interval);
   }
