@@ -6,7 +6,9 @@ export default class Game {
     this.players = players;
     this.bullets = [];
     this.deadPlayers = [];
-    this.walls = config.walls;
+    this.walls = [];
+    this.addConstraintWalls();
+    this.addBarrierWalls();
   }
 
   start() {
@@ -35,6 +37,50 @@ export default class Game {
 
   addBullet(bullet) {
     this.bullets.push(bullet);
+  }
+
+  addConstraintWalls() {
+    for (let i = 0; i < config.fieldWidth; i += 100) {
+      this.walls.push({
+        ...config.constraintWalls,
+        x: config.constraintWalls.x + i,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: config.constraintWalls.x + i,
+        y: config.fieldHeight - 10,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: 10,
+        y: 50 + i,
+        angle: Math.PI / 2,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: config.fieldWidth - 10,
+        y: 50 + i,
+        angle: Math.PI / 2,
+      });
+    }
+  }
+
+  addBarrierWalls() {
+    for (let i = 1; i <= 3; i += 1) {
+      for (let j = 1; j <= 3; j += 1) {
+        this.walls.push({
+          ...config.barrierWalls,
+          x: config.fieldWidth * 1/4 * i,
+          y: config.fieldHeight * 1/4 * j,
+        });
+        this.walls.push({
+          ...config.barrierWalls,
+          x: config.fieldWidth * 1/4 * i,
+          y: config.fieldHeight * 1/4 * j,
+          angle: -config.barrierWalls.angle,
+        });
+      }
+    }
   }
 
   bulletHitsPlayer() {

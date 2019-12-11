@@ -9,52 +9,34 @@ const config = {
   bulletRadius: 10,
 
   fieldWidth: 1280, // 16:9
-  fieldHeigth: 720,
+  fieldHeight: 625,
   shootingRate: 100,
 
   playerstartingPositions: [
     { x: 100, y: 100 },
-    { x: 500, y: 100 },
+    { x: 1180, y: 100 },
     { x: 100, y: 200 },
-    { x: 500, y: 200 },
+    { x: 1180, y: 200 },
   ],
 
-  walls: [
-    {
-      x: 500,
-      y: 10,
-      height: 20,
-      width: 100,
-      angle: 0,
-      color: 'white',
-    },
-    {
-      x: 500,
-      y: 300,
-      height: 20,
-      width: 100,
-      angle: Math.PI / 8,
-      color: 'white',
-    },
-
-    {
-      x: 700,
-      y: 400,
-      height: 100,
-      width: 20,
-      angle: 0,
-      color: 'white',
-    },
-
-    {
-      x: 200,
-      y: 200,
-      height: 20,
-      width: 100,
-      angle: Math.PI / 2,
-      color: 'white',
-    },
-  ],
+  constraintWalls: {
+    x: 50,
+    y: 10,
+    height: 20,
+    width: 100,
+    angle: 0,
+    fillColor: 'white',
+    strokeColor: 'black',
+  },
+  barrierWalls: {
+    x: 50,
+    y: 10,
+    height: 20,
+    width: 60,
+    angle: Math.PI / 4,
+    fillColor: 'white',
+    strokeColor: 'white',
+  },
 };
 
 export default config;

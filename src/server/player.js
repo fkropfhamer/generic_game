@@ -127,8 +127,8 @@ export default class Player {
       this.x = 0 + this.radius;
     }
 
-    if (this.y > config.fieldHeigth - this.radius) {
-      this.y = config.fieldHeigth - this.radius;
+    if (this.y > config.fieldHeight - this.radius) {
+      this.y = config.fieldHeight - this.radius;
     }
 
     if (this.y < 0 + this.radius) {
