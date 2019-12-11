@@ -157,9 +157,9 @@ class Game {
         right: this.pressedRight,
       });
     });
-    this.socket.on('waiting', () => {
+    this.socket.on('waiting', (data) => {
       console.log('you must wait!');
-      this.view.showWaitingScreen();
+      this.view.showWaitingScreen(data.numberOfPlayers);
       this.waiting = true;
     });
     this.socket.on('opponent disconnected', () => {

@@ -132,7 +132,7 @@ class View {
     }
   }
 
-  showWaitingScreen() {
+  showWaitingScreen(numberOfPlayers) {
     const waitingScreen = document.createElement('div');
     waitingScreen.style.backgroundColor = 'white';
     waitingScreen.style.position = 'absolute';
@@ -142,7 +142,8 @@ class View {
     waitingScreen.style.height = `${this.height / 2}px`;
 
     const heading = document.createElement('h1');
-    heading.innerHTML = 'You have to wait for another player!';
+    const playerString = numberOfPlayers === 1 ? 'player' : 'players';
+    heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
 
     waitingScreen.appendChild(heading);
 

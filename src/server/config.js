@@ -7,6 +7,7 @@ const config = {
   gameDuration: 60,
   playerLives: 3,
   bulletRadius: 10,
+  teamSize: 2,
 
   fieldWidth: 1280, // 16:9
   fieldHeigth: 720,
