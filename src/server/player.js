@@ -118,21 +118,5 @@ export default class Player {
     if (this.pressedRight) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
     }
-
-    if (this.x > config.fieldWidth - this.radius) {
-      this.x = config.fieldWidth - this.radius;
-    }
-
-    if (this.x < 0 + this.radius) {
-      this.x = 0 + this.radius;
-    }
-
-    if (this.y > config.fieldHeight - this.radius) {
-      this.y = config.fieldHeight - this.radius;
-    }
-
-    if (this.y < 0 + this.radius) {
-      this.y = 0 + this.radius;
-    }
   }
 }
