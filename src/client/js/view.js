@@ -233,7 +233,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You win! :D';
 
+    const relodadButton = View.reloadButton();
+
     winScreen.appendChild(heading);
+    winScreen.appendChild(relodadButton);
 
     document.getElementById('root').appendChild(winScreen);
 
@@ -252,7 +255,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You lose :(';
 
+    const relodadButton = View.reloadButton();
+
     loseScreen.appendChild(heading);
+    loseScreen.appendChild(relodadButton);
 
     document.getElementById('root').appendChild(loseScreen);
 
@@ -464,6 +470,14 @@ class View {
     if (this.startScreen) {
       this.startScreen.style.display = 'none';
     }
+  }
+
+  static reloadButton() {
+    const button = document.createElement('button');
+    button.innerHTML = 'play again!';
+    button.onclick = () => window.location.reload();
+
+    return button;
   }
 }
 
