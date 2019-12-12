@@ -1,45 +1,68 @@
+/* eslint-disable vars-on-top */
+import config from '../../server/config';
+
 class View {
   constructor() {
     this.scale = 1;
-    this.height = window.innerHeight;
-    this.width = window.innerWidth;
+    this.windowHeight = window.innerHeight;
+    this.windowWidth = window.innerWidth;
     this.color = '#232529';
 
+    this.canvas = document.createElement('canvas');
+    document.getElementById('root').appendChild(this.canvas);
     this.setupCanvas();
+
+    window.addEventListener('resize', this.resize.bind(this));
 
     this.ctx = this.canvas.getContext('2d');
   }
 
   setupCanvas() {
-    this.canvas = document.createElement('canvas');
+    if (this.windowWidth !== config.fieldWidth) {
+      this.scale = this.windowWidth / config.fieldWidth;
+      if (config.fieldHeight * this.scale > this.windowHeight) {
+        this.scale = this.windowHeight / config.fieldHeight;
+      }
+    }
+    this.width = config.fieldWidth * this.scale;
+    this.height = config.fieldHeight * this.scale;
 
     this.canvas.width = this.width;
     this.canvas.height = this.height;
 
     this.canvas.style.backgroundColor = this.color;
-    document.getElementById('root').appendChild(this.canvas);
+  }
+
+  resize() {
+    this.windowHeight = window.innerHeight;
+    this.windowWidth = window.innerWidth;
+
+    this.setupCanvas();
   }
 
   drawCircle(x, y, radius, color) {
     this.ctx.beginPath();
-    this.ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+    this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
 
-  drawRectangle(x, y, height, width, angle, color) {
+  drawRectangle(x, y, height, width, angle, fillColor, strokeColor) {
     const wSin = (Math.sin(angle) * width) / 2;
     const wCos = (Math.cos(angle) * width) / 2;
     const hSin = (Math.sin(angle) * height) / 2;
     const hCos = (Math.cos(angle) * height) / 2;
     this.ctx.beginPath();
-    this.ctx.moveTo(x - wCos + hSin, y - hCos - wSin);
-    this.ctx.lineTo(x + wCos + hSin, y - hCos + wSin);
-    this.ctx.lineTo(x + wCos - hSin, y + hCos + wSin);
-    this.ctx.lineTo(x - wCos - hSin, y + hCos - wSin);
-    this.ctx.lineTo(x - wCos + hSin, y - hCos - wSin);
-    this.ctx.fillStyle = color;
+    this.ctx.moveTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
+    this.ctx.lineTo((x + wCos + hSin) * this.scale, (y - hCos + wSin) * this.scale);
+    this.ctx.lineTo((x + wCos - hSin) * this.scale, (y + hCos + wSin) * this.scale);
+    this.ctx.lineTo((x - wCos - hSin) * this.scale, (y + hCos - wSin) * this.scale);
+    this.ctx.lineTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
+    this.ctx.fillStyle = fillColor;
+    this.ctx.strokeStyle = strokeColor;
+    this.ctx.lineWidth = 3;
     this.ctx.fill();
+    this.ctx.stroke();
   }
 
   drawImage(x, y, img) {
@@ -53,15 +76,27 @@ class View {
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
-    const imgWidth = image.width * scale;
-    const imgHeight = image.height * scale;
+    const imgWidth = image.width * scale * this.scale;
+    const imgHeight = image.height * scale * this.scale;
 
     this.ctx.save();
-    this.ctx.translate(x, y);
+    this.ctx.translate(x * this.scale, y * this.scale);
     this.ctx.rotate(angle);
 
     this.ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
     this.ctx.restore();
+  }
+
+  drawPlayerIndicator(x, y) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.lineTo((x - 10) * this.scale, (y - 35) * this.scale);
+    this.ctx.lineTo((x + 10) * this.scale, (y - 35) * this.scale);
+    this.ctx.lineTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.closePath();
+
+    this.ctx.fillStyle = 'yellow';
+    this.ctx.fill();
   }
 
   showTimer(timer) {
@@ -85,7 +120,34 @@ class View {
     }
   }
 
-  showWaitingScreen() {
+  showPlayerColorInfo(playerColor) {
+    const playerColorInfo = document.createElement('div');
+    playerColorInfo.style.backgroundColor = this.color;
+    playerColorInfo.style.position = 'absolute';
+    playerColorInfo.style.left = '75%';
+    playerColorInfo.style.top = '25%';
+    playerColorInfo.style.width = '5px';
+    playerColorInfo.style.height = '5px';
+
+    const colorInfoText = document.createElement('h1');
+    colorInfoText.style.fontSize = '30px';
+    colorInfoText.style.color = '#FFFFFF';
+    colorInfoText.innerHTML = `Your colour is ${playerColor}`;
+
+    playerColorInfo.appendChild(colorInfoText);
+
+    document.getElementById('root').appendChild(playerColorInfo);
+
+    this.playerColorInfo = playerColorInfo;
+  }
+
+  hidePlayerColorInfo() {
+    if (this.playerColorInfo) {
+      this.playerColorInfo.style.display = 'none';
+    }
+  }
+
+  showWaitingScreen(numberOfPlayers) {
     const waitingScreen = document.createElement('div');
     waitingScreen.style.backgroundColor = 'white';
     waitingScreen.style.position = 'absolute';
@@ -95,7 +157,8 @@ class View {
     waitingScreen.style.height = `${this.height / 2}px`;
 
     const heading = document.createElement('h1');
-    heading.innerHTML = 'You have to wait for another player!';
+    const playerString = numberOfPlayers === 1 ? 'player' : 'players';
+    heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
 
     waitingScreen.appendChild(heading);
 
@@ -166,7 +229,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'Time is over';
 
+    const reloadButton = View.reloadButton();
+
     timeOverScreen.appendChild(heading);
+    timeOverScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(timeOverScreen);
 
@@ -185,7 +251,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You win! :D';
 
+    const reloadButton = View.reloadButton();
+
     winScreen.appendChild(heading);
+    winScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(winScreen);
 
@@ -204,7 +273,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You lose :(';
 
+    const reloadButton = View.reloadButton();
+
     loseScreen.appendChild(heading);
+    loseScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(loseScreen);
 
@@ -416,6 +488,14 @@ class View {
     if (this.startScreen) {
       this.startScreen.style.display = 'none';
     }
+  }
+
+  static reloadButton() {
+    const button = document.createElement('button');
+    button.innerHTML = 'play again!';
+    button.onclick = () => window.location.reload();
+
+    return button;
   }
 }
 

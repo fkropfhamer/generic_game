@@ -16,7 +16,7 @@
 3. open browser on `localhost:8080`
 4. play!
 
-## comands:
+## commands:
 
 ### installation:
 

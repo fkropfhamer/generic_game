@@ -10,6 +10,7 @@ export default class Player {
     this.speed = config.playerSpeed;
     this.angle = 0;
     this.radius = config.playerRadius;
+    this.shootingCount = 0;
   }
 
   setupSocket() {
@@ -20,20 +21,18 @@ export default class Player {
       this.pressedUp = data.up;
     });
     this.socket.on('shoot', (data) => {
-      this.angle = data.angle;
-      this.createBullet();
+      if (this.shootingCount === 0) {
+        this.angle = data.angle;
+        this.createBullet();
+        this.shootingCount = config.shootingRate;
+      }
     });
     this.socket.on('update angle', (data) => {
       this.angle = data.angle;
     });
     this.socket.on('disconnect', () => {
-      if (this.waiting && this.mode === 'normal') {
-        this.gameHandler.waitingPlayer = false;
-      } else if (this.waiting && this.mode === 'teams') {
-        this.gameHandler.waitingPlayers = this.gameHandler.waitingPlayers.filter(
-          (player) => !Object.is(player, this)
-        );
-        console.log(this.gameHandler.waitingPlayers.length);
+      if (this.waiting) {
+        this.gameHandler.waitingPlayerDisconnected(this);
       } else if (typeof this.game !== 'undefined') {
         this.game.playerDisconnected(this);
       }
@@ -65,9 +64,9 @@ export default class Player {
     });
   }
 
-  notifyWaiting() {
+  notifyWaiting(numberOfPlayers) {
     this.waiting = true;
-    this.socket.emit('waiting');
+    this.socket.emit('waiting', { numberOfPlayers });
   }
 
   notifyUpdate(players, bullets, timer) {
@@ -100,6 +99,8 @@ export default class Player {
   }
 
   update() {
+    if (this.shootingCount > 0) this.shootingCount -= 1;
+
     if (this.pressedUp) {
       this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
     }
@@ -111,22 +112,6 @@ export default class Player {
     }
     if (this.pressedRight) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
-    }
-
-    if (this.x > config.fieldWidth - this.radius) {
-      this.x = config.fieldWidth - this.radius;
-    }
-
-    if (this.x < 0 + this.radius) {
-      this.x = 0 + this.radius;
-    }
-
-    if (this.y > config.fieldHeigth - this.radius) {
-      this.y = config.fieldHeigth - this.radius;
-    }
-
-    if (this.y < 0 + this.radius) {
-      this.y = 0 + this.radius;
     }
   }
 }
