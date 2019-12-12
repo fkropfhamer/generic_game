@@ -60,4 +60,25 @@ describe('gamehandler', () => {
     onConnectionMock.connection(socket);
     expect(Player).toHaveBeenCalledTimes(1);
   });
+
+  test('game handler waiting player disconnected mode = normal', () => {
+    const player = { mode: 'normal' };
+
+    gamehandler.waitingPlayer = player;
+    gamehandler.waitingPlayerDisconnected(player);
+
+    expect(gamehandler.waitingPlayer).toBe(false);
+  });
+
+  test('game handler waiting player disconnected mode = teams', () => {
+    const player1 = { mode: 'teams', notifyWaiting: jest.fn() };
+    const player2 = { mode: 'teams', notifyWaiting: jest.fn() };
+
+    gamehandler.waitingPlayers = [player1, player2];
+    gamehandler.waitingPlayerDisconnected(player1);
+
+    expect(gamehandler.waitingPlayers).toEqual([player2]);
+    expect(player2.notifyWaiting).toHaveBeenCalledTimes(1);
+    expect(player2.notifyWaiting.mock.calls[0][0]).toBe(3);
+  });
 });
