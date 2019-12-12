@@ -4,9 +4,15 @@ describe('player test', () => {
   let player;
   let socket;
   let gameHandler;
+  const mocks = {};
 
   beforeEach(() => {
-    socket = { on: jest.fn(), emit: jest.fn() };
+    socket = {
+      on: jest.fn((event, cb) => {
+        mocks[event] = cb;
+      }),
+      emit: jest.fn(),
+    };
     gameHandler = {};
     player = new Player(socket, gameHandler);
   });
@@ -22,6 +28,20 @@ describe('player test', () => {
     expect(socket.on.mock.calls[1][0]).toBe('shoot');
     expect(socket.on.mock.calls[2][0]).toBe('update angle');
     expect(socket.on.mock.calls[3][0]).toBe('disconnect');
+  });
+
+  test('socket event keys', () => {
+    mocks.keys({
+      right: true,
+      left: true,
+      down: true,
+      up: true,
+    });
+
+    expect(player.pressedRight).toBe(true);
+    expect(player.pressedLeft).toBe(true);
+    expect(player.pressedDown).toBe(true);
+    expect(player.pressedUp).toBe(true);
   });
 
   test('player create bullet', () => {
