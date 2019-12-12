@@ -176,6 +176,20 @@ describe('player test', () => {
     });
   });
 
+  test('player notify win', () => {
+    player.notifyWin();
+
+    expect(socket.emit.mock.calls.length).toBe(1);
+    expect(socket.emit.mock.calls[0][0]).toBe('win');
+  });
+
+  test('player notify lose', () => {
+    player.notifyLose();
+
+    expect(socket.emit.mock.calls.length).toBe(1);
+    expect(socket.emit.mock.calls[0][0]).toBe('lose');
+  });
+
   test('player notify opponent disconnected', () => {
     player.notifyOpponentDisconnected();
     expect(socket.emit.mock.calls.length).toBe(1);
@@ -257,5 +271,13 @@ describe('player test', () => {
 
     expect(player.x).toBe(99.5);
     expect(player.y).toBe(200.5);
+  });
+
+  test('player update decrements shooting count if gt 0', () => {
+    player.shootingCount = 100;
+
+    player.update();
+
+    expect(player.shootingCount).toBe(99);
   });
 });
