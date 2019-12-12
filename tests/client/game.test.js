@@ -50,5 +50,9 @@ describe('game', () => {
     expect(game.pressedDown).toBe(false);
     expect(game.pressedLeft).toBe(false);
     expect(game.pressedRight).toBe(false);
+
+    expect(game.socket.emit).toHaveBeenCalledTimes(1);
+    expect(game.socket.emit.mock.calls[0][0]).toBe('ready');
+    expect(game.socket.emit.mock.calls[0][1]).toEqual({ face: 'face1', mode: 'normal' });
   });
 });

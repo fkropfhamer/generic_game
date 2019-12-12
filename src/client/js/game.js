@@ -7,7 +7,6 @@ class Game {
 
     this.view.showStartScreen((face, mode) => {
       this.view.hideStartScreen();
-      console.log(face, mode);
       this.start();
       this.socket.emit('ready', { face, mode });
     });
@@ -125,6 +124,7 @@ class Game {
     this.socket = io();
     this.socket.on('connect', () => {
       console.log('connected');
+      this.connected = true;
     });
     this.socket.on('start', (data) => {
       console.log('game starting!');
