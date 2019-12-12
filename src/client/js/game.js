@@ -128,9 +128,9 @@ class Game {
     });
     this.socket.on('start', (data) => {
       console.log('game starting!');
-      if (this.waiting) {
+      if (this.isWaiting) {
         this.view.hideWaitingScreen();
-        this.waiting = false;
+        this.isWaiting = false;
       }
 
       this.x = data.x;
@@ -165,7 +165,7 @@ class Game {
     this.socket.on('waiting', (data) => {
       console.log('you must wait!');
       this.view.showWaitingScreen(data.numberOfPlayers);
-      this.waiting = true;
+      this.isWaiting = true;
     });
     this.socket.on('opponent disconnected', () => {
       console.log('opponent disconnected');

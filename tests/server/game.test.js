@@ -62,8 +62,8 @@ describe('game test', () => {
     expect(game.players[0].game).toBe(game);
     expect(game.players[1].game).toBe(game);
 
-    expect(game.players[0].waiting).toBe(false);
-    expect(game.players[1].waiting).toBe(false);
+    expect(game.players[0].isWaiting).toBe(false);
+    expect(game.players[1].isWaiting).toBe(false);
   });
 
   test('game add bullet', () => {

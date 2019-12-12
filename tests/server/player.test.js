@@ -1,19 +1,20 @@
 import Player from '../../src/server/player';
+import config from '../../src/server/config';
 
 describe('player test', () => {
   let player;
   let socket;
   let gameHandler;
-  const mocks = {};
+  const socketEventMocks = {};
 
   beforeEach(() => {
     socket = {
       on: jest.fn((event, cb) => {
-        mocks[event] = cb;
+        socketEventMocks[event] = cb;
       }),
       emit: jest.fn(),
     };
-    gameHandler = {};
+    gameHandler = { waitingPlayerDisconnected: jest.fn(), playerIsReady: jest.fn() };
     player = new Player(socket, gameHandler);
   });
 
@@ -31,7 +32,7 @@ describe('player test', () => {
   });
 
   test('socket event keys', () => {
-    mocks.keys({
+    socketEventMocks.keys({
       right: true,
       left: true,
       down: true,
@@ -42,6 +43,64 @@ describe('player test', () => {
     expect(player.pressedLeft).toBe(true);
     expect(player.pressedDown).toBe(true);
     expect(player.pressedUp).toBe(true);
+  });
+
+  test('socket event shoot', () => {
+    player.createBullet = jest.fn();
+    socketEventMocks.shoot({ angle: Math.PI });
+
+    expect(player.angle).toBe(Math.PI);
+    expect(player.createBullet.mock.calls.length).toBe(1);
+    expect(player.shootingCount).toBe(config.shootingRate);
+  });
+
+  test('socket event shoot limited by shooting count', () => {
+    player.createBullet = jest.fn();
+    player.shootingCount = 10;
+    socketEventMocks.shoot({ angle: Math.PI });
+
+    expect(player.angle).toBe(0);
+    expect(player.createBullet.mock.calls.length).toBe(0);
+    expect(player.shootingCount).toBe(10);
+  });
+
+  test('socket event update angle', () => {
+    socketEventMocks['update angle']({ angle: 3000 });
+
+    expect(player.angle).toBe(3000);
+  });
+
+  test('socket event disconnect player is waiting', () => {
+    player.isWaiting = true;
+    socketEventMocks.disconnect();
+
+    expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(1);
+    expect(gameHandler.waitingPlayerDisconnected.mock.calls[0][0]).toBe(player);
+  });
+
+  test('socket event disconnect game has started', () => {
+    player.game = { playerDisconnected: jest.fn() };
+    socketEventMocks.disconnect();
+
+    expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(0);
+    expect(player.game.playerDisconnected.mock.calls.length).toBe(1);
+    expect(player.game.playerDisconnected.mock.calls[0][0]).toBe(player);
+  });
+
+  test('socket event disconnect player not waiting and no game', () => {
+    socketEventMocks.disconnect();
+
+    expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(0);
+  });
+
+  test('socket event ready', () => {
+    socketEventMocks.ready({ face: 'face1', mode: 'normal' });
+
+    expect(player.face).toBe('face1');
+    expect(player.mode).toBe('normal');
+    expect(gameHandler.playerIsReady.mock.calls.length).toBe(1);
+    expect(gameHandler.playerIsReady.mock.calls[0][0]).toBe(player);
+    expect(gameHandler.playerIsReady.mock.calls[0][1]).toBe('normal');
   });
 
   test('player create bullet', () => {
@@ -84,7 +143,7 @@ describe('player test', () => {
   test('player notify waiting', () => {
     player.notifyWaiting();
 
-    expect(player.waiting).toBe(true);
+    expect(player.isWaiting).toBe(true);
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('waiting');
   });

@@ -31,7 +31,7 @@ export default class Player {
       this.angle = data.angle;
     });
     this.socket.on('disconnect', () => {
-      if (this.waiting) {
+      if (this.isWaiting) {
         this.gameHandler.waitingPlayerDisconnected(this);
       } else if (typeof this.game !== 'undefined') {
         this.game.playerDisconnected(this);
@@ -65,7 +65,7 @@ export default class Player {
   }
 
   notifyWaiting(numberOfPlayers) {
-    this.waiting = true;
+    this.isWaiting = true;
     this.socket.emit('waiting', { numberOfPlayers });
   }
 
