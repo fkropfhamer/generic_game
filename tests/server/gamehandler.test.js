@@ -160,5 +160,6 @@ describe('gamehandler', () => {
     };
 
     expect(exception).toThrow(Error);
+    expect(exception).toThrow('mode test unknown');
   });
 });
