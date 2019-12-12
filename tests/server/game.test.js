@@ -1,4 +1,5 @@
 import Game from '../../src/server/game';
+import config from '../../src/server/config';
 
 describe('game test', () => {
   let player1;
@@ -42,12 +43,12 @@ describe('game test', () => {
     expect(game.timer).toBe(60);
     expect(game.count).toBe(0);
 
-    expect(game.players[0].x).toBe(100);
-    expect(game.players[0].y).toBe(100);
+    expect(game.players[0].x).toBe(config.playerstartingPositions[0].x);
+    expect(game.players[0].y).toBe(config.playerstartingPositions[0].y);
     expect(game.players[0].color).toBe('blue');
 
-    expect(game.players[1].x).toBe(500);
-    expect(game.players[1].y).toBe(100);
+    expect(game.players[1].x).toBe(config.playerstartingPositions[1].x);
+    expect(game.players[1].y).toBe(config.playerstartingPositions[1].y);
     expect(game.players[1].color).toBe('red');
 
     expect(game.players[0].notifyStart.mock.calls.length).toBe(1);
