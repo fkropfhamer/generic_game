@@ -103,4 +103,13 @@ describe('Util test', () => {
 
     expect(Util.collisionRectCircle(rect, circle2)).toBe(false);
   });
+
+  test('collision circle circle', () => {
+    const circle1 = { x: 10, y: 10, radius: 2 };
+    const circle2 = { x: 20, y: 20, radius: 5 };
+
+    expect(Util.collisionCircleCircle(circle1, circle1)).toBe(true);
+    expect(Util.collisionCircleCircle(circle2, circle2)).toBe(true);
+    expect(Util.collisionCircleCircle(circle1, circle2)).toBe(false);
+  });
 });
