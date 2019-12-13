@@ -25,14 +25,14 @@ describe('player test', () => {
     expect(player.radius).toBe(27.5);
     expect(player.angle).toBe(0);
     expect(socket.on.mock.calls.length).toBe(5);
-    expect(socket.on.mock.calls[0][0]).toBe('keys');
+    expect(socket.on.mock.calls[0][0]).toBe('keyspressed');
     expect(socket.on.mock.calls[1][0]).toBe('shoot');
     expect(socket.on.mock.calls[2][0]).toBe('update angle');
     expect(socket.on.mock.calls[3][0]).toBe('disconnect');
   });
 
-  test('socket event keys', () => {
-    socketEventMocks.keys({
+  test('socket event onkeyspressed', () => {
+    player.onKeysPressed({
       right: true,
       left: true,
       down: true,
@@ -145,7 +145,7 @@ describe('player test', () => {
 
     expect(player.isWaiting).toBe(true);
     expect(socket.emit.mock.calls.length).toBe(1);
-    expect(socket.emit.mock.calls[0][0]).toBe('waiting');
+    expect(socket.emit.mock.calls[0][0]).toBe('wait');
   });
 
   test('player notify update', () => {
