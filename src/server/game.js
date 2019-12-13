@@ -23,7 +23,7 @@ export default class Game {
     this.players.forEach((player) => {
       player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
       player.game = this;
-      player.waiting = false;
+      player.isWaiting = false;
     });
 
     this.interval = setInterval(this.loop.bind(this), 10);

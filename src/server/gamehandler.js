@@ -63,6 +63,8 @@ class GameHandler {
         this.waitingPlayers.push(player);
         this.notifyWaitingPlayers();
       }
+    } else {
+      throw Error(`mode ${mode} unknown`);
     }
   }
 }
