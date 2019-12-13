@@ -76,6 +76,7 @@ export default class Player {
       y: this.y,
       angle: this.angle,
       lives: this.lives,
+      hitAngle: this.hitAngle,
       players: mappedPlayers,
       bullets,
       timer,
