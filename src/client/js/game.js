@@ -8,12 +8,12 @@ class Game {
     this.view.showStartScreen((face, mode) => {
       this.view.hideStartScreen();
       console.log(face, mode);
-      this.start();
+      this.setup();
       this.socket.emit('ready', { face, mode });
     });
   }
 
-  start() {
+  setup() {
     this.setupSocket();
     this.pressedUp = false;
     this.pressedDown = false;
@@ -62,12 +62,14 @@ class Game {
     window.addEventListener('keydown', this.keyPressed.bind(this));
     window.addEventListener('keyup', this.keyUp.bind(this));
     window.addEventListener('click', this.shoot.bind(this));
-    window.addEventListener('mousemove', (e) => {
-      const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
-      this.angle = angle;
+    window.addEventListener('mousemove', this.mouseMove.bind(this));
+  }
 
-      this.socket.emit('update angle', { angle });
-    });
+  mouseMove(e) {
+    const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
+    this.angle = angle;
+
+    this.socket.emit('update angle', { angle });
   }
 
   displayPlayerColorInfo() {
@@ -128,69 +130,85 @@ class Game {
     }
   }
 
+  start(data) {
+    console.log('game starting!');
+    if (this.waiting) {
+      this.view.hideWaitingScreen();
+      this.waiting = false;
+    }
+
+    this.x = data.x;
+    this.y = data.y;
+    this.angle = data.angle;
+    this.color = data.color;
+    this.lives = data.lives;
+    this.face = data.face;
+    this.otherPlayers = data.players;
+    this.timer = data.timer;
+    this.bullets = [];
+    this.walls = data.walls;
+    this.draw();
+    this.setupKeyPressedEvents();
+  }
+
+  connected() {
+    console.log('connected');
+    this.connected = true;
+  }
+
+  update(data) {
+    this.x = data.x;
+    this.y = data.y;
+    this.angle = data.angle;
+    this.otherPlayers = data.players;
+    this.bullets = data.bullets;
+    this.timer = data.timer;
+    this.lives = data.lives;
+    this.draw();
+    this.socket.emit('keys', {
+      up: this.pressedUp,
+      down: this.pressedDown,
+      left: this.pressedLeft,
+      right: this.pressedRight,
+    });
+  }
+
+  waiting(data) {
+    console.log('you have to wait!');
+    this.view.showWaitingScreen(data.numberOfPlayers);
+    this.waiting = true;
+  }
+
+  opponentDisconnected() {
+    console.log('opponent disconnected');
+    this.view.showOpponentDisconnectedScreen();
+  }
+
+  timeOver() {
+    this.view.showTimeOverScreen();
+  }
+
+  win() {
+    console.log('win');
+    this.view.showWinScreen();
+  }
+
+  lose() {
+    console.log('lose');
+    this.view.showLoseScreen();
+  }
+
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
-    this.socket.on('connect', () => {
-      console.log('connected');
-    });
-    this.socket.on('start', (data) => {
-      console.log('game starting!');
-      if (this.waiting) {
-        this.view.hideWaitingScreen();
-        this.waiting = false;
-      }
-
-      this.x = data.x;
-      this.y = data.y;
-      this.angle = data.angle;
-      this.color = data.color;
-      this.lives = data.lives;
-      this.face = data.face;
-      this.otherPlayers = data.players;
-      this.timer = data.timer;
-      this.bullets = [];
-      this.walls = data.walls;
-      this.draw();
-      this.setupKeyPressedEvents();
-    });
-    this.socket.on('update', (data) => {
-      this.x = data.x;
-      this.y = data.y;
-      this.angle = data.angle;
-      this.otherPlayers = data.players;
-      this.bullets = data.bullets;
-      this.timer = data.timer;
-      this.lives = data.lives;
-      this.hitAngle = data.hitAngle;
-      this.draw();
-      this.socket.emit('keys', {
-        up: this.pressedUp,
-        down: this.pressedDown,
-        left: this.pressedLeft,
-        right: this.pressedRight,
-      });
-    });
-    this.socket.on('waiting', (data) => {
-      console.log('you must wait!');
-      this.view.showWaitingScreen(data.numberOfPlayers);
-      this.waiting = true;
-    });
-    this.socket.on('opponent disconnected', () => {
-      console.log('opponent disconnected');
-      this.view.showOpponentDisconnectedScreen();
-    });
-    this.socket.on('time over', () => {
-      this.view.showTimeOverScreen();
-    });
-    this.socket.on('win', () => {
-      console.log('win');
-      this.view.showWinScreen();
-    });
-    this.socket.on('lose', () => {
-      console.log('lose');
-      this.view.showLoseScreen();
-    });
+    this.socket.on('connect', this.connected.bind(this));
+    this.socket.on('start', this.start.bind(this));
+    this.socket.on('update', this.update.bind(this));
+    this.socket.on('waiting', this.waiting.bind(this));
+    this.socket.on('opponent disconnected', this.opponentDisconnected.bind(this));
+    this.socket.on('time over', this.timeOver.bind(this));
+    this.socket.on('win', this.win.bind(this));
+    this.socket.on('lose', this.lose.bind(this));
   }
 }
 
