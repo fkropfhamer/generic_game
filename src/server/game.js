@@ -37,56 +37,50 @@ export default class Game {
     this.bullets.push(bullet);
   }
 
-  bulletHitsPlayer() {
+  checkBulletHitsPlayer(player) {
     this.bullets.forEach((bullet) => {
-      this.players.forEach((player) => {
-        if (bullet.color !== player.color) {
-          const playerDistance = Math.sqrt((player.x - bullet.x) ** 2 + (player.y - bullet.y) ** 2);
-          const radiusDistance = config.bulletRadius + config.playerRadius;
-          if (playerDistance <= radiusDistance) {
-            const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
-            const v2 = { x: 10, y: 0 };
+      if (bullet.color !== player.color) {
+        const playerDistance = Math.sqrt((player.x - bullet.x) ** 2 + (player.y - bullet.y) ** 2);
+        const radiusDistance = config.bulletRadius + config.playerRadius;
+        if (playerDistance <= radiusDistance) {
+          const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
+          const v2 = { x: 10, y: 0 };
 
-            const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x);
-            const hitAngle = -angle - player.angle;
+          const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x);
+          const hitAngle = -angle - player.angle;
 
-            player.hitAngle = hitAngle;
+          player.hitAngle = hitAngle;
 
-            this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
-            player.lives -= 1;
-            if (player.lives <= 0) {
-              this.playerDied(player);
-            }
+          this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
+          player.lives -= 1;
+          if (player.lives <= 0) {
+            this.playerDied(player);
           }
         }
-      });
+      }
     });
   }
 
-  checkWallCollisionPlayer() {
-    this.players.forEach((player) => {
-      this.walls.forEach((wall) => {
-        const playerCollides = Util.collisionRectCircle(wall, player);
-        if (playerCollides) {
-          const angle = playerCollides.angle + wall.angle;
-          const dis = config.playerRadius - playerCollides.dis;
+  checkWallCollisionPlayer(player) {
+    this.walls.forEach((wall) => {
+      const playerCollides = Util.collisionRectCircle(wall, player);
+      if (playerCollides) {
+        const angle = playerCollides.angle + wall.angle;
+        const dis = config.playerRadius - playerCollides.dis;
 
-          player.x += dis * Math.cos(angle);
-          player.y += dis * Math.sin(angle);
-        }
-      });
+        player.x += dis * Math.cos(angle);
+        player.y += dis * Math.sin(angle);
+      }
     });
   }
 
-  checkWallCollisionBullet() {
-    this.bullets.forEach((bullet) => {
-      this.walls.forEach((wall) => {
-        const bulletCollides = Util.collisionRectCircle(wall, bullet);
-        if (bulletCollides) {
-          this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
-          wall.fillColor = bullet.color;
-        }
-      });
+  checkWallCollisionBullet(bullet) {
+    this.walls.forEach((wall) => {
+      const bulletCollides = Util.collisionRectCircle(wall, bullet);
+      if (bulletCollides) {
+        this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
+        wall.fillColor = bullet.color;
+      }
     });
   }
 
@@ -169,15 +163,17 @@ export default class Game {
   }
 
   update() {
+    this.bullets.forEach((bullet) => {
+      bullet.update();
+      this.checkWallCollisionBullet(bullet);
+    });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
       player.update();
+      this.checkWallCollisionPlayer(player);
+
+      this.checkBulletHitsPlayer(player);
     });
-
-    this.checkWallCollisionPlayer();
-    this.checkWallCollisionBullet();
-
-    this.bullets.forEach((bullet) => bullet.update());
 
     const bullets = this.bullets.map((b) => {
       return {
@@ -191,7 +187,5 @@ export default class Game {
     this.players.forEach((player) => {
       player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer, this.walls);
     });
-
-    this.bulletHitsPlayer();
   }
 }
