@@ -13,6 +13,33 @@ describe('Util test', () => {
     expect(Util.halfIfAnotherKeyIsPressed(false, false)).toBe(1);
   });
 
+  test('mapPlayers empty', () => {
+    expect(Util.mapPlayers([])).toEqual([]);
+  });
+
+  test('mapPlayers', () => {
+    const players = [
+      {
+        x: 100,
+        y: 200,
+        angle: Math.PI,
+        color: 'red',
+        lives: 4,
+        face: 'face1',
+      },
+      {
+        x: 300,
+        y: 500,
+        angle: 2 * Math.PI,
+        color: 'blue',
+        lives: 1,
+        face: 'face3',
+      },
+    ];
+
+    expect(Util.mapPlayers(players)).toEqual(players);
+  });
+
   test('rotate point', () => {
     const point1 = { x: 3, y: 4 };
     const point2 = { x: 1, y: 5 };
@@ -75,5 +102,14 @@ describe('Util test', () => {
     const circle2 = { x: config.playerRadius + 14, y: config.playerRadius + 14 };
 
     expect(Util.collisionRectCircle(rect, circle2)).toBe(false);
+  });
+
+  test('collision circle circle', () => {
+    const circle1 = { x: 10, y: 10, radius: 2 };
+    const circle2 = { x: 20, y: 20, radius: 5 };
+
+    expect(Util.collisionCircleCircle(circle1, circle1)).toBe(true);
+    expect(Util.collisionCircleCircle(circle2, circle2)).toBe(true);
+    expect(Util.collisionCircleCircle(circle1, circle2)).toBe(false);
   });
 });

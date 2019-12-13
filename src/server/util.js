@@ -15,6 +15,7 @@ export default class Util {
         color: player.color,
         lives: player.lives,
         face: player.face,
+        hitAngle: player.hitAngle,
       };
     });
   }
@@ -125,6 +126,14 @@ export default class Util {
       return { angle: Math.PI, dis: distanceDA };
     }
 
+    return false;
+  }
+
+  static collisionCircleCircle(circle1, circle2) {
+    const distance = this.pointDistance(circle1, circle2);
+    if (distance <= circle1.radius + circle2.radius) {
+      return true;
+    }
     return false;
   }
 }

@@ -23,7 +23,7 @@ export default class Game {
     this.players.forEach((player) => {
       player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
       player.game = this;
-      player.waiting = false;
+      player.isWaiting = false;
     });
 
     this.interval = setInterval(this.loop.bind(this), 10);
@@ -44,6 +44,14 @@ export default class Game {
           const playerDistance = Math.sqrt((player.x - bullet.x) ** 2 + (player.y - bullet.y) ** 2);
           const radiusDistance = config.bulletRadius + config.playerRadius;
           if (playerDistance <= radiusDistance) {
+            const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
+            const v2 = { x: 10, y: 0 };
+
+            const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x);
+            const hitAngle = -angle - player.angle;
+
+            player.hitAngle = hitAngle;
+
             this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
             player.lives -= 1;
             if (player.lives <= 0) {
@@ -76,6 +84,7 @@ export default class Game {
         const bulletCollides = Util.collisionRectCircle(wall, bullet);
         if (bulletCollides) {
           this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
+          wall.fillColor = bullet.color;
         }
       });
     });
@@ -118,7 +127,7 @@ export default class Game {
     }
   }
 
-  isOverlapping(player1) {
+  checkPlayerCollisionPlayer(player1) {
     this.players.forEach((player2) => {
       if (!Object.is(player1, player2)) {
         const playerDistance = Math.sqrt(
@@ -161,7 +170,7 @@ export default class Game {
 
   update() {
     this.players.forEach((player) => {
-      this.isOverlapping(player);
+      this.checkPlayerCollisionPlayer(player);
       player.update();
     });
 
@@ -180,7 +189,7 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer);
+      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer, this.walls);
     });
 
     this.bulletHitsPlayer();

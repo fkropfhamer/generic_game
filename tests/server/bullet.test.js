@@ -5,7 +5,12 @@ describe('bullet test', () => {
   let player;
 
   beforeEach(() => {
-    player = { x: 100, y: 200, angle: Math.PI };
+    player = {
+      x: 100,
+      y: 200,
+      angle: Math.PI,
+      color: 'blue',
+    };
     bullet = new Bullet(player);
   });
   test('test bullet constructor', () => {
@@ -15,6 +20,7 @@ describe('bullet test', () => {
     expect(bullet.duration).toBe(1000);
     expect(bullet.player).toBe(player);
     expect(bullet.speed).toBe(5);
+    expect(bullet.color).toBe('blue');
   });
   test('update bullet 180 degree', () => {
     bullet.update();
