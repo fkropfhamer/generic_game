@@ -22,6 +22,7 @@ class Game {
   }
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle) {
+    console.log('hit', hitAngle);
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
@@ -164,6 +165,7 @@ class Game {
     this.bullets = data.bullets;
     this.timer = data.timer;
     this.lives = data.lives;
+    this.hitAngle = data.hitAngle;
     this.draw();
     this.socket.emit('keys', {
       up: this.pressedUp,
