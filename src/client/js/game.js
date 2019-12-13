@@ -4,20 +4,17 @@ class Game {
   constructor(view, assets) {
     this.view = view;
     this.assets = assets;
-
-    this.view.showStartScreen((face, mode) => {
-      this.view.hideStartScreen();
-      this.setup();
-      this.socket.emit('ready', { face, mode });
-    });
+    this.view.showStartScreen(this.setup.bind(this));
   }
 
-  setup() {
+  setup(face, mode) {
+    this.view.hideStartScreen();
     this.setupSocket();
     this.pressedUp = false;
     this.pressedDown = false;
     this.pressedLeft = false;
     this.pressedRight = false;
+    this.socket.emit('ready', { face, mode });
   }
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle) {
