@@ -7,11 +7,7 @@ class Game {
 
     this.view.showStartScreen((face, mode) => {
       this.view.hideStartScreen();
-<<<<<<< HEAD
-      this.start();
-=======
       this.setup();
->>>>>>> develop
       this.socket.emit('ready', { face, mode });
     });
   }
