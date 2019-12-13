@@ -33,8 +33,9 @@ describe('game test', () => {
 
   test('test constructor', () => {
     expect(game.players).toEqual([player1, player2]);
-    // expect(game.players[1]).toBe(player2);
     expect(game.bullets).toEqual([]);
+    expect(game.deadPlayers).toEqual([]);
+    expect(game.walls).toEqual(config.walls);
   });
 
   test('test game start', () => {

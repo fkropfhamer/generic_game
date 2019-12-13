@@ -6,7 +6,7 @@ export default class Game {
     this.players = players;
     this.bullets = [];
     this.deadPlayers = [];
-    this.walls = config.walls;
+    this.walls = JSON.parse(JSON.stringify(config.walls));
   }
 
   start() {
