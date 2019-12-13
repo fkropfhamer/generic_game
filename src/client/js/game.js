@@ -7,7 +7,6 @@ class Game {
 
     this.view.showStartScreen((face, mode) => {
       this.view.hideStartScreen();
-      console.log(face, mode);
       this.setup();
       this.socket.emit('ready', { face, mode });
     });
@@ -22,7 +21,6 @@ class Game {
   }
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle) {
-    console.log('hit', hitAngle);
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
