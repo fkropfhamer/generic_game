@@ -164,6 +164,7 @@ class Game {
     this.timer = data.timer;
     this.lives = data.lives;
     this.hitAngle = data.hitAngle;
+    this.walls = data.walls;
     this.draw();
     this.socket.emit('keys', {
       up: this.pressedUp,

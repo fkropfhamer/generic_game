@@ -69,7 +69,7 @@ export default class Player {
     this.socket.emit('waiting', { numberOfPlayers });
   }
 
-  notifyUpdate(players, bullets, timer) {
+  notifyUpdate(players, bullets, timer, walls) {
     const mappedPlayers = Util.mapPlayers(players);
     this.socket.emit('update', {
       x: this.x,
@@ -80,6 +80,7 @@ export default class Player {
       players: mappedPlayers,
       bullets,
       timer,
+      walls,
     });
   }
 
