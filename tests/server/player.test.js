@@ -5,13 +5,10 @@ describe('player test', () => {
   let player;
   let socket;
   let gameHandler;
-  const socketEventMocks = {};
 
   beforeEach(() => {
     socket = {
-      on: jest.fn((event, cb) => {
-        socketEventMocks[event] = cb;
-      }),
+      on: jest.fn(),
       emit: jest.fn(),
     };
     gameHandler = { waitingPlayerDisconnected: jest.fn(), playerIsReady: jest.fn() };
@@ -47,7 +44,7 @@ describe('player test', () => {
 
   test('socket event shoot', () => {
     player.createBullet = jest.fn();
-    socketEventMocks.shoot({ angle: Math.PI });
+    player.onShoot({ angle: Math.PI });
 
     expect(player.angle).toBe(Math.PI);
     expect(player.createBullet.mock.calls.length).toBe(1);
@@ -57,7 +54,7 @@ describe('player test', () => {
   test('socket event shoot limited by shooting count', () => {
     player.createBullet = jest.fn();
     player.shootingCount = 10;
-    socketEventMocks.shoot({ angle: Math.PI });
+    player.onShoot({ angle: Math.PI });
 
     expect(player.angle).toBe(0);
     expect(player.createBullet.mock.calls.length).toBe(0);
@@ -65,14 +62,14 @@ describe('player test', () => {
   });
 
   test('socket event update angle', () => {
-    socketEventMocks['update angle']({ angle: 3000 });
+    player.onUpdateAngle({ angle: 3000 });
 
     expect(player.angle).toBe(3000);
   });
 
   test('socket event disconnect player is waiting', () => {
     player.isWaiting = true;
-    socketEventMocks.disconnect();
+    player.onDisconnect();
 
     expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(1);
     expect(gameHandler.waitingPlayerDisconnected.mock.calls[0][0]).toBe(player);
@@ -80,7 +77,7 @@ describe('player test', () => {
 
   test('socket event disconnect game has started', () => {
     player.game = { playerDisconnected: jest.fn() };
-    socketEventMocks.disconnect();
+    player.onDisconnect();
 
     expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(0);
     expect(player.game.playerDisconnected.mock.calls.length).toBe(1);
@@ -88,13 +85,13 @@ describe('player test', () => {
   });
 
   test('socket event disconnect player not waiting and no game', () => {
-    socketEventMocks.disconnect();
+    player.onDisconnect();
 
     expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(0);
   });
 
   test('socket event ready', () => {
-    socketEventMocks.ready({ face: 'face1', mode: 'normal' });
+    player.onReady({ face: 'face1', mode: 'normal' });
 
     expect(player.face).toBe('face1');
     expect(player.mode).toBe('normal');
