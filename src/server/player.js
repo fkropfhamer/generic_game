@@ -25,7 +25,7 @@ export default class Player {
   }
 
   onShoot(data) {
-    if (this.shootingCount === 0) {
+    if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
       this.shootingCount = config.shootingRate;

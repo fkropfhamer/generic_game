@@ -44,6 +44,7 @@ describe('player test', () => {
 
   test('socket event shoot', () => {
     player.createBullet = jest.fn();
+    player.game = {};
     player.onShoot({ angle: Math.PI });
 
     expect(player.angle).toBe(Math.PI);
