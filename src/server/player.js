@@ -13,35 +13,45 @@ export default class Player {
     this.shootingCount = 0;
   }
 
-  setupSocket() {
-    this.socket.on('keys', (data) => {
-      this.pressedRight = data.right;
-      this.pressedLeft = data.left;
-      this.pressedDown = data.down;
-      this.pressedUp = data.up;
-    });
-    this.socket.on('shoot', (data) => {
-      if (this.shootingCount === 0) {
-        this.angle = data.angle;
-        this.createBullet();
-        this.shootingCount = config.shootingRate;
-      }
-    });
-    this.socket.on('update angle', (data) => {
+  onKeysPressed(data) {
+    this.pressedRight = data.right;
+    this.pressedLeft = data.left;
+    this.pressedDown = data.down;
+    this.pressedUp = data.up;
+  }
+
+  onUpdateAngle(data) {
+    this.angle = data.angle;
+  }
+
+  onShoot(data) {
+    if (this.shootingCount === 0) {
       this.angle = data.angle;
-    });
-    this.socket.on('disconnect', () => {
-      if (this.isWaiting) {
-        this.gameHandler.waitingPlayerDisconnected(this);
-      } else if (typeof this.game !== 'undefined') {
-        this.game.playerDisconnected(this);
-      }
-    });
-    this.socket.on('ready', (data) => {
-      this.face = data.face;
-      this.mode = data.mode;
-      this.gameHandler.playerIsReady(this, data.mode);
-    });
+      this.createBullet();
+      this.shootingCount = config.shootingRate;
+    }
+  }
+
+  onDisconnect() {
+    if (this.isWaiting) {
+      this.gameHandler.waitingPlayerDisconnected(this);
+    } else if (typeof this.game !== 'undefined') {
+      this.game.playerDisconnected(this);
+    }
+  }
+
+  onReady(data) {
+    this.face = data.face;
+    this.mode = data.mode;
+    this.gameHandler.playerIsReady(this, data.mode);
+  }
+
+  setupSocket() {
+    this.socket.on('keyspressed', this.onKeysPressed.bind(this));
+    this.socket.on('shoot', this.onShoot.bind(this));
+    this.socket.on('update angle', this.onUpdateAngle.bind(this));
+    this.socket.on('disconnect', this.onDisconnect.bind(this));
+    this.socket.on('ready', this.onReady.bind(this));
   }
 
   createBullet() {
@@ -66,7 +76,7 @@ export default class Player {
 
   notifyWaiting(numberOfPlayers) {
     this.isWaiting = true;
-    this.socket.emit('waiting', { numberOfPlayers });
+    this.socket.emit('wait', { numberOfPlayers });
   }
 
   notifyUpdate(players, bullets, timer, walls) {
