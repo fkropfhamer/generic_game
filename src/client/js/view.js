@@ -1,4 +1,3 @@
-/* eslint-disable vars-on-top */
 import config from '../../server/config';
 
 class View {
@@ -87,6 +86,18 @@ class View {
     this.ctx.restore();
   }
 
+  drawPlayerIndicator(x, y) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.lineTo((x - 10) * this.scale, (y - 35) * this.scale);
+    this.ctx.lineTo((x + 10) * this.scale, (y - 35) * this.scale);
+    this.ctx.lineTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.closePath();
+
+    this.ctx.fillStyle = 'yellow';
+    this.ctx.fill();
+  }
+
   showTimer(timer) {
     if (!this.timerDisplay) {
       const div = document.createElement('div');
@@ -135,7 +146,7 @@ class View {
     }
   }
 
-  showWaitingScreen() {
+  showWaitingScreen(numberOfPlayers) {
     const waitingScreen = document.createElement('div');
     waitingScreen.style.backgroundColor = 'white';
     waitingScreen.style.position = 'absolute';
@@ -145,7 +156,8 @@ class View {
     waitingScreen.style.height = `${this.height / 2}px`;
 
     const heading = document.createElement('h1');
-    heading.innerHTML = 'You have to wait for another player!';
+    const playerString = numberOfPlayers === 1 ? 'player' : 'players';
+    heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
 
     waitingScreen.appendChild(heading);
 
@@ -216,7 +228,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'Time is over';
 
+    const reloadButton = View.reloadButton();
+
     timeOverScreen.appendChild(heading);
+    timeOverScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(timeOverScreen);
 
@@ -235,7 +250,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You win! :D';
 
+    const reloadButton = View.reloadButton();
+
     winScreen.appendChild(heading);
+    winScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(winScreen);
 
@@ -254,7 +272,10 @@ class View {
     const heading = document.createElement('h1');
     heading.innerHTML = 'You lose :(';
 
+    const reloadButton = View.reloadButton();
+
     loseScreen.appendChild(heading);
+    loseScreen.appendChild(reloadButton);
 
     document.getElementById('root').appendChild(loseScreen);
 
@@ -466,6 +487,14 @@ class View {
     if (this.startScreen) {
       this.startScreen.style.display = 'none';
     }
+  }
+
+  static reloadButton() {
+    const button = document.createElement('button');
+    button.innerHTML = 'play again!';
+    button.onclick = () => window.location.reload();
+
+    return button;
   }
 }
 

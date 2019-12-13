@@ -6,9 +6,7 @@ export default class Game {
     this.players = players;
     this.bullets = [];
     this.deadPlayers = [];
-    this.walls = [];
-    this.addConstraintWalls();
-    this.addBarrierWalls();
+    this.walls = config.walls;
   }
 
   start() {
@@ -39,50 +37,6 @@ export default class Game {
     this.bullets.push(bullet);
   }
 
-  addConstraintWalls() {
-    for (let i = 0; i < config.fieldWidth; i += 100) {
-      this.walls.push({
-        ...config.constraintWalls,
-        x: config.constraintWalls.x + i,
-      });
-      this.walls.push({
-        ...config.constraintWalls,
-        x: config.constraintWalls.x + i,
-        y: config.fieldHeight - 10,
-      });
-      this.walls.push({
-        ...config.constraintWalls,
-        x: 10,
-        y: 50 + i,
-        angle: Math.PI / 2,
-      });
-      this.walls.push({
-        ...config.constraintWalls,
-        x: config.fieldWidth - 10,
-        y: 50 + i,
-        angle: Math.PI / 2,
-      });
-    }
-  }
-
-  addBarrierWalls() {
-    for (let i = 1; i <= 3; i += 1) {
-      for (let j = 1; j <= 3; j += 1) {
-        this.walls.push({
-          ...config.barrierWalls,
-          x: ((config.fieldWidth * 1) / 4) * i,
-          y: ((config.fieldHeight * 1) / 4) * j,
-        });
-        this.walls.push({
-          ...config.barrierWalls,
-          x: ((config.fieldWidth * 1) / 4) * i,
-          y: ((config.fieldHeight * 1) / 4) * j,
-          angle: -config.barrierWalls.angle,
-        });
-      }
-    }
-  }
-
   bulletHitsPlayer() {
     this.bullets.forEach((bullet) => {
       this.players.forEach((player) => {
@@ -90,6 +44,14 @@ export default class Game {
           const playerDistance = Math.sqrt((player.x - bullet.x) ** 2 + (player.y - bullet.y) ** 2);
           const radiusDistance = config.bulletRadius + config.playerRadius;
           if (playerDistance <= radiusDistance) {
+            const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
+            const v2 = { x: 10, y: 0 };
+
+            const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x);
+            const hitAngle = -angle - player.angle;
+
+            player.hitAngle = hitAngle;
+
             this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
             player.lives -= 1;
             if (player.lives <= 0) {
@@ -160,7 +122,9 @@ export default class Game {
   }
 
   playerDisconnected(player) {
-    this.playerDied(player);
+    if (!this.ended) {
+      this.playerDied(player);
+    }
   }
 
   checkPlayerCollisionPlayer(player1) {
@@ -185,6 +149,7 @@ export default class Game {
   }
 
   end() {
+    this.ended = true;
     console.log('game ended');
     clearInterval(this.interval);
   }

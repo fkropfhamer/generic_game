@@ -31,13 +31,8 @@ export default class Player {
       this.angle = data.angle;
     });
     this.socket.on('disconnect', () => {
-      if (this.waiting && this.mode === 'normal') {
-        this.gameHandler.waitingPlayer = false;
-      } else if (this.waiting && this.mode === 'teams') {
-        this.gameHandler.waitingPlayers = this.gameHandler.waitingPlayers.filter(
-          (player) => !Object.is(player, this)
-        );
-        console.log(this.gameHandler.waitingPlayers.length);
+      if (this.waiting) {
+        this.gameHandler.waitingPlayerDisconnected(this);
       } else if (typeof this.game !== 'undefined') {
         this.game.playerDisconnected(this);
       }
@@ -69,9 +64,9 @@ export default class Player {
     });
   }
 
-  notifyWaiting() {
+  notifyWaiting(numberOfPlayers) {
     this.waiting = true;
-    this.socket.emit('waiting');
+    this.socket.emit('waiting', { numberOfPlayers });
   }
 
   notifyUpdate(players, bullets, timer, walls) {
@@ -81,6 +76,7 @@ export default class Player {
       y: this.y,
       angle: this.angle,
       lives: this.lives,
+      hitAngle: this.hitAngle,
       players: mappedPlayers,
       bullets,
       timer,
@@ -118,22 +114,6 @@ export default class Player {
     }
     if (this.pressedRight) {
       this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
-    }
-
-    if (this.x > config.fieldWidth - this.radius) {
-      this.x = config.fieldWidth - this.radius;
-    }
-
-    if (this.x < 0 + this.radius) {
-      this.x = 0 + this.radius;
-    }
-
-    if (this.y > config.fieldHeight - this.radius) {
-      this.y = config.fieldHeight - this.radius;
-    }
-
-    if (this.y < 0 + this.radius) {
-      this.y = 0 + this.radius;
     }
   }
 }
