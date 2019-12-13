@@ -1,21 +1,18 @@
 import Game from '../../src/client/js/game';
 
-const socketEventMocks = {};
-const socket = {
-  on: jest.fn((event, cb) => {
-    socketEventMocks[event] = cb;
-  }),
-  emit: jest.fn(),
-};
-
-global.io = jest.fn(() => socket);
-
-describe('game', () => {
+describe('game client', () => {
   let game;
   let view;
   let assets;
+  let socket;
 
   beforeEach(() => {
+    socket = {
+      on: jest.fn(),
+      emit: jest.fn(),
+    };
+
+    global.io = jest.fn(() => socket);
     view = {
       showStartScreen: jest.fn((fn) => {
         fn('face1', 'normal');
@@ -32,7 +29,9 @@ describe('game', () => {
 
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
     expect(view.hideStartScreen).toHaveBeenCalledTimes(1);
+  });
 
+  test('game setup', () => {
     expect(game.socket).toEqual(socket);
     expect(global.io).toHaveBeenCalledTimes(1);
 
