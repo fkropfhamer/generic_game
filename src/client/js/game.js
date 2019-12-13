@@ -129,7 +129,7 @@ class Game {
     }
   }
 
-  start(data) {
+  onStart(data) {
     console.log('game starting!');
     if (this.waiting) {
       this.view.hideWaitingScreen();
@@ -150,12 +150,12 @@ class Game {
     this.setupKeyPressedEvents();
   }
 
-  connected() {
+  onConnected() {
     console.log('connected');
     this.connected = true;
   }
 
-  update(data) {
+  onUpdate(data) {
     this.x = data.x;
     this.y = data.y;
     this.angle = data.angle;
@@ -166,7 +166,7 @@ class Game {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.draw();
-    this.socket.emit('keys', {
+    this.socket.emit('keyspressed', {
       up: this.pressedUp,
       down: this.pressedDown,
       left: this.pressedLeft,
@@ -174,27 +174,27 @@ class Game {
     });
   }
 
-  waiting(data) {
+  onWait(data) {
     console.log('you have to wait!');
     this.view.showWaitingScreen(data.numberOfPlayers);
     this.waiting = true;
   }
 
-  opponentDisconnected() {
+  onOpponentDisconnected() {
     console.log('opponent disconnected');
     this.view.showOpponentDisconnectedScreen();
   }
 
-  timeOver() {
+  onTimeOver() {
     this.view.showTimeOverScreen();
   }
 
-  win() {
+  onWin() {
     console.log('win');
     this.view.showWinScreen();
   }
 
-  lose() {
+  onLose() {
     console.log('lose');
     this.view.showLoseScreen();
   }
@@ -202,14 +202,14 @@ class Game {
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
-    this.socket.on('connect', this.connected.bind(this));
-    this.socket.on('start', this.start.bind(this));
-    this.socket.on('update', this.update.bind(this));
-    this.socket.on('waiting', this.waiting.bind(this));
-    this.socket.on('opponent disconnected', this.opponentDisconnected.bind(this));
-    this.socket.on('time over', this.timeOver.bind(this));
-    this.socket.on('win', this.win.bind(this));
-    this.socket.on('lose', this.lose.bind(this));
+    this.socket.on('connect', this.onConnected.bind(this));
+    this.socket.on('start', this.onStart.bind(this));
+    this.socket.on('update', this.onUpdate.bind(this));
+    this.socket.on('wait', this.onWait.bind(this));
+    this.socket.on('opponent disconnected', this.onOpponentDisconnected.bind(this));
+    this.socket.on('time over', this.onTimeOver.bind(this));
+    this.socket.on('win', this.onWin.bind(this));
+    this.socket.on('lose', this.onLose.bind(this));
   }
 }
 

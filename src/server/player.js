@@ -14,7 +14,7 @@ export default class Player {
   }
 
   setupSocket() {
-    this.socket.on('keys', (data) => {
+    this.socket.on('keyspressed', (data) => {
       this.pressedRight = data.right;
       this.pressedLeft = data.left;
       this.pressedDown = data.down;
@@ -66,7 +66,7 @@ export default class Player {
 
   notifyWaiting(numberOfPlayers) {
     this.isWaiting = true;
-    this.socket.emit('waiting', { numberOfPlayers });
+    this.socket.emit('wait', { numberOfPlayers });
   }
 
   notifyUpdate(players, bullets, timer, walls) {
