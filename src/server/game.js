@@ -18,12 +18,8 @@ export default class Game {
       player.y = config.playerstartingPositions[i].y;
       player.lives = config.playerLives;
       player.color = i % 2 === 0 ? 'blue' : 'red';
-    });
-
-    this.players.forEach((player) => {
       player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
       player.game = this;
-      player.isWaiting = false;
     });
 
     this.interval = setInterval(this.loop.bind(this), 10);

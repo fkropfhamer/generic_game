@@ -60,6 +60,7 @@ export default class Player {
   }
 
   notifyStart(otherPlayers, timer, walls) {
+    this.isWaiting = false;
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,

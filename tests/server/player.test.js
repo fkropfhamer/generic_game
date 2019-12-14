@@ -124,6 +124,7 @@ describe('player test', () => {
     };
 
     player.notifyStart([opponent], 30);
+    expect(player.isWaiting).toBe(false);
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('start');
     expect(socket.emit.mock.calls[0][1]).toEqual({
