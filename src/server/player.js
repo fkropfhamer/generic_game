@@ -3,9 +3,9 @@ import Util from './util';
 import config from './config';
 
 export default class Player {
-  constructor(socket, gameHandler) {
+  constructor(socket, server) {
     this.socket = socket;
-    this.gameHandler = gameHandler;
+    this.server = server;
     this.setupSocket();
     this.speed = config.playerSpeed;
     this.angle = 0;
@@ -34,7 +34,7 @@ export default class Player {
 
   onDisconnect() {
     if (this.isWaiting) {
-      this.gameHandler.waitingPlayerDisconnected(this);
+      this.server.waitingPlayerDisconnected(this);
     } else if (typeof this.game !== 'undefined') {
       this.game.playerDisconnected(this);
     }
@@ -43,7 +43,7 @@ export default class Player {
   onReady(data) {
     this.face = data.face;
     this.mode = data.mode;
-    this.gameHandler.playerIsReady(this, data.mode);
+    this.server.playerIsReady(this, data.mode);
   }
 
   setupSocket() {

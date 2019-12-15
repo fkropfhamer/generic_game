@@ -1,4 +1,4 @@
-import GameHandler from '../../src/server/gamehandler';
+import Server from '../../src/server/server';
 import server from '../../src/server/server';
 import Player from '../../src/server/player';
 import Game from '../../src/server/game';
@@ -19,8 +19,8 @@ jest.mock('socket.io', () => {
   };
 });
 
-describe('gamehandler', () => {
-  let gamehandler;
+describe('server', () => {
+  let server;
 
   beforeEach(() => {
     Game.mockClear();
@@ -29,38 +29,38 @@ describe('gamehandler', () => {
     server.listen = jest.fn((port) => {
       return { port };
     });
-    gamehandler = new GameHandler();
+    server = new Server();
   });
 
   test('constructor', () => {
-    expect(gamehandler.waitingPlayer).toBe(false);
-    expect(gamehandler.waitingPlayers).toEqual([]);
+    expect(server.waitingPlayer).toBe(false);
+    expect(server.waitingPlayers).toEqual([]);
   });
 
-  test('gamehandler listen', () => {
+  test('server listen', () => {
     const port = 80;
 
-    gamehandler.listen(port);
+    server.listen(port);
 
-    expect(gamehandler.server).toEqual({ port });
+    expect(server.server).toEqual({ port });
     expect(server.listen.mock.calls.length).toBe(1);
     expect(server.listen.mock.calls[0][0]).toBe(port);
 
-    expect(gamehandler.io.server).toBe(gamehandler.server);
+    expect(server.io.server).toBe(server.server);
   });
 
-  test('gamehandler connection event', () => {
+  test('server connection event', () => {
     const socket = {};
 
     const onConnectionMock = {};
 
-    gamehandler.io = {
+    server.io = {
       on: jest.fn((event, cb) => {
         onConnectionMock[event] = cb;
       }),
     };
 
-    gamehandler.setup();
+    server.setup();
 
     onConnectionMock.connection(socket);
     expect(Player).toHaveBeenCalledTimes(1);
@@ -69,32 +69,32 @@ describe('gamehandler', () => {
   test('game handler waiting player disconnected mode = normal', () => {
     const player = { mode: 'normal' };
 
-    gamehandler.waitingPlayer = player;
-    gamehandler.waitingPlayerDisconnected(player);
+    server.waitingPlayer = player;
+    server.waitingPlayerDisconnected(player);
 
-    expect(gamehandler.waitingPlayer).toBe(false);
+    expect(server.waitingPlayer).toBe(false);
   });
 
   test('game handler waiting player disconnected mode = teams', () => {
     const player1 = { mode: 'teams', notifyWaiting: jest.fn() };
     const player2 = { mode: 'teams', notifyWaiting: jest.fn() };
 
-    gamehandler.waitingPlayers = [player1, player2];
-    gamehandler.waitingPlayerDisconnected(player1);
+    server.waitingPlayers = [player1, player2];
+    server.waitingPlayerDisconnected(player1);
 
-    expect(gamehandler.waitingPlayers).toEqual([player2]);
+    expect(server.waitingPlayers).toEqual([player2]);
     expect(player2.notifyWaiting).toHaveBeenCalledTimes(1);
     expect(player2.notifyWaiting.mock.calls[0][0]).toBe(3);
   });
 
-  test('gamehandler notify waiting players', () => {
+  test('server notify waiting players', () => {
     const player1 = { mode: 'teams', notifyWaiting: jest.fn() };
     const player2 = { mode: 'teams', notifyWaiting: jest.fn() };
     const player3 = { mode: 'teams', notifyWaiting: jest.fn() };
 
-    gamehandler.waitingPlayers = [player1, player2, player3];
+    server.waitingPlayers = [player1, player2, player3];
 
-    gamehandler.notifyWaitingPlayers();
+    server.notifyWaitingPlayers();
 
     expect(player1.notifyWaiting).toHaveBeenCalledTimes(1);
     expect(player2.notifyWaiting).toHaveBeenCalledTimes(1);
@@ -104,51 +104,51 @@ describe('gamehandler', () => {
     expect(player3.notifyWaiting.mock.calls[0][0]).toBe(1);
   });
 
-  test('gamehandler player is ready mode = normal and has to wait', () => {
+  test('server player is ready mode = normal and has to wait', () => {
     const player = { notifyWaiting: jest.fn() };
 
-    gamehandler.playerIsReady(player, 'normal');
+    server.playerIsReady(player, 'normal');
 
-    expect(gamehandler.waitingPlayer).toBe(player);
+    expect(server.waitingPlayer).toBe(player);
     expect(player.notifyWaiting).toHaveBeenCalledTimes(1);
     expect(player.notifyWaiting.mock.calls[0][0]).toBe(1);
   });
 
-  test('gamehandler player is ready mode = normal and game starts', () => {
+  test('server player is ready mode = normal and game starts', () => {
     const player1 = {};
     const player2 = {};
 
-    gamehandler.waitingPlayer = player1;
+    server.waitingPlayer = player1;
 
-    gamehandler.playerIsReady(player2, 'normal');
+    server.playerIsReady(player2, 'normal');
 
-    expect(gamehandler.waitingPlayer).toBe(false);
+    expect(server.waitingPlayer).toBe(false);
     expect(Game).toHaveBeenCalledTimes(1);
     expect(Game.mock.calls[0][0]).toEqual([player2, player1]);
     expect(Game.mock.instances[0].start).toHaveBeenCalledTimes(1);
   });
 
-  test('gamehandler player is ready mode = teams and has to wait', () => {
+  test('server player is ready mode = teams and has to wait', () => {
     const player = { notifyWaiting: jest.fn() };
 
-    gamehandler.playerIsReady(player, 'teams');
+    server.playerIsReady(player, 'teams');
 
-    expect(gamehandler.waitingPlayers).toEqual([player]);
+    expect(server.waitingPlayers).toEqual([player]);
     expect(player.notifyWaiting).toHaveBeenCalledTimes(1);
     expect(player.notifyWaiting).toHaveBeenCalledWith(3);
   });
 
-  test('gamehandler player is ready mode = teams and has to wait', () => {
+  test('server player is ready mode = teams and has to wait', () => {
     const player1 = {};
     const player2 = {};
     const player3 = {};
     const player4 = {};
 
-    gamehandler.waitingPlayers = [player1, player2, player3];
+    server.waitingPlayers = [player1, player2, player3];
 
-    gamehandler.playerIsReady(player4, 'teams');
+    server.playerIsReady(player4, 'teams');
 
-    expect(gamehandler.waitingPlayers).toEqual([]);
+    expect(server.waitingPlayers).toEqual([]);
     expect(Game).toHaveBeenCalledTimes(1);
     expect(Game.mock.calls[0][0]).toEqual([player1, player2, player3, player4]);
     expect(Game.mock.instances[0].start).toHaveBeenCalledTimes(1);
@@ -156,7 +156,7 @@ describe('gamehandler', () => {
 
   test('game player is ready unknown mode', () => {
     const exception = () => {
-      gamehandler.playerIsReady({}, 'test');
+      server.playerIsReady({}, 'test');
     };
 
     expect(exception).toThrow(Error);
