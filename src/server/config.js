@@ -23,6 +23,12 @@ const config = {
   walls: [],
   numberOfVerticalWalls: 10,
   numberOfHorizontalWalls: 12,
+  
+  powerupX: 500,
+  powerupY: 500,
+  powerupRadius: 20,
+  powerupDuration: 10,
+  powerupColor: 'green',
 };
 
 const constraintWalls = {

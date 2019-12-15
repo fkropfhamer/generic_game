@@ -1,5 +1,6 @@
 import config from './config';
 import Util from './util';
+import PowerUp from './powerup';
 
 export default class Game {
   constructor(players) {
@@ -7,6 +8,7 @@ export default class Game {
     this.bullets = [];
     this.deadPlayers = [];
     this.walls = JSON.parse(JSON.stringify(config.walls));
+    this.powerup = [];
   }
 
   start() {
@@ -35,6 +37,10 @@ export default class Game {
 
   addBullet(bullet) {
     this.bullets.push(bullet);
+  }
+
+  addPowerup(powerup) {
+    this.powerup.push(powerup);
   }
 
   checkBulletHitsPlayer(player) {
@@ -162,6 +168,9 @@ export default class Game {
       bullet.update();
       this.checkWallCollisionBullet(bullet);
     });
+    // this.powerup.forEach((powerup) => {
+    //   powerup.update();
+    // });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
       player.update();
@@ -180,7 +189,13 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer, this.walls);
+      player.notifyUpdate(
+        this.getOtherPlayers(player),
+        bullets,
+        this.timer,
+        this.walls,
+        this.powerup
+      );
     });
   }
 }
