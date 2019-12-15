@@ -1,6 +1,7 @@
 import Bullet from './bullet';
 import Util from './util';
 import config from './config';
+import PowerUp from './powerup';
 
 export default class Player {
   constructor(socket, gameHandler) {
@@ -82,6 +83,7 @@ export default class Player {
 
   notifyUpdate(players, bullets, timer, walls, powerup) {
     const mappedPlayers = Util.mapPlayers(players);
+    const mappedPowerups = PowerUp.mapPowerups(powerup);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -92,7 +94,7 @@ export default class Player {
       bullets,
       timer,
       walls,
-      powerup,
+      powerup: mappedPowerups,
     });
   }
 

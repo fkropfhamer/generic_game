@@ -159,7 +159,6 @@ export default class Game {
     this.count += 1;
   }
 
-
   update() {
     this.bullets.forEach((bullet) => {
       bullet.update();

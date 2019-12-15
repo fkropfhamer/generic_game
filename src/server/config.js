@@ -1,3 +1,10 @@
+import PowerUp from "./powerup";
+
+const powerUpTypes = {
+  HEALTH: 'health',
+  SHIELD: 'shield',
+}
+
 const config = {
   bulletSpeed: 5,
   bulletDuration: 1000,
@@ -24,15 +31,10 @@ const config = {
   numberOfVerticalWalls: 10,
   numberOfHorizontalWalls: 12,
   powerup: [],
+  initPowerups: [{ x: 500, y: 500, type: powerUpTypes.HEALTH }],  
 };
 
-const powerupOne = {
-  powerupX: 500,
-  powerupY: 500,
-  powerupRadius: 20,
-  powerupDuration: 10,
-  powerupColor: 'green',
-};
+
 
 const constraintWalls = {
   x: 0,
@@ -106,7 +108,11 @@ function setupBarrierWalls() {
 }
 
 function setupPowerups() {
-  config.powerup.push(powerupOne);
+  config.initPowerups.forEach(p => {
+    if (p.type === 'health') {
+      config.powerup.push(new PowerUp(p.x, p.y, 'green', 20));
+    }
+  });
 }
 
 setupBarrierWalls();
