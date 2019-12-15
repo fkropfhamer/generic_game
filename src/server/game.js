@@ -18,8 +18,11 @@ export default class Game {
       player.y = config.playerstartingPositions[i].y;
       player.lives = config.playerLives;
       player.color = i % 2 === 0 ? 'blue' : 'red';
-      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
       player.game = this;
+    });
+
+    this.players.forEach((player) => {
+      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
     });
 
     this.interval = setInterval(this.loop.bind(this), 10);
