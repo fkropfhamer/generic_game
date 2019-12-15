@@ -1,14 +1,14 @@
-import PowerUp from "./powerup";
+import PowerUp from './powerup';
 
-const powerUpTypes = {
-  HEALTH: 'health',
+export const powerUpTypes = {
+  ADDHEALTH: 'health',
   SHIELD: 'shield',
-}
+};
 
 const config = {
   bulletSpeed: 5,
   bulletDuration: 1000,
-  playerSpeed: 1,
+  playerSpeed: 3,
   playerRadius: 27.5,
   playerRepulsion: 10,
   gameDuration: 60,
@@ -31,10 +31,8 @@ const config = {
   numberOfVerticalWalls: 10,
   numberOfHorizontalWalls: 12,
   powerup: [],
-  initPowerups: [{ x: 500, y: 500, type: powerUpTypes.HEALTH }],  
+  initPowerups: [{ x: 500, y: 500, type: powerUpTypes.ADDHEALTH }],
 };
-
-
 
 const constraintWalls = {
   x: 0,
@@ -108,10 +106,8 @@ function setupBarrierWalls() {
 }
 
 function setupPowerups() {
-  config.initPowerups.forEach(p => {
-    if (p.type === 'health') {
-      config.powerup.push(new PowerUp(p.x, p.y, 'green', 20));
-    }
+  config.initPowerups.forEach((powerup) => {
+    config.powerup.push(new PowerUp(powerup.x, powerup.y, powerup.type));
   });
 }
 
