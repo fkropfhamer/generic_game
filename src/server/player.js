@@ -59,7 +59,7 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls) {
+  notifyStart(otherPlayers, timer, walls, powerup) {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,
@@ -71,6 +71,7 @@ export default class Player {
       players: mappedPlayers,
       timer,
       walls,
+      powerup,
     });
   }
 

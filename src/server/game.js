@@ -8,7 +8,7 @@ export default class Game {
     this.bullets = [];
     this.deadPlayers = [];
     this.walls = JSON.parse(JSON.stringify(config.walls));
-    this.powerup = [];
+    this.powerup = JSON.parse(JSON.stringify(config.powerup));
   }
 
   start() {
@@ -23,7 +23,7 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
+      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls, this.powerup);
       player.game = this;
       player.isWaiting = false;
     });
@@ -37,10 +37,6 @@ export default class Game {
 
   addBullet(bullet) {
     this.bullets.push(bullet);
-  }
-
-  addPowerup(powerup) {
-    this.powerup.push(powerup);
   }
 
   checkBulletHitsPlayer(player) {
@@ -162,6 +158,7 @@ export default class Game {
 
     this.count += 1;
   }
+
 
   update() {
     this.bullets.forEach((bullet) => {

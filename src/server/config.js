@@ -23,7 +23,10 @@ const config = {
   walls: [],
   numberOfVerticalWalls: 10,
   numberOfHorizontalWalls: 12,
-  
+  powerup: [],
+};
+
+const powerupOne = {
   powerupX: 500,
   powerupY: 500,
   powerupRadius: 20,
@@ -102,7 +105,12 @@ function setupBarrierWalls() {
   }
 }
 
+function setupPowerups() {
+  config.powerup.push(powerupOne);
+}
+
 setupBarrierWalls();
 setupConstraintWalls();
+setupPowerups();
 
 export default config;

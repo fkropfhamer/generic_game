@@ -49,7 +49,7 @@ class Game {
         player.hitAngle
       );
     });
-    this.powerup.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
+    this.powerup.forEach((p) => this.view.drawCircle(p.powerupX, p.powerupY, p.powerupRadius, p.powerupColor));
   }
 
   drawPlayerIndicator() {
