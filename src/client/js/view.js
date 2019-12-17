@@ -40,7 +40,7 @@ class View {
   }
 
   drawBackround() {
-    this.drawImage(this.width / 2, this.height / 2, this.assets.background);
+    this.drawImage(this.assets.background);
   }
 
   drawCircle(x, y, radius, color) {
@@ -68,9 +68,9 @@ class View {
     this.ctx.stroke();
   }
 
-  drawImage(x, y, img) {
+  drawImage(img) {
     console.log(img, img.width, img.height);
-    this.ctx.drawImage(img, 0, 0);
+    this.ctx.drawImage(img, 0, 0, this.width, this.height);
   }
 
   reset() {

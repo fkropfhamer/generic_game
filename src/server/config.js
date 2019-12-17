@@ -33,8 +33,8 @@ const config = {
     height: 20,
     width: 100,
     angle: 0,
-    fillColor: 'black',
-    strokeColor: 'white',
+    fillColor: 'white',
+    strokeColor: 'black',
   },
 
   barrierWalls: {
@@ -43,8 +43,8 @@ const config = {
     height: 20,
     width: 60,
     angle: Math.PI / 4,
-    fillColor: 'black',
-    strokeColor: 'black',
+    fillColor: 'white',
+    strokeColor: 'white',
   },
 };
 
