@@ -29,7 +29,7 @@ window.onload = () => {
     { name: 'face2', url: face2 },
     { name: 'face3', url: face3 },
     { name: 'face4', url: face4 },
-    {name: 'background', url: background}
+    { name: 'background', url: background },
   ]).then((assets) => {
     view.assets = assets;
     // eslint-disable-next-line no-new

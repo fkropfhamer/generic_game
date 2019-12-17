@@ -76,7 +76,7 @@ class View {
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.drawBackround()
+    this.drawBackround();
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
