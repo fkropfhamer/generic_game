@@ -49,7 +49,7 @@ describe('player test', () => {
 
     expect(player.angle).toBe(Math.PI);
     expect(player.createBullet.mock.calls.length).toBe(1);
-    expect(player.shootingCount).toBe(config.shootingRate);
+    expect(player.shootingCount).toBe(config.SHOOTING_RATE);
   });
 
   test('socket event shoot limited by shooting count', () => {
@@ -151,6 +151,8 @@ describe('player test', () => {
     player.x = 400;
     player.y = 300;
     player.lives = 1;
+    player.hitAngle = Math.PI / 2;
+    player.isShielded = false;
     const opponent = {
       x: 100,
       y: 200,
@@ -158,6 +160,8 @@ describe('player test', () => {
       face: 'face3',
       color: 'blue',
       lives: 3,
+      isShielded: true,
+      hitAngle: Math.PI,
     };
 
     player.notifyUpdate([opponent], [], 25, [], []);
@@ -174,6 +178,8 @@ describe('player test', () => {
       timer: 25,
       walls: [],
       powerUp: [],
+      isShielded: false,
+      hitAngle: Math.PI / 2,
     });
   });
 

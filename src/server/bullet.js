@@ -4,12 +4,12 @@ export default class Bullet {
   constructor(player) {
     this.x = player.x;
     this.y = player.y;
-    this.duration = config.bulletDuration;
+    this.duration = config.BULLET_DURATION;
     this.player = player;
-    this.speed = config.bulletSpeed;
+    this.speed = config.BULLET_SPEED;
     this.angle = player.angle;
     this.color = player.color;
-    this.radius = config.bulletRadius;
+    this.radius = config.BULLET_RADIUS;
   }
 
   update() {

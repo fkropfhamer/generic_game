@@ -17,14 +17,14 @@ class View {
   }
 
   setupCanvas() {
-    if (this.windowWidth !== config.fieldWidth) {
-      this.scale = this.windowWidth / config.fieldWidth;
-      if (config.fieldHeight * this.scale > this.windowHeight) {
-        this.scale = this.windowHeight / config.fieldHeight;
+    if (this.windowWidth !== config.FIELD_WIDTH) {
+      this.scale = this.windowWidth / config.FIELD_WIDTH;
+      if (config.FIELD_HEIGHT * this.scale > this.windowHeight) {
+        this.scale = this.windowHeight / config.FIELD_HEIGHT;
       }
     }
-    this.width = config.fieldWidth * this.scale;
-    this.height = config.fieldHeight * this.scale;
+    this.width = config.FIELD_WIDTH * this.scale;
+    this.height = config.FIELD_HEIGHT * this.scale;
 
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -40,7 +40,7 @@ class View {
   }
 
   drawBackround() {
-    this.drawImage(this.width / 2, this.height / 2, this.assets.background);
+    this.drawImage(this.assets.background);
   }
 
   drawCircle(x, y, radius, color) {
@@ -48,6 +48,14 @@ class View {
     this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
+  }
+
+  drawRing(x, y, radius, color) {
+    this.ctx.beginPath();
+    this.ctx.arc(x * this.scale, y * this.scale, (radius + 5) * this.scale, 0, 2 * Math.PI, false);
+    this.ctx.lineWidth = 6;
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
   }
 
   drawRectangle(x, y, height, width, angle, fillColor, strokeColor) {
@@ -68,15 +76,15 @@ class View {
     this.ctx.stroke();
   }
 
-  drawImage(x, y, img) {
+  drawImage(img) {
     console.log(img, img.width, img.height);
-    this.ctx.drawImage(img, 0, 0);
+    this.ctx.drawImage(img, 0, 0, this.width, this.height);
   }
 
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.drawBackround();
+    // this.drawBackround();
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {

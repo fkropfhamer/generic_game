@@ -5,7 +5,7 @@ export default class PowerUp {
     this.x = x;
     this.y = y;
     this.radius = 10;
-    this.color = 'green';
+    this.color = type === powerUpTypes.SHIELD ? 'brown' : 'green';
     this.type = type;
   }
 
@@ -26,12 +26,19 @@ export default class PowerUp {
     }
   }
 
+  static addShieldUpdate(player) {
+    if (!player.isShielded) {
+      player.isShielded = true;
+    }
+  }
+
   update(player) {
     switch (this.type) {
       case powerUpTypes.ADDHEALTH:
         PowerUp.addHealthUpdate(player);
         break;
       case powerUpTypes.SHIELD:
+        PowerUp.addShieldUpdate(player);
         break;
       default:
         throw Error('type does not exist');

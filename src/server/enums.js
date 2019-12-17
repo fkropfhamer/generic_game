@@ -1,9 +1,9 @@
-export const powerUpTypes = {
+export const powerUpTypes = Object.freeze({
   ADDHEALTH: 'health',
   SHIELD: 'shield',
-};
+});
 
-export const Color = {
+export const Color = Object.freeze({
   BLUE: 'blue',
   RED: 'red',
-};
+});

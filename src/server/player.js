@@ -8,10 +8,11 @@ export default class Player {
     this.socket = socket;
     this.server = server;
     this.setupSocket();
-    this.speed = config.playerSpeed;
+    this.speed = config.PLAYER_SPEED;
     this.angle = 0;
-    this.radius = config.playerRadius;
+    this.radius = config.PLAYER_RADIUS;
     this.shootingCount = 0;
+    this.isShielded = false;
   }
 
   onKeysPressed(data) {
@@ -29,7 +30,7 @@ export default class Player {
     if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
-      this.shootingCount = config.shootingRate;
+      this.shootingCount = config.SHOOTING_RATE;
     }
   }
 
@@ -92,6 +93,7 @@ export default class Player {
       lives: this.lives,
       hitAngle: this.hitAngle,
       players: mappedPlayers,
+      isShielded: this.isShielded,
       bullets,
       timer,
       walls,

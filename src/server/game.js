@@ -1,26 +1,28 @@
 import config from './config';
 import Util from './util';
 import PowerUp from './powerup';
+import { Color } from './enums';
 
 export default class Game {
   constructor(players) {
     this.players = players;
     this.bullets = [];
     this.deadPlayers = [];
-    this.walls = JSON.parse(JSON.stringify(config.walls));
+    this.walls = [];
     this.powerUps = [];
     this.setupPowerups();
+    this.setupWalls();
   }
 
   start() {
-    this.timer = config.gameDuration;
+    this.timer = config.GAME_DURATION;
     this.count = 0;
 
     this.players.forEach((player, i) => {
-      player.x = config.playerstartingPositions[i].x;
-      player.y = config.playerstartingPositions[i].y;
-      player.lives = config.playerLives;
-      player.color = i % 2 === 0 ? 'blue' : 'red';
+      player.x = config.PLAYER_STARTING_POSITIONS[i].x;
+      player.y = config.PLAYER_STARTING_POSITIONS[i].y;
+      player.lives = config.PLAYER_LIVES;
+      player.color = i % 2 === 0 ? Color.BLUE : Color.RED;
       player.game = this;
     });
 
@@ -34,9 +36,66 @@ export default class Game {
   }
 
   setupPowerups() {
-    config.initPowerUps.forEach((powerUp) => {
+    config.POWER_UPS.forEach((powerUp) => {
       this.powerUps.push(new PowerUp(powerUp.x, powerUp.y, powerUp.type));
     });
+  }
+
+  setupWalls() {
+    this.setupBarrierWalls();
+    this.setupConstraintWalls();
+  }
+
+  setupConstraintWalls() {
+    const horizontalWidth = config.FIELD_WIDTH / config.NUMBER_OF_HORIZONTAL_WALLS;
+    for (let i = horizontalWidth / 2; i < config.FIELD_WIDTH; i += horizontalWidth) {
+      this.walls.push({
+        ...config.constraintWalls,
+        x: i,
+        width: horizontalWidth,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: i,
+        width: horizontalWidth,
+        y: config.FIELD_HEIGHT - 10,
+      });
+    }
+    const veritcalWidth = config.FIELD_HEIGHT / config.NUMBER_OF_VERTICAL_WALLS;
+    for (let i = veritcalWidth / 2; i < config.FIELD_HEIGHT; i += veritcalWidth) {
+      this.walls.push({
+        ...config.constraintWalls,
+        x: 10,
+        y: i,
+        width: veritcalWidth,
+        angle: Math.PI / 2,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: config.FIELD_WIDTH - 10,
+        y: i,
+        width: veritcalWidth,
+        angle: Math.PI / 2,
+      });
+    }
+  }
+
+  setupBarrierWalls() {
+    for (let i = 1; i <= 3; i += 1) {
+      for (let j = 1; j <= 3; j += 1) {
+        this.walls.push({
+          ...config.barrierWalls,
+          x: (config.FIELD_WIDTH / 4) * i,
+          y: (config.FIELD_HEIGHT / 4) * j,
+        });
+        this.walls.push({
+          ...config.barrierWalls,
+          x: (config.FIELD_WIDTH / 4) * i,
+          y: (config.FIELD_HEIGHT / 4) * j,
+          angle: -config.barrierWalls.angle,
+        });
+      }
+    }
   }
 
   getOtherPlayers(player) {
@@ -60,9 +119,13 @@ export default class Game {
           player.hitAngle = hitAngle;
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
-          player.lives -= 1;
-          if (player.lives <= 0) {
-            this.playerDied(player);
+          if (player.isShielded) {
+            player.isShielded = false;
+          } else {
+            player.lives -= 1;
+            if (player.lives <= 0) {
+              this.playerDied(player);
+            }
           }
         }
       }
@@ -84,7 +147,7 @@ export default class Game {
       const playerCollides = Util.collisionRectCircle(wall, player);
       if (playerCollides) {
         const angle = playerCollides.angle + wall.angle;
-        const dis = config.playerRadius - playerCollides.dis;
+        const dis = config.PLAYER_RADIUS - playerCollides.dis;
 
         player.x += dis * Math.cos(angle);
         player.y += dis * Math.sin(angle);
@@ -105,12 +168,12 @@ export default class Game {
   playerDied(player) {
     this.deadPlayers.push(player);
     const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
-    const teamBlue = remainingPlayers.filter((p) => p.color === 'blue');
-    const teamRed = remainingPlayers.filter((p) => p.color === 'red');
+    const teamBlue = remainingPlayers.filter((p) => p.color === Color.BLUE);
+    const teamRed = remainingPlayers.filter((p) => p.color === Color.RED);
 
     if (teamBlue.length === 0) {
       this.deadPlayers.forEach((p) => {
-        if (p.color === 'blue') {
+        if (p.color === Color.BLUE) {
           p.notifyLose();
         } else {
           p.notifyWin();
@@ -120,7 +183,7 @@ export default class Game {
       this.end();
     } else if (teamRed.length === 0) {
       this.deadPlayers.forEach((p) => {
-        if (p.color === 'red') {
+        if (p.color === Color.RED) {
           p.notifyLose();
         } else {
           p.notifyWin();
@@ -145,8 +208,8 @@ export default class Game {
         if (Util.collisionCircleCircle(player1, player2)) {
           let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
           alpha = alpha || 0;
-          player1.x += Math.sign(player1.x - player2.x) * config.playerRepulsion * Math.cos(alpha);
-          player1.y += Math.sign(player1.y - player2.y) * config.playerRepulsion * Math.sin(alpha);
+          player1.x += Math.sign(player1.x - player2.x) * config.PLAYER_REPULSION * Math.cos(alpha);
+          player1.y += Math.sign(player1.y - player2.y) * config.PLAYER_REPULSION * Math.sin(alpha);
         }
       }
     });
