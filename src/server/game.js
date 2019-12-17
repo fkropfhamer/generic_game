@@ -1,7 +1,5 @@
 import config from './config';
 import Util from './util';
-import PowerUp from './powerup';
-import {powerUpTypes} from './config';
 
 export default class Game {
   constructor(players) {

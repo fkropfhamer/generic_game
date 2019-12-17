@@ -1,14 +1,10 @@
 import PowerUp from './powerup';
-
-export const powerUpTypes = {
-  ADDHEALTH: 'health',
-  SHIELD: 'shield',
-};
+import { powerUpTypes } from './enums';
 
 const config = {
   bulletSpeed: 5,
   bulletDuration: 1000,
-  playerSpeed: 3,
+  playerSpeed: 1,
   playerRadius: 27.5,
   playerRepulsion: 10,
   gameDuration: 60,
