@@ -1,4 +1,3 @@
-import PowerUp from './powerup';
 import { powerUpTypes } from './enums';
 
 const config = {
@@ -26,8 +25,8 @@ const config = {
   walls: [],
   numberOfVerticalWalls: 10,
   numberOfHorizontalWalls: 12,
-  powerup: [],
-  initPowerups: [{ x: 500, y: 500, type: powerUpTypes.ADDHEALTH }],
+  powerUp: [],
+  initPowerUps: [{ x: 500, y: 500, type: powerUpTypes.ADDHEALTH }],
 };
 
 const constraintWalls = {
@@ -101,14 +100,7 @@ function setupBarrierWalls() {
   }
 }
 
-function setupPowerups() {
-  config.initPowerups.forEach((powerup) => {
-    config.powerup.push(new PowerUp(powerup.x, powerup.y, powerup.type));
-  });
-}
-
 setupBarrierWalls();
 setupConstraintWalls();
-setupPowerups();
 
 export default config;

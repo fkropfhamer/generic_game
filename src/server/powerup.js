@@ -9,8 +9,8 @@ export default class PowerUp {
     this.type = type;
   }
 
-  static mapPowerups(powerup) {
-    return powerup.map((p) => {
+  static mapPowerups(powerUp) {
+    return powerUp.map((p) => {
       return {
         x: p.x,
         y: p.y,

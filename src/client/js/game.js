@@ -48,7 +48,7 @@ class Game {
         player.hitAngle
       );
     });
-    this.powerup.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
+    this.powerUp.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
   }
 
   drawPlayerIndicator() {
@@ -144,7 +144,7 @@ class Game {
     this.timer = data.timer;
     this.bullets = [];
     this.walls = data.walls;
-    this.powerup = data.powerup;
+    this.powerUp = data.powerUp;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -164,7 +164,7 @@ class Game {
     this.lives = data.lives;
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
-    this.powerup = data.powerup;
+    this.powerUp = data.powerUp;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,

@@ -172,7 +172,7 @@ describe('player test', () => {
       bullets: [],
       timer: 25,
       walls: [],
-      powerup: [],
+      powerUp: [],
     });
   });
 
