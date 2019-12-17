@@ -11,10 +11,10 @@ class Server {
   }
 
   listen(port) {
-    const server = express();
-    server.use(express.static('public'));
-    this.server = server.listen(port);
-    this.io = io(this.server); // Mache Websocket auf
+    const fileServer = express();
+    fileServer.use(express.static('public'));
+    this.fileServer = fileServer.listen(port);
+    this.io = io(this.fileServer); // Mache Websocket auf
     this.setup(); // Config den Websocket
   }
 
