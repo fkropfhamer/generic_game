@@ -39,6 +39,10 @@ class View {
     this.setupCanvas();
   }
 
+  drawBackround() {
+    this.drawImage(this.width / 2, this.height / 2, this.assets.background);
+  }
+
   drawCircle(x, y, radius, color) {
     this.ctx.beginPath();
     this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
@@ -72,6 +76,7 @@ class View {
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.drawBackround();
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
@@ -147,23 +152,30 @@ class View {
   }
 
   showWaitingScreen(numberOfPlayers) {
-    const waitingScreen = document.createElement('div');
-    waitingScreen.style.backgroundColor = 'white';
-    waitingScreen.style.position = 'absolute';
-    waitingScreen.style.left = '25%';
-    waitingScreen.style.top = '25%';
-    waitingScreen.style.width = `${this.width / 2}px`;
-    waitingScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
     const playerString = numberOfPlayers === 1 ? 'player' : 'players';
-    heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+    if (this.waitingScreen) {
+      document.getElementById(
+        'waitcount'
+      ).innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+    } else {
+      const waitingScreen = document.createElement('div');
+      waitingScreen.style.backgroundColor = 'white';
+      waitingScreen.style.position = 'absolute';
+      waitingScreen.style.left = '25%';
+      waitingScreen.style.top = '25%';
+      waitingScreen.style.width = `${this.width / 2}px`;
+      waitingScreen.style.height = `${this.height / 2}px`;
 
-    waitingScreen.appendChild(heading);
+      const heading = document.createElement('h1');
+      heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+      heading.id = 'waitcount';
 
-    document.getElementById('root').appendChild(waitingScreen);
+      waitingScreen.appendChild(heading);
 
-    this.waitingScreen = waitingScreen;
+      document.getElementById('root').appendChild(waitingScreen);
+
+      this.waitingScreen = waitingScreen;
+    }
   }
 
   hideWaitingScreen() {

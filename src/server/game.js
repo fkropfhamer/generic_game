@@ -21,6 +21,7 @@ export default class Game {
       player.y = config.playerstartingPositions[i].y;
       player.lives = config.playerLives;
       player.color = i % 2 === 0 ? 'blue' : 'red';
+      player.game = this;
     });
 
     this.players.forEach((player) => {

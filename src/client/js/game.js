@@ -2,6 +2,7 @@ import config from '../../server/config';
 
 class Game {
   constructor(view, assets) {
+    this.isWaiting = true;
     this.view = view;
     this.assets = assets;
     this.view.showStartScreen(this.setup.bind(this));
@@ -129,9 +130,9 @@ class Game {
 
   onStart(data) {
     console.log('game starting!');
-    if (this.waiting) {
+    if (this.isWaiting) {
       this.view.hideWaitingScreen();
-      this.waiting = false;
+      this.isWaiting = false;
     }
 
     this.x = data.x;
@@ -177,7 +178,7 @@ class Game {
   onWait(data) {
     console.log('you have to wait!');
     this.view.showWaitingScreen(data.numberOfPlayers);
-    this.waiting = true;
+    this.isWaiting = true;
   }
 
   onOpponentDisconnected() {
