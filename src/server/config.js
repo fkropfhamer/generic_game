@@ -1,3 +1,5 @@
+import { powerUpTypes } from './enums';
+
 const config = {
   bulletSpeed: 5,
   bulletDuration: 1000,
@@ -23,6 +25,8 @@ const config = {
   walls: [],
   numberOfVerticalWalls: 10,
   numberOfHorizontalWalls: 12,
+  powerUp: [],
+  initPowerUps: [{ x: 500, y: 500, type: powerUpTypes.ADDHEALTH }],
 };
 
 const constraintWalls = {

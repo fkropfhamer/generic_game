@@ -1,5 +1,6 @@
 import config from './config';
 import Util from './util';
+import PowerUp from './powerup';
 
 export default class Game {
   constructor(players) {
@@ -7,6 +8,8 @@ export default class Game {
     this.bullets = [];
     this.deadPlayers = [];
     this.walls = JSON.parse(JSON.stringify(config.walls));
+    this.powerUps = [];
+    this.setupPowerups();
   }
 
   start() {
@@ -22,10 +25,18 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
+      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls, this.powerUps);
+      player.game = this;
+      player.isWaiting = false;
     });
 
     this.interval = setInterval(this.loop.bind(this), 10);
+  }
+
+  setupPowerups() {
+    config.initPowerUps.forEach((powerUp) => {
+      this.powerUps.push(new PowerUp(powerUp.x, powerUp.y, powerUp.type));
+    });
   }
 
   getOtherPlayers(player) {
@@ -54,6 +65,16 @@ export default class Game {
             this.playerDied(player);
           }
         }
+      }
+    });
+  }
+
+  checkPlayerHitsPowerUp(player) {
+    this.powerUps.forEach((powerUp) => {
+      if (Util.collisionCircleCircle(powerUp, player)) {
+        console.log(powerUp);
+        powerUp.update(player);
+        this.powerUps = this.powerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
   }
@@ -167,6 +188,7 @@ export default class Game {
       this.checkWallCollisionPlayer(player);
 
       this.checkBulletHitsPlayer(player);
+      this.checkPlayerHitsPowerUp(player);
     });
 
     const bullets = this.bullets.map((b) => {
@@ -179,7 +201,13 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer, this.walls);
+      player.notifyUpdate(
+        this.getOtherPlayers(player),
+        bullets,
+        this.timer,
+        this.walls,
+        this.powerUps
+      );
     });
   }
 }

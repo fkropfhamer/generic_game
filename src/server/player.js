@@ -1,6 +1,7 @@
 import Bullet from './bullet';
 import Util from './util';
 import config from './config';
+import PowerUp from './powerup';
 
 export default class Player {
   constructor(socket, server) {
@@ -59,7 +60,7 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls) {
+  notifyStart(otherPlayers, timer, walls, powerUp) {
     this.isWaiting = false;
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
@@ -72,6 +73,7 @@ export default class Player {
       players: mappedPlayers,
       timer,
       walls,
+      powerUp,
     });
   }
 
@@ -80,8 +82,9 @@ export default class Player {
     this.socket.emit('wait', { numberOfPlayers });
   }
 
-  notifyUpdate(players, bullets, timer, walls) {
+  notifyUpdate(players, bullets, timer, walls, powerUp) {
     const mappedPlayers = Util.mapPlayers(players);
+    const mappedPowerups = PowerUp.mapPowerups(powerUp);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -92,6 +95,7 @@ export default class Player {
       bullets,
       timer,
       walls,
+      powerUp: mappedPowerups,
     });
   }
 

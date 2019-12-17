@@ -160,7 +160,7 @@ describe('player test', () => {
       lives: 3,
     };
 
-    player.notifyUpdate([opponent], [], 25);
+    player.notifyUpdate([opponent], [], 25, [], []);
 
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('update');
@@ -172,6 +172,8 @@ describe('player test', () => {
       players: [opponent],
       bullets: [],
       timer: 25,
+      walls: [],
+      powerUp: [],
     });
   });
 
