@@ -119,8 +119,8 @@ export default class Game {
           player.hitAngle = hitAngle;
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
-          if (player.shieldActivated) {
-            player.shieldActivated = false;
+          if (player.isShielded) {
+            player.isShielded = false;
           } else {
             player.lives -= 1;
             if (player.lives <= 0) {

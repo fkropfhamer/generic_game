@@ -18,14 +18,14 @@ class Game {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, shieldActivated, radius) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded) {
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
     this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
-    if (shieldActivated) {
-      this.view.drawRing(x, y, radius, color);
+    if (isShielded) {
+      this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
     }
   }
 
@@ -46,8 +46,7 @@ class Game {
       this.y,
       this.angle,
       this.hitAngle,
-      this.shieldActivated,
-      this.radius
+      this.isShielded
     );
     this.drawPlayerIndicator();
     this.displayPlayerColorInfo();
@@ -60,8 +59,7 @@ class Game {
         player.y,
         player.angle,
         player.hitAngle,
-        player.shieldActivated,
-        player.radius
+        player.isShielded
       );
     });
     this.powerUp.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
@@ -160,8 +158,7 @@ class Game {
     this.timer = data.timer;
     this.bullets = [];
     this.walls = data.walls;
-    this.shieldActivated = data.shieldActivated;
-    this.radius = data.radius;
+    this.isShielded = data.isShielded;
     this.powerUp = data.powerUp;
     this.draw();
     this.setupKeyPressedEvents();
@@ -182,8 +179,7 @@ class Game {
     this.lives = data.lives;
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
-    this.shieldActivated = data.shieldActivated;
-    this.radius = data.radius;
+    this.isShielded = data.isShielded;
     this.powerUp = data.powerUp;
     this.draw();
     this.socket.emit('keyspressed', {

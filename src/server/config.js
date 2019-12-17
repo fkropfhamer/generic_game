@@ -1,7 +1,7 @@
 import { powerUpTypes } from './enums';
 import Util from './util';
 
-const config = {
+const config = Util.deepFreeze({
   BULLET_SPEED: 5,
   BULLET_DURATION: 1000,
   PLAYER_SPEED: 1,
@@ -49,6 +49,6 @@ const config = {
     fillColor: 'white',
     strokeColor: 'white',
   },
-};
+});
 
-export default Util.deepFreeze(config);
+export default config;

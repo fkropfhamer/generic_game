@@ -27,8 +27,7 @@ export default class Util {
         lives: player.lives,
         face: player.face,
         hitAngle: player.hitAngle,
-        shieldActivated: player.shieldActivated,
-        radius: player.radius,
+        isShielded: player.isShielded,
       };
     });
   }
