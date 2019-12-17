@@ -2,6 +2,7 @@ import config from '../../server/config';
 
 class Game {
   constructor(view, assets) {
+    this.isWaiting = true;
     this.view = view;
     this.assets = assets;
     this.view.showStartScreen(this.setup.bind(this));
@@ -31,7 +32,7 @@ class Game {
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
-    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.bulletRadius, b.color));
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
       this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
@@ -63,7 +64,7 @@ class Game {
         player.radius
       );
     });
-    this.powerup.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
+    this.powerUp.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
   }
 
   drawPlayerIndicator() {
@@ -144,9 +145,9 @@ class Game {
 
   onStart(data) {
     console.log('game starting!');
-    if (this.waiting) {
+    if (this.isWaiting) {
       this.view.hideWaitingScreen();
-      this.waiting = false;
+      this.isWaiting = false;
     }
 
     this.x = data.x;
@@ -159,9 +160,9 @@ class Game {
     this.timer = data.timer;
     this.bullets = [];
     this.walls = data.walls;
-    this.powerup = data.powerup;
     this.shieldActivated = data.shieldActivated;
     this.radius = data.radius;
+    this.powerUp = data.powerUp;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -181,9 +182,9 @@ class Game {
     this.lives = data.lives;
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
-    this.powerup = data.powerup;
     this.shieldActivated = data.shieldActivated;
     this.radius = data.radius;
+    this.powerUp = data.powerUp;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,
@@ -196,7 +197,7 @@ class Game {
   onWait(data) {
     console.log('you have to wait!');
     this.view.showWaitingScreen(data.numberOfPlayers);
-    this.waiting = true;
+    this.isWaiting = true;
   }
 
   onOpponentDisconnected() {

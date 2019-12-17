@@ -1,13 +1,13 @@
 import config from './config';
 
 export default class IceSand {
-  constructor(powerup) {
-    this.x = powerup.x;
-    this.y = powerup.y;
-    this.duration = powerup.powerupDuration;
-    this.radius = powerup.powerupRadius;
-    this.color = powerup.powerupColor;
-    this.type = powerup.type;
+  constructor(powerUp) {
+    this.x = powerUp.x;
+    this.y = powerUp.y;
+    this.duration = powerUp.powerupDuration;
+    this.radius = powerUp.powerupRadius;
+    this.color = powerUp.powerupColor;
+    this.type = powerUp.type;
   }
 
   manipulatePlayer(player) {

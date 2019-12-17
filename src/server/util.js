@@ -6,6 +6,17 @@ export default class Util {
     return 1;
   }
 
+  static deepFreeze(object) {
+    const propNames = Object.getOwnPropertyNames(object);
+
+    propNames.forEach((propName) => {
+      const value = object[propName];
+      object[propName] = value && typeof value === 'object' ? this.deepFreeze(value) : value;
+    });
+
+    return Object.freeze(object);
+  }
+
   static mapPlayers(players) {
     return players.map((player) => {
       return {

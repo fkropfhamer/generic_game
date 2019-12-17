@@ -1,28 +1,24 @@
-/* eslint-disable indent */
-/* eslint-disable prettier/prettier */
-import config from './config';
-import {powerUpTypes} from './config';
+import { powerUpTypes } from './enums';
 
 export default class PowerUp {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
-    //this.duration = config.powerupDuration;
     this.radius = 10;
-    this.color = 'green';
+    this.color = type === powerUpTypes.SHIELD ? 'brown' : 'green';
     this.type = type;
-    }
+  }
 
-    static mapPowerups(powerup) {
-      return powerup.map((p) => {
-        return {
-          x: p.x,
-          y: p.y,
-          radius: p.radius,
-          color: p.color,
-        };
-      });
-    }
+  static mapPowerups(powerUp) {
+    return powerUp.map((p) => {
+      return {
+        x: p.x,
+        y: p.y,
+        radius: p.radius,
+        color: p.color,
+      };
+    });
+  }
 
   static addHealthUpdate(player) {
     if (player.lives < 3) {

@@ -17,14 +17,14 @@ class View {
   }
 
   setupCanvas() {
-    if (this.windowWidth !== config.fieldWidth) {
-      this.scale = this.windowWidth / config.fieldWidth;
-      if (config.fieldHeight * this.scale > this.windowHeight) {
-        this.scale = this.windowHeight / config.fieldHeight;
+    if (this.windowWidth !== config.FIELD_WIDTH) {
+      this.scale = this.windowWidth / config.FIELD_WIDTH;
+      if (config.FIELD_HEIGHT * this.scale > this.windowHeight) {
+        this.scale = this.windowHeight / config.FIELD_HEIGHT;
       }
     }
-    this.width = config.fieldWidth * this.scale;
-    this.height = config.fieldHeight * this.scale;
+    this.width = config.FIELD_WIDTH * this.scale;
+    this.height = config.FIELD_HEIGHT * this.scale;
 
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -39,6 +39,10 @@ class View {
     this.setupCanvas();
   }
 
+  drawBackround() {
+    this.drawImage(this.assets.background);
+  }
+
   drawCircle(x, y, radius, color) {
     this.ctx.beginPath();
     this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
@@ -48,7 +52,7 @@ class View {
 
   drawRing(x, y, radius, color) {
     this.ctx.beginPath();
-    this.ctx.arc(x * this.scale, y * this.scale, (radius + 5)* this.scale, 0, 2 * Math.PI, false);
+    this.ctx.arc(x * this.scale, y * this.scale, (radius + 5) * this.scale, 0, 2 * Math.PI, false);
     this.ctx.lineWidth = 6;
     this.ctx.strokeStyle = color;
     this.ctx.stroke();
@@ -72,14 +76,15 @@ class View {
     this.ctx.stroke();
   }
 
-  drawImage(x, y, img) {
+  drawImage(img) {
     console.log(img, img.width, img.height);
-    this.ctx.drawImage(img, 0, 0);
+    this.ctx.drawImage(img, 0, 0, this.width, this.height);
   }
 
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.drawBackround();
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
@@ -155,23 +160,30 @@ class View {
   }
 
   showWaitingScreen(numberOfPlayers) {
-    const waitingScreen = document.createElement('div');
-    waitingScreen.style.backgroundColor = 'white';
-    waitingScreen.style.position = 'absolute';
-    waitingScreen.style.left = '25%';
-    waitingScreen.style.top = '25%';
-    waitingScreen.style.width = `${this.width / 2}px`;
-    waitingScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
     const playerString = numberOfPlayers === 1 ? 'player' : 'players';
-    heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+    if (this.waitingScreen) {
+      document.getElementById(
+        'waitcount'
+      ).innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+    } else {
+      const waitingScreen = document.createElement('div');
+      waitingScreen.style.backgroundColor = 'white';
+      waitingScreen.style.position = 'absolute';
+      waitingScreen.style.left = '25%';
+      waitingScreen.style.top = '25%';
+      waitingScreen.style.width = `${this.width / 2}px`;
+      waitingScreen.style.height = `${this.height / 2}px`;
 
-    waitingScreen.appendChild(heading);
+      const heading = document.createElement('h1');
+      heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+      heading.id = 'waitcount';
 
-    document.getElementById('root').appendChild(waitingScreen);
+      waitingScreen.appendChild(heading);
 
-    this.waitingScreen = waitingScreen;
+      document.getElementById('root').appendChild(waitingScreen);
+
+      this.waitingScreen = waitingScreen;
+    }
   }
 
   hideWaitingScreen() {

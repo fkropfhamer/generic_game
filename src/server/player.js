@@ -4,13 +4,13 @@ import config from './config';
 import PowerUp from './powerup';
 
 export default class Player {
-  constructor(socket, gameHandler) {
+  constructor(socket, server) {
     this.socket = socket;
-    this.gameHandler = gameHandler;
+    this.server = server;
     this.setupSocket();
-    this.speed = config.playerSpeed;
+    this.speed = config.PLAYER_SPEED;
     this.angle = 0;
-    this.radius = config.playerRadius;
+    this.radius = config.PLAYER_RADIUS;
     this.shootingCount = 0;
     this.shieldActivated = false;
   }
@@ -30,13 +30,13 @@ export default class Player {
     if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
-      this.shootingCount = config.shootingRate;
+      this.shootingCount = config.SHOOTING_RATE;
     }
   }
 
   onDisconnect() {
     if (this.isWaiting) {
-      this.gameHandler.waitingPlayerDisconnected(this);
+      this.server.waitingPlayerDisconnected(this);
     } else if (typeof this.game !== 'undefined') {
       this.game.playerDisconnected(this);
     }
@@ -45,7 +45,7 @@ export default class Player {
   onReady(data) {
     this.face = data.face;
     this.mode = data.mode;
-    this.gameHandler.playerIsReady(this, data.mode);
+    this.server.playerIsReady(this, data.mode);
   }
 
   setupSocket() {
@@ -61,7 +61,8 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls, powerup) {
+  notifyStart(otherPlayers, timer, walls, powerUp) {
+    this.isWaiting = false;
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
       x: this.x,
@@ -73,7 +74,7 @@ export default class Player {
       players: mappedPlayers,
       timer,
       walls,
-      powerup,
+      powerUp,
     });
   }
 
@@ -82,9 +83,9 @@ export default class Player {
     this.socket.emit('wait', { numberOfPlayers });
   }
 
-  notifyUpdate(players, bullets, timer, walls, powerup) {
+  notifyUpdate(players, bullets, timer, walls, powerUp) {
     const mappedPlayers = Util.mapPlayers(players);
-    const mappedPowerups = PowerUp.mapPowerups(powerup);
+    const mappedPowerups = PowerUp.mapPowerups(powerUp);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -97,7 +98,7 @@ export default class Player {
       bullets,
       timer,
       walls,
-      powerup: mappedPowerups,
+      powerUp: mappedPowerups,
     });
   }
 
