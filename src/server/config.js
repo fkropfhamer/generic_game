@@ -31,8 +31,8 @@ const constraintWalls = {
   height: 20,
   width: 100,
   angle: 0,
-  fillColor: 'white',
-  strokeColor: 'black',
+  fillColor: 'black',
+  strokeColor: 'white',
 };
 const barrierWalls = {
   x: 50,
@@ -40,8 +40,8 @@ const barrierWalls = {
   height: 20,
   width: 60,
   angle: Math.PI / 4,
-  fillColor: 'white',
-  strokeColor: 'white',
+  fillColor: 'black',
+  strokeColor: 'black',
 };
 
 function setupConstraintWalls() {
