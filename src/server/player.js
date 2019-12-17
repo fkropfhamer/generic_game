@@ -94,7 +94,6 @@ export default class Player {
       hitAngle: this.hitAngle,
       players: mappedPlayers,
       isShielded: this.isShielded,
-      radius: this.radius,
       bullets,
       timer,
       walls,

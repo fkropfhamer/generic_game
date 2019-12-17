@@ -151,6 +151,8 @@ describe('player test', () => {
     player.x = 400;
     player.y = 300;
     player.lives = 1;
+    player.hitAngle = Math.PI / 2;
+    player.isShielded = false;
     const opponent = {
       x: 100,
       y: 200,
@@ -158,6 +160,8 @@ describe('player test', () => {
       face: 'face3',
       color: 'blue',
       lives: 3,
+      isShielded: true,
+      hitAngle: Math.PI,
     };
 
     player.notifyUpdate([opponent], [], 25, [], []);
@@ -174,6 +178,8 @@ describe('player test', () => {
       timer: 25,
       walls: [],
       powerUp: [],
+      isShielded: false,
+      hitAngle: Math.PI / 2,
     });
   });
 

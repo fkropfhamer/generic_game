@@ -26,15 +26,16 @@ const config = Util.deepFreeze({
   NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_WALLS: 12,
   POWER_UPS: [
-    { x: 500, y: 500, type: powerUpTypes.ADDHEALTH },
-    { x: 500, y: 250, type: powerUpTypes.SHIELD },
+    { x: 480, y: 455, type: powerUpTypes.ADDHEALTH },
+    { x: 800, y: 455, type: powerUpTypes.SHIELD },
+    { x: 480, y: 265, type: powerUpTypes.SHIELD },
+    { x: 800, y: 265, type: powerUpTypes.ADDHEALTH },
   ],
 
   constraintWalls: {
     x: 0,
     y: 10,
     height: 20,
-    width: 100,
     angle: 0,
     fillColor: 'white',
     strokeColor: 'black',

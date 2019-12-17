@@ -85,13 +85,13 @@ export default class Game {
       for (let j = 1; j <= 3; j += 1) {
         this.walls.push({
           ...config.barrierWalls,
-          x: ((config.FIELD_WIDTH * 1) / 4) * i,
-          y: ((config.FIELD_HEIGHT * 1) / 4) * j,
+          x: (config.FIELD_WIDTH / 4) * i,
+          y: (config.FIELD_HEIGHT / 4) * j,
         });
         this.walls.push({
           ...config.barrierWalls,
-          x: ((config.FIELD_WIDTH * 1) / 4) * i,
-          y: ((config.FIELD_HEIGHT * 1) / 4) * j,
+          x: (config.FIELD_WIDTH / 4) * i,
+          y: (config.FIELD_HEIGHT / 4) * j,
           angle: -config.barrierWalls.angle,
         });
       }
