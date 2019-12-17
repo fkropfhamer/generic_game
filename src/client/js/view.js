@@ -39,6 +39,10 @@ class View {
     this.setupCanvas();
   }
 
+  drawBackround() {
+    this.drawImage(this.width / 2, this.height / 2, this.assets.background);
+  }
+
   drawCircle(x, y, radius, color) {
     this.ctx.beginPath();
     this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
@@ -72,6 +76,7 @@ class View {
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.drawBackround()
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
