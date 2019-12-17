@@ -1,6 +1,6 @@
 import config from '../../server/config';
 
-class Game {
+export default class Client {
   constructor(view, assets) {
     this.isWaiting = true;
     this.view = view;
@@ -227,5 +227,3 @@ class Game {
     this.socket.on('lose', this.onLose.bind(this));
   }
 }
-
-export default Game;

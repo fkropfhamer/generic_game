@@ -12,7 +12,7 @@ import face3 from '../img/face3.png';
 import face4 from '../img/face4.png';
 // import background from '../img/background.png';
 import AssetLoader from './assetloader';
-import Game from './game';
+import Client from './client';
 
 window.onload = () => {
   const view = new View();
@@ -33,6 +33,6 @@ window.onload = () => {
   ]).then((assets) => {
     view.assets = assets;
     // eslint-disable-next-line no-new
-    new Game(view, assets);
+    new Client(view, assets);
   });
 };
