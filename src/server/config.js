@@ -1,4 +1,5 @@
 import { powerUpTypes } from './enums';
+import Util from './util';
 
 const config = {
   BULLET_SPEED: 5,
@@ -47,4 +48,4 @@ const config = {
   },
 };
 
-export default config;
+export default Util.deepFreeze(config);
