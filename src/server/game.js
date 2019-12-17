@@ -36,7 +36,7 @@ export default class Game {
   }
 
   setupPowerups() {
-    config.initPowerUps.forEach((powerUp) => {
+    config.POWER_UPS.forEach((powerUp) => {
       this.powerUps.push(new PowerUp(powerUp.x, powerUp.y, powerUp.type));
     });
   }

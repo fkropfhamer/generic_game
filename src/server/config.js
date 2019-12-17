@@ -22,7 +22,6 @@ const config = {
     { x: 1180, y: 100 },
   ],
 
-  walls: [],
   NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_WALLS: 12,
   initPowerUps: [{ x: 500, y: 500, type: powerUpTypes.ADDHEALTH }],
