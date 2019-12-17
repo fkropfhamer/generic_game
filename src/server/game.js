@@ -67,6 +67,7 @@ export default class Game {
       if (Util.collisionCircleCircle(powerup, player)) {
         console.log(powerup);
         powerup.update(player);
+        this.powerups = this.powerups.filter((p) => !Object.is(powerup, p));
       }
     });
   }
