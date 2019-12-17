@@ -27,10 +27,10 @@ describe('server', () => {
     Game.mockClear();
     Player.mockClear();
 
-    /* webSocket.listen = jest.fn((port) => {
-      return { port };
-    }); */
     server = new Server();
+    server.listen = jest.fn((port) => {
+      return { port };
+    });
   });
 
   test('constructor', () => {
@@ -47,7 +47,7 @@ describe('server', () => {
     // expect(server.listen.mock.calls.length).toBe(1);
     // expect(server.listen.mock.calls[0][0]).toBe(port);
 
-    expect(server.io.webSocket).toBe(server.fileServer);
+    // expect(server.io.webSocket).toBe(server.fileServer);
   });
 
   test('server connection event', () => {
