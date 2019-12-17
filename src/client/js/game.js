@@ -106,7 +106,6 @@ class Game {
   }
 
   shoot(e) {
-    console.log('shoot', e.clientX, e.clientY);
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
     this.socket.emit('shoot', { angle });
