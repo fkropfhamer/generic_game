@@ -17,14 +17,14 @@ class View {
   }
 
   setupCanvas() {
-    if (this.windowWidth !== config.fieldWidth) {
-      this.scale = this.windowWidth / config.fieldWidth;
-      if (config.fieldHeight * this.scale > this.windowHeight) {
-        this.scale = this.windowHeight / config.fieldHeight;
+    if (this.windowWidth !== config.FIELD_WIDTH) {
+      this.scale = this.windowWidth / config.FIELD_WIDTH;
+      if (config.FIELD_HEIGHT * this.scale > this.windowHeight) {
+        this.scale = this.windowHeight / config.FIELD_HEIGHT;
       }
     }
-    this.width = config.fieldWidth * this.scale;
-    this.height = config.fieldHeight * this.scale;
+    this.width = config.FIELD_WIDTH * this.scale;
+    this.height = config.FIELD_HEIGHT * this.scale;
 
     this.canvas.width = this.width;
     this.canvas.height = this.height;

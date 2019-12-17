@@ -95,11 +95,11 @@ describe('Util test', () => {
       height: 10,
     };
 
-    const circle = { x: config.playerRadius + 15, y: config.playerRadius + 15 };
+    const circle = { x: config.PLAYER_RADIUS + 15, y: config.PLAYER_RADIUS + 15 };
 
     expect(Util.collisionRectCircle(rect, circle)).toBe(false);
 
-    const circle2 = { x: config.playerRadius + 14, y: config.playerRadius + 14 };
+    const circle2 = { x: config.PLAYER_RADIUS + 14, y: config.PLAYER_RADIUS + 14 };
 
     expect(Util.collisionRectCircle(rect, circle2)).toBe(false);
   });

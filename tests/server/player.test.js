@@ -49,7 +49,7 @@ describe('player test', () => {
 
     expect(player.angle).toBe(Math.PI);
     expect(player.createBullet.mock.calls.length).toBe(1);
-    expect(player.shootingCount).toBe(config.shootingRate);
+    expect(player.shootingCount).toBe(config.SHOOTING_RATE);
   });
 
   test('socket event shoot limited by shooting count', () => {

@@ -40,7 +40,7 @@ class Server {
   }
 
   notifyWaitingPlayers() {
-    const neededPlayers = config.teamSize * 2 - this.waitingPlayers.length;
+    const neededPlayers = config.TEAM_SIZE * 2 - this.waitingPlayers.length;
     this.waitingPlayers.forEach((waitingPlayer) => waitingPlayer.notifyWaiting(neededPlayers));
   }
 
@@ -57,7 +57,7 @@ class Server {
         this.waitingPlayer = false;
       }
     } else if (mode === 'teams') {
-      if (this.waitingPlayers.length === config.teamSize * 2 - 1) {
+      if (this.waitingPlayers.length === config.TEAM_SIZE * 2 - 1) {
         const game = new Game([player, ...this.waitingPlayers]);
         game.start();
         this.waitingPlayers = [];
