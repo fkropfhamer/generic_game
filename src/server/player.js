@@ -12,6 +12,7 @@ export default class Player {
     this.angle = 0;
     this.radius = config.playerRadius;
     this.shootingCount = 0;
+    this.shieldActivated = true;
   }
 
   onKeysPressed(data) {

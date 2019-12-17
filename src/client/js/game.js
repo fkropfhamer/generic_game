@@ -1,6 +1,5 @@
 import config from '../../server/config';
 
-
 class Game {
   constructor(view, assets) {
     this.view = view;
@@ -18,12 +17,15 @@ class Game {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, shieldActivated, radius) {
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
     this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
+    if (shieldActivated) {
+      this.view.drawRing(x, y, radius, color);
+    }
   }
 
   draw() {
@@ -35,7 +37,17 @@ class Game {
       this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
     );
 
-    this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle, this.hitAngle);
+    this.drawPlayer(
+      this.color,
+      this.lives,
+      this.face,
+      this.x,
+      this.y,
+      this.angle,
+      this.hitAngle,
+      this.shieldActivated,
+      this.radius
+    );
     this.drawPlayerIndicator();
     this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
@@ -46,7 +58,9 @@ class Game {
         player.x,
         player.y,
         player.angle,
-        player.hitAngle
+        player.hitAngle,
+        player.shieldActivated,
+        player.radius
       );
     });
     this.powerup.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
@@ -146,6 +160,8 @@ class Game {
     this.bullets = [];
     this.walls = data.walls;
     this.powerup = data.powerup;
+    this.shieldActivated = data.shieldActivated;
+    this.radius = data.radius;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -166,6 +182,8 @@ class Game {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.powerup = data.powerup;
+    this.shieldActivated = data.shieldActivated;
+    this.radius = data.radius;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,

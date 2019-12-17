@@ -46,6 +46,14 @@ class View {
     this.ctx.fill();
   }
 
+  drawRing(x, y, radius, color) {
+    this.ctx.beginPath();
+    this.ctx.arc(x * this.scale, y * this.scale, (radius + 5)* this.scale, 0, 2 * Math.PI, false);
+    this.ctx.lineWidth = 6;
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+  }
+
   drawRectangle(x, y, height, width, angle, fillColor, strokeColor) {
     const wSin = (Math.sin(angle) * width) / 2;
     const wCos = (Math.cos(angle) * width) / 2;
