@@ -149,7 +149,9 @@ class View {
   showWaitingScreen(numberOfPlayers) {
     const playerString = numberOfPlayers === 1 ? 'player' : 'players';
     if (this.waitingScreen) {
-      document.getElementById('waitcount').innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
+      document.getElementById(
+        'waitcount'
+      ).innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
     } else {
       const waitingScreen = document.createElement('div');
       waitingScreen.style.backgroundColor = 'white';

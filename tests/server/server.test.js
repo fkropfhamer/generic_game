@@ -27,9 +27,9 @@ describe('server', () => {
     Game.mockClear();
     Player.mockClear();
 
-    /*webSocket.listen = jest.fn((port) => {
+    /* webSocket.listen = jest.fn((port) => {
       return { port };
-    });*/
+    }); */
     server = new Server();
   });
 
