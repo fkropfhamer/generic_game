@@ -1,7 +1,7 @@
 import config from './config';
 import Util from './util';
 import PowerUp from './powerup';
-import {powerUpTypes} from './config';
+import { powerUpTypes } from './config';
 
 export default class Game {
   constructor(players) {
@@ -53,9 +53,13 @@ export default class Game {
           player.hitAngle = hitAngle;
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
-          player.lives -= 1;
-          if (player.lives <= 0) {
-            this.playerDied(player);
+          if (player.shieldActivated) {
+            player.shieldActivated = false;
+          } else {
+            player.lives -= 1;
+            if (player.lives <= 0) {
+              this.playerDied(player);
+            }
           }
         }
       }

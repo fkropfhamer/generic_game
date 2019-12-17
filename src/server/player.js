@@ -12,7 +12,7 @@ export default class Player {
     this.angle = 0;
     this.radius = config.playerRadius;
     this.shootingCount = 0;
-    this.shieldActivated = true;
+    this.shieldActivated = false;
   }
 
   onKeysPressed(data) {
@@ -92,6 +92,8 @@ export default class Player {
       lives: this.lives,
       hitAngle: this.hitAngle,
       players: mappedPlayers,
+      shieldActivated: this.shieldActivated,
+      radius: this.radius,
       bullets,
       timer,
       walls,

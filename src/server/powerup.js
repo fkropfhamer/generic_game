@@ -30,12 +30,19 @@ export default class PowerUp {
     }
   }
 
+  static addShieldUpdate(player) {
+    if (!player.shieldActivated) {
+      player.shieldActivated = true;
+    }
+  }
+
   update(player) {
     switch (this.type) {
       case powerUpTypes.ADDHEALTH:
         PowerUp.addHealthUpdate(player);
         break;
       case powerUpTypes.SHIELD:
+        PowerUp.addShieldUpdate(player);
         break;
       default:
         throw Error('type does not exist');
