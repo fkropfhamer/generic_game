@@ -1,4 +1,5 @@
 import config from '../../server/config';
+import View from './view';
 
 export default class Client {
   constructor(view, assets) {
@@ -9,7 +10,7 @@ export default class Client {
   }
 
   setup(face, mode) {
-    this.view.hideStartScreen();
+    View.hideStartScreen();
     this.setupSocket();
     this.pressedUp = false;
     this.pressedDown = false;
@@ -143,7 +144,7 @@ export default class Client {
   onStart(data) {
     console.log('game starting!');
     if (this.isWaiting) {
-      this.view.hideWaitingScreen();
+      View.hideWaitingScreen();
       this.isWaiting = false;
     }
 
@@ -191,7 +192,7 @@ export default class Client {
 
   onWait(data) {
     console.log('you have to wait!');
-    this.view.showWaitingScreen(data.numberOfPlayers);
+    View.showWaitingScreen(data.numberOfPlayers);
     this.isWaiting = true;
   }
 

@@ -159,37 +159,16 @@ class View {
     }
   }
 
-  showWaitingScreen(numberOfPlayers) {
+  static showWaitingScreen(numberOfPlayers) {
+    document.getElementById('waitingscreen').style.display = 'initial';
     const playerString = numberOfPlayers === 1 ? 'player' : 'players';
-    if (this.waitingScreen) {
-      document.getElementById(
-        'waitcount'
-      ).innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
-    } else {
-      const waitingScreen = document.createElement('div');
-      waitingScreen.style.backgroundColor = 'white';
-      waitingScreen.style.position = 'absolute';
-      waitingScreen.style.left = '25%';
-      waitingScreen.style.top = '25%';
-      waitingScreen.style.width = `${this.width / 2}px`;
-      waitingScreen.style.height = `${this.height / 2}px`;
-
-      const heading = document.createElement('h1');
-      heading.innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
-      heading.id = 'waitcount';
-
-      waitingScreen.appendChild(heading);
-
-      document.getElementById('root').appendChild(waitingScreen);
-
-      this.waitingScreen = waitingScreen;
-    }
+    document.getElementById(
+      'waitingscreenheading'
+    ).innerHTML = `You have to wait for ${numberOfPlayers} other ${playerString}!`;
   }
 
-  hideWaitingScreen() {
-    if (this.waitingScreen) {
-      this.waitingScreen.style.display = 'none';
-    }
+  static hideWaitingScreen() {
+    document.getElementById('waitingscreen').style.display = 'none';
   }
 
   showEndScreen() {
@@ -303,214 +282,54 @@ class View {
   }
 
   showStartScreen(callback) {
-    const startScreen = document.createElement('div');
-    startScreen.style.backgroundColor = 'blue';
-    startScreen.style.position = 'absolute';
-    startScreen.style.left = '25%';
-    startScreen.style.top = '25%';
-    startScreen.style.width = `${this.width / 2}px`;
-    startScreen.style.height = `${this.height / 2}px`;
+    document.getElementById('startscreen').style.display = 'initial';
 
-    const heading = document.createElement('h1');
-    heading.innerHTML = 'Nice Game Title';
+    this.assets.face1.classList.add('img-thumbnail');
+    this.assets.face2.classList.add('img-thumbnail');
+    this.assets.face3.classList.add('img-thumbnail');
+    this.assets.face4.classList.add('img-thumbnail');
 
-    const faceChoice = document.createElement('div');
-    faceChoice.style.backgroundColor = 'white';
+    document.getElementById('choice1-label').appendChild(this.assets.face1);
+    document.getElementById('choice2-label').appendChild(this.assets.face2);
+    document.getElementById('choice3-label').appendChild(this.assets.face3);
+    document.getElementById('choice4-label').appendChild(this.assets.face4);
 
-    const faceChoiceHeading = document.createElement('h1');
-    faceChoiceHeading.innerHTML = 'Choose Face!';
-
-    const faceChoice1 = document.createElement('div');
-    faceChoice1.style.backgroundColor = 'grey';
-    faceChoice1.style.cssFloat = 'left';
-    faceChoice1.style.margin = '1%';
-    faceChoice1.style.padding = '1%';
-    const faceChoice2 = document.createElement('div');
-    faceChoice2.style.backgroundColor = 'grey';
-    faceChoice2.style.cssFloat = 'left';
-    faceChoice2.style.margin = '1%';
-    faceChoice2.style.padding = '1%';
-    const faceChoice3 = document.createElement('div');
-    faceChoice3.style.backgroundColor = 'grey';
-    faceChoice3.style.cssFloat = 'left';
-    faceChoice3.style.margin = '1%';
-    faceChoice3.style.padding = '1%';
-    const faceChoice4 = document.createElement('div');
-    faceChoice4.style.backgroundColor = 'grey';
-    faceChoice4.style.cssFloat = 'left';
-    faceChoice4.style.margin = '1%';
-    faceChoice4.style.padding = '1%';
-
-    const checkbox1 = document.createElement('input');
-    const checkbox2 = document.createElement('input');
-    const checkbox3 = document.createElement('input');
-    const checkbox4 = document.createElement('input');
-
-    const face1Img = this.assets.face1;
-
-    const face2Img = this.assets.face2;
-
-    const face3Img = this.assets.face3;
-
-    const face4Img = this.assets.face4;
-
-    checkbox1.type = 'checkbox';
-    checkbox1.checked = true;
-    checkbox1.onclick = () => {
-      if (!checkbox1.checked) {
-        checkbox1.checked = false;
-      } else {
-        checkbox1.checked = true;
-
-        checkbox2.checked = false;
-
-        checkbox3.checked = false;
-
-        checkbox4.checked = false;
-      }
-    };
-
-    checkbox2.type = 'checkbox';
-    checkbox2.checked = false;
-    checkbox2.onclick = () => {
-      if (!checkbox2.checked) {
-        checkbox2.checked = false;
-      } else {
-        checkbox2.checked = true;
-
-        checkbox1.checked = false;
-
-        checkbox3.checked = false;
-
-        checkbox4.checked = false;
-      }
-    };
-
-    checkbox3.type = 'checkbox';
-    checkbox3.checked = false;
-    checkbox3.onclick = () => {
-      if (!checkbox3.checked) {
-        checkbox3.checked = false;
-      } else {
-        checkbox3.checked = true;
-
-        checkbox2.checked = false;
-
-        checkbox1.checked = false;
-
-        checkbox4.checked = false;
-      }
-    };
-
-    checkbox4.type = 'checkbox';
-    checkbox4.checked = false;
-    checkbox4.onclick = () => {
-      if (!checkbox4.checked) {
-        checkbox4.checked = false;
-      } else {
-        checkbox4.checked = true;
-
-        checkbox2.checked = false;
-
-        checkbox3.checked = false;
-
-        checkbox1.checked = false;
-      }
-    };
-
-    const teamChoiceHeading = document.createElement('h1');
-    teamChoiceHeading.innerHTML = 'teamgame?';
-
-    const teamCheckbox = document.createElement('input');
-    teamCheckbox.type = 'checkbox';
-    teamCheckbox.innerHTML = 'teams?';
-
-    const teamChoice = document.createElement('div');
-    teamChoice.style.backgroundColor = 'brown';
-
-    const startButton = document.createElement('button');
-    startButton.innerHTML = 'start';
-    startButton.style.paddingLeft = '2%';
-    startButton.style.paddingRight = '6%';
-    startButton.style.paddingTop = '1%';
-    startButton.style.paddingBottom = '1%';
-    startButton.style.display = 'inline-block';
-    startButton.style.textAlign = 'center';
-    startButton.style.position = 'absolute';
-    startButton.style.backgroundColor = 'green';
-    startButton.style.color = 'white';
-    startButton.style.border = 'none';
-    startButton.style.top = '85%';
-    startButton.style.left = '10%';
-    // startButton.style.left = '100%';
+    const startButton = document.getElementById('startbutton');
     startButton.onclick = () => {
-      let face;
-      if (checkbox1.checked) {
-        console.log(1);
+      let teamgame = false;
+      let face = 'face1';
+
+      if (document.getElementById('teamgame-checkbox').checked) {
+        teamgame = true;
+      }
+
+      if (document.getElementById('choice1').checked) {
         face = 'face1';
-      } else if (checkbox2.checked) {
-        console.log(2);
+      }
+      if (document.getElementById('choice2').checked) {
         face = 'face2';
-      } else if (checkbox3.checked) {
-        console.log(3);
+      }
+      if (document.getElementById('choice3').checked) {
         face = 'face3';
-      } else if (checkbox4.checked) {
-        console.log(4);
+      }
+      if (document.getElementById('choice4').checked) {
         face = 'face4';
-      } else {
-        console.log(5);
-        face = 'face1';
       }
 
-      let mode;
-      if (teamCheckbox.checked) {
-        mode = 'teams';
-      } else {
-        mode = 'normal';
-      }
-
+      console.log(face, teamgame);
+      const mode = teamgame ? 'team' : 'normal';
       callback(face, mode);
     };
-
-    startScreen.appendChild(heading);
-
-    faceChoice1.appendChild(face1Img);
-    faceChoice1.appendChild(checkbox1);
-    faceChoice2.appendChild(face2Img);
-    faceChoice2.appendChild(checkbox2);
-    faceChoice3.appendChild(face3Img);
-    faceChoice3.appendChild(checkbox3);
-    faceChoice4.appendChild(face4Img);
-    faceChoice4.appendChild(checkbox4);
-
-    faceChoice.appendChild(faceChoiceHeading);
-    faceChoice.appendChild(faceChoice1);
-    faceChoice.appendChild(faceChoice2);
-    faceChoice.appendChild(faceChoice3);
-    faceChoice.appendChild(faceChoice4);
-
-    teamChoice.appendChild(teamChoiceHeading);
-    teamChoice.appendChild(teamCheckbox);
-
-    startScreen.appendChild(faceChoice);
-
-    startScreen.appendChild(teamChoice);
-
-    startScreen.appendChild(startButton);
-
-    document.getElementById('root').appendChild(startScreen);
-
-    this.startScreen = startScreen;
   }
 
-  hideStartScreen() {
-    if (this.startScreen) {
-      this.startScreen.style.display = 'none';
-    }
+  static hideStartScreen() {
+    document.getElementById('startscreen').style.display = 'none';
   }
 
   static reloadButton() {
     const button = document.createElement('button');
+    button.classList.add('btn-primary');
+    button.classList.add('btn');
     button.innerHTML = 'play again!';
     button.onclick = () => window.location.reload();
 

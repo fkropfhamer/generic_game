@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 import '../css/index.css';
 import View from './view';
 import red1life from '../img/red1life.png';
