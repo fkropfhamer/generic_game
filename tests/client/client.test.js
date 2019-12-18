@@ -1,6 +1,6 @@
 import Client from '../../src/client/js/client';
 
-describe('game client', () => {
+describe('client', () => {
   let game;
   let view;
   let assets;
@@ -24,6 +24,7 @@ describe('game client', () => {
   });
 
   test('constructor', () => {
+    // TODO: mock static methods
     expect(game.view).toBe(view);
     expect(game.assets).toBe(assets);
 
@@ -31,7 +32,7 @@ describe('game client', () => {
     expect(view.hideStartScreen).toHaveBeenCalledTimes(1);
   });
 
-  test('game setup', () => {
+  test('client setup', () => {
     expect(game.socket).toEqual(socket);
     expect(global.io).toHaveBeenCalledTimes(1);
 
