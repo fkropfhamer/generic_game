@@ -1,5 +1,5 @@
 import Client from '../../src/client/js/client';
-import View from '../../src/client/js/view';
+// import View from '../../src/client/js/view';
 jest.mock('../../src/client/js/view');
 
 describe('client', () => {
