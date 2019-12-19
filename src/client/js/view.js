@@ -1,11 +1,11 @@
 import config from '../../server/config';
+import background from '../img/background.png';
 
 class View {
   constructor() {
     this.scale = 1;
     this.windowHeight = window.innerHeight;
     this.windowWidth = window.innerWidth;
-    this.color = '#232529';
 
     this.canvas = document.createElement('canvas');
     document.getElementById('root').appendChild(this.canvas);
@@ -29,7 +29,9 @@ class View {
     this.canvas.width = this.width;
     this.canvas.height = this.height;
 
-    this.canvas.style.backgroundColor = this.color;
+    this.canvas.style.backgroundImage = `url(${background})`;
+    this.canvas.style.backgroundRepeat = 'no-repeat';
+    this.canvas.style.backgroundSize = 'cover';
   }
 
   resize() {
@@ -37,10 +39,6 @@ class View {
     this.windowWidth = window.innerWidth;
 
     this.setupCanvas();
-  }
-
-  drawBackround() {
-    this.drawImage(this.assets.background);
   }
 
   drawCircle(x, y, radius, color) {
@@ -84,7 +82,6 @@ class View {
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
-    // this.drawBackround();
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
