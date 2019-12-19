@@ -7,3 +7,8 @@ export const Color = Object.freeze({
   BLUE: 'blue',
   RED: 'red',
 });
+
+export const Mode = Object.freeze({
+  TEAMS: 'teams',
+  NORMAL: 'normal',
+});

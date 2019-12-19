@@ -1,4 +1,5 @@
 import config from '../../server/config';
+import { Mode } from '../../server/enums';
 
 class View {
   constructor() {
@@ -317,7 +318,7 @@ class View {
       }
 
       console.log(face, teamgame);
-      const mode = teamgame ? 'team' : 'normal';
+      const mode = teamgame ? Mode.TEAMS : Mode.NORMAL;
       callback(face, mode);
     };
   }
