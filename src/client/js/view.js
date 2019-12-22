@@ -42,15 +42,23 @@ class View {
   }
 
   drawCircle(x, y, radius, color) {
+    const scaledX = Math.round(x * this.scale);
+    const scaledY = Math.round(y * this.scale);
+    const scaledRadius = Math.round(radius * this.scale);
+
     this.ctx.beginPath();
-    this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
 
   drawRing(x, y, radius, color) {
+    const scaledX = Math.round(x * this.scale);
+    const scaledY = Math.round(y * this.scale);
+    const scaledRadius = Math.round((radius + 5) * this.scale);
+
     this.ctx.beginPath();
-    this.ctx.arc(x * this.scale, y * this.scale, (radius + 5) * this.scale, 0, 2 * Math.PI, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
     this.ctx.lineWidth = 6;
     this.ctx.strokeStyle = color;
     this.ctx.stroke();
@@ -61,12 +69,22 @@ class View {
     const wCos = (Math.cos(angle) * width) / 2;
     const hSin = (Math.sin(angle) * height) / 2;
     const hCos = (Math.cos(angle) * height) / 2;
+
+    const aX = Math.round((x - wCos + hSin) * this.scale);
+    const aY = Math.round((y - hCos - wSin) * this.scale);
+    const bX = Math.round((x + wCos + hSin) * this.scale);
+    const bY = Math.round((y - hCos + wSin) * this.scale);
+    const cX = Math.round((x + wCos - hSin) * this.scale);
+    const cY = Math.round((y + hCos + wSin) * this.scale);
+    const dX = Math.round((x - wCos - hSin) * this.scale);
+    const dY = Math.round((y + hCos - wSin) * this.scale);
+
     this.ctx.beginPath();
-    this.ctx.moveTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
-    this.ctx.lineTo((x + wCos + hSin) * this.scale, (y - hCos + wSin) * this.scale);
-    this.ctx.lineTo((x + wCos - hSin) * this.scale, (y + hCos + wSin) * this.scale);
-    this.ctx.lineTo((x - wCos - hSin) * this.scale, (y + hCos - wSin) * this.scale);
-    this.ctx.lineTo((x - wCos + hSin) * this.scale, (y - hCos - wSin) * this.scale);
+    this.ctx.moveTo(aX, aY);
+    this.ctx.lineTo(bX, bY);
+    this.ctx.lineTo(cX, cY);
+    this.ctx.lineTo(dX, dY);
+    this.ctx.lineTo(aX, aY);
     this.ctx.fillStyle = fillColor;
     this.ctx.strokeStyle = strokeColor;
     this.ctx.lineWidth = 3;
@@ -74,34 +92,32 @@ class View {
     this.ctx.stroke();
   }
 
-  drawImage(img) {
-    console.log(img, img.width, img.height);
-    this.ctx.drawImage(img, 0, 0, this.width, this.height);
-  }
-
   reset() {
     this.ctx.fillStyle = this.color;
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.clearRect(0, 0, Math.ceil(this.width), Math.ceil(this.height));
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
-    const imgWidth = image.width * scale * this.scale;
-    const imgHeight = image.height * scale * this.scale;
+    const imgWidth = Math.round(image.width * scale * this.scale);
+    const imgHeight = Math.round(image.height * scale * this.scale);
 
     this.ctx.save();
-    this.ctx.translate(x * this.scale, y * this.scale);
+    this.ctx.translate(Math.round(x * this.scale), Math.round(y * this.scale));
     this.ctx.rotate(angle);
 
-    this.ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+    const roundedX = Math.round(-imgWidth / 2);
+    const roundedY = Math.round(-imgHeight / 2);
+
+    this.ctx.drawImage(image, roundedX, roundedY, imgWidth, imgHeight);
     this.ctx.restore();
   }
 
   drawPlayerIndicator(x, y) {
     this.ctx.beginPath();
-    this.ctx.moveTo(x * this.scale, (y - 30) * this.scale);
-    this.ctx.lineTo((x - 10) * this.scale, (y - 35) * this.scale);
-    this.ctx.lineTo((x + 10) * this.scale, (y - 35) * this.scale);
-    this.ctx.lineTo(x * this.scale, (y - 30) * this.scale);
+    this.ctx.moveTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
+    this.ctx.lineTo(Math.round((x - 10) * this.scale), Math.round((y - 35) * this.scale));
+    this.ctx.lineTo(Math.round((x + 10) * this.scale), Math.round((y - 35) * this.scale));
+    this.ctx.lineTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
     this.ctx.closePath();
 
     this.ctx.fillStyle = 'yellow';
