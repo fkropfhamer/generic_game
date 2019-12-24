@@ -254,19 +254,10 @@ export default class Game {
       this.checkPlayerHitsPowerUp(player);
     });
 
-    const bullets = this.bullets.map((b) => {
-      return {
-        x: b.x,
-        y: b.y,
-        angle: b.angle,
-        color: b.color,
-      };
-    });
-
     this.players.forEach((player) => {
       player.notifyUpdate(
         this.getOtherPlayers(player),
-        bullets,
+        this.bullets,
         this.timer,
         this.walls,
         this.powerUps

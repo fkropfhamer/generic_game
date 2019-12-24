@@ -123,7 +123,7 @@ describe('player test', () => {
       lives: 2,
     };
 
-    player.notifyStart([opponent], 30);
+    player.notifyStart([opponent], 30, [], []);
     expect(player.isWaiting).toBe(false);
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('start');
@@ -136,6 +136,8 @@ describe('player test', () => {
       color: 'blue',
       players: [opponent],
       timer: 30,
+      powerUps: [],
+      walls: [],
     });
   });
 
@@ -177,7 +179,7 @@ describe('player test', () => {
       bullets: [],
       timer: 25,
       walls: [],
-      powerUp: [],
+      powerUps: [],
       isShielded: false,
       hitAngle: Math.PI / 2,
     });
