@@ -28,9 +28,7 @@ export default class PowerUp {
   }
 
   static addShieldUpdate(player) {
-    if (!player.isShielded) {
-      player.isShielded = true;
-    }
+    player.isShielded = true;
   }
 
   update(player) {
