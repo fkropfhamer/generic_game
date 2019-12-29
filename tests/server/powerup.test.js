@@ -1,5 +1,5 @@
 import PowerUp from '../../src/server/powerup';
-import { powerUpTypes } from '../../dist/enums';
+import { powerUpTypes } from '../../src/server/enums';
 import config from '../../src/server/config';
 
 describe('powerup', () => {
