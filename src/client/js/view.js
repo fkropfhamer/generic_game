@@ -81,7 +81,6 @@ class View {
   reset() {
     this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, this.width, this.height);
-    // this.drawBackround();
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
@@ -111,7 +110,6 @@ class View {
   showTimer(timer) {
     const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
     document.getElementById('timeprogress').style.width = `${timeLeftPercentage}%`;
-    // console.log('timer', Math.round((timer / maxTime) * 100));
     if (!this.timerDisplay) {
       const div = document.createElement('div');
       div.style.position = 'absolute';
@@ -218,7 +216,6 @@ class View {
         face = 'face4';
       }
 
-      console.log(face, teamgame);
       const mode = teamgame ? Mode.TEAMS : Mode.NORMAL;
       callback(face, mode);
     };
