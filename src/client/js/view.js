@@ -4,13 +4,11 @@ import { Mode } from '../../server/enums';
 class View {
   constructor() {
     this.scale = 1;
-    this.windowHeight = window.innerHeight - 50;
-    this.windowWidth = window.innerWidth;
     this.color = '#232529';
 
     this.canvas = document.createElement('canvas');
+    this.resize();
     document.getElementById('root').appendChild(this.canvas);
-    this.setupCanvas();
 
     window.addEventListener('resize', this.resize.bind(this));
 
@@ -34,9 +32,8 @@ class View {
   }
 
   resize() {
-    this.windowHeight = window.innerHeight - 50;
+    this.windowHeight = window.innerHeight * 0.95;
     this.windowWidth = window.innerWidth;
-
     this.setupCanvas();
   }
 
