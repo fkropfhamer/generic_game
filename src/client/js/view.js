@@ -172,114 +172,16 @@ class View {
     document.getElementById('waitingscreen').style.display = 'none';
   }
 
-  showEndScreen() {
-    const endScreen = document.createElement('div');
-    endScreen.style.backgroundColor = 'red';
-    endScreen.style.position = 'absolute';
-    endScreen.style.left = '25%';
-    endScreen.style.top = '25%';
-    endScreen.style.width = `${this.width / 2}px`;
-    endScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
-    heading.innerHTML = 'The Game has ended!';
-
-    endScreen.appendChild(heading);
-
-    document.getElementById('root').appendChild(endScreen);
-
-    this.endScreen = endScreen;
+  static showTimeOverScreen() {
+    document.getElementById('timeoverscreen').style.display = 'initial';
   }
 
-  hideEndScreen() {
-    if (this.endScreen) {
-      this.endScreen.style.display = 'none';
-    }
+  static showWinScreen() {
+    document.getElementById('winscreen').style.display = 'initial';
   }
 
-  showOpponentDisconnectedScreen() {
-    const disconnectedScreen = document.createElement('div');
-    disconnectedScreen.style.backgroundColor = 'green';
-    disconnectedScreen.style.position = 'absolute';
-    disconnectedScreen.style.left = '25%';
-    disconnectedScreen.style.top = '25%';
-    disconnectedScreen.style.width = `${this.width / 2}px`;
-    disconnectedScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
-    heading.innerHTML = 'Your Opponent disconnected';
-
-    disconnectedScreen.appendChild(heading);
-
-    document.getElementById('root').appendChild(disconnectedScreen);
-
-    this.disconnectedScreen = disconnectedScreen;
-  }
-
-  showTimeOverScreen() {
-    const timeOverScreen = document.createElement('div');
-    timeOverScreen.style.backgroundColor = 'blue';
-    timeOverScreen.style.position = 'absolute';
-    timeOverScreen.style.left = '25%';
-    timeOverScreen.style.top = '25%';
-    timeOverScreen.style.width = `${this.width / 2}px`;
-    timeOverScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
-    heading.innerHTML = 'Time is over';
-
-    const reloadButton = View.reloadButton();
-
-    timeOverScreen.appendChild(heading);
-    timeOverScreen.appendChild(reloadButton);
-
-    document.getElementById('root').appendChild(timeOverScreen);
-
-    this.timeOverScreen = timeOverScreen;
-  }
-
-  showWinScreen() {
-    const winScreen = document.createElement('div');
-    winScreen.style.backgroundColor = 'blue';
-    winScreen.style.position = 'absolute';
-    winScreen.style.left = '25%';
-    winScreen.style.top = '25%';
-    winScreen.style.width = `${this.width / 2}px`;
-    winScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
-    heading.innerHTML = 'You win! :D';
-
-    const reloadButton = View.reloadButton();
-
-    winScreen.appendChild(heading);
-    winScreen.appendChild(reloadButton);
-
-    document.getElementById('root').appendChild(winScreen);
-
-    this.winScreen = winScreen;
-  }
-
-  showLoseScreen() {
-    const loseScreen = document.createElement('div');
-    loseScreen.style.backgroundColor = 'blue';
-    loseScreen.style.position = 'absolute';
-    loseScreen.style.left = '25%';
-    loseScreen.style.top = '25%';
-    loseScreen.style.width = `${this.width / 2}px`;
-    loseScreen.style.height = `${this.height / 2}px`;
-
-    const heading = document.createElement('h1');
-    heading.innerHTML = 'You lose :(';
-
-    const reloadButton = View.reloadButton();
-
-    loseScreen.appendChild(heading);
-    loseScreen.appendChild(reloadButton);
-
-    document.getElementById('root').appendChild(loseScreen);
-
-    this.loseScreen = loseScreen;
+  static showLoseScreen() {
+    document.getElementById('losescreen').style.display = 'initial';
   }
 
   showStartScreen(callback) {
@@ -325,16 +227,6 @@ class View {
 
   static hideStartScreen() {
     document.getElementById('startscreen').style.display = 'none';
-  }
-
-  static reloadButton() {
-    const button = document.createElement('button');
-    button.classList.add('btn-primary');
-    button.classList.add('btn');
-    button.innerHTML = 'play again!';
-    button.onclick = () => window.location.reload();
-
-    return button;
   }
 }
 

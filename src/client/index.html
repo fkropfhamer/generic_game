@@ -42,6 +42,18 @@
         <div id="waitingscreen" class="container screen" style="background-color: white; display: none;">
             <h1 id="waitingscreenheading">Wait!</h1>
         </div>
+        <div id="losescreen" class="container screen" style="background-color: red; display: none;">
+            <h1 id="losescreenheading">You Lose! :(</h1>
+            <button class="btn btn-primary" onClick="window.location.reload();">Play again</button>
+        </div>
+        <div id="winscreen" class="container screen" style="background-color: green; display: none;">
+            <h1 id="winscreenheading">You Win! :D</h1>
+            <button class="btn btn-primary" onClick="window.location.reload();">Play again</button>
+        </div>
+        <div id="timeoverscreen" class="container screen" style="background-color: yellow; display: none;">
+            <h1 id="timeoverscreenheading">Time is over!</h1>
+            <button class="btn btn-primary" onClick="window.location.reload();">Play again</button>
+        </div>
     </div>
     <div id="root"></div>
 </body>

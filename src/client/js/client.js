@@ -196,23 +196,21 @@ export default class Client {
     this.isWaiting = true;
   }
 
-  onOpponentDisconnected() {
-    console.log('opponent disconnected');
-    this.view.showOpponentDisconnectedScreen();
-  }
-
   onTimeOver() {
-    this.view.showTimeOverScreen();
+    View.showTimeOverScreen();
+    this.isEnded = true;
   }
 
   onWin() {
     console.log('win');
-    this.view.showWinScreen();
+    View.showWinScreen();
+    this.isEnded = true;
   }
 
   onLose() {
     console.log('lose');
-    this.view.showLoseScreen();
+    View.showLoseScreen();
+    this.isEnded = true;
   }
 
   setupSocket() {
@@ -222,7 +220,6 @@ export default class Client {
     this.socket.on('start', this.onStart.bind(this));
     this.socket.on('update', this.onUpdate.bind(this));
     this.socket.on('wait', this.onWait.bind(this));
-    this.socket.on('opponent disconnected', this.onOpponentDisconnected.bind(this));
     this.socket.on('time over', this.onTimeOver.bind(this));
     this.socket.on('win', this.onWin.bind(this));
     this.socket.on('lose', this.onLose.bind(this));

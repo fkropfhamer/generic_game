@@ -101,10 +101,6 @@ export default class Player {
     });
   }
 
-  notifyOpponentDisconnected() {
-    this.socket.emit('opponent disconnected');
-  }
-
   notifyTimeOver() {
     this.socket.emit('time over');
   }

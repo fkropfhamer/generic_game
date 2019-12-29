@@ -197,12 +197,6 @@ describe('player test', () => {
     expect(socket.emit.mock.calls[0][0]).toBe('lose');
   });
 
-  test('player notify opponent disconnected', () => {
-    player.notifyOpponentDisconnected();
-    expect(socket.emit.mock.calls.length).toBe(1);
-    expect(socket.emit.mock.calls[0][0]).toBe('opponent disconnected');
-  });
-
   test('player notify time over', () => {
     player.notifyTimeOver();
     expect(socket.emit.mock.calls.length).toBe(1);
