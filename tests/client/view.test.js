@@ -27,7 +27,7 @@ describe('view', () => {
 
   test('constructor', () => {
     // jest/jsdom defines the window innerWidth and innerHeight to be 1024 x 768
-    expect(view.windowHeight).toBe(718);
+    expect(view.windowHeight).toBe(768 * 0.95);
     expect(view.windowWidth).toBe(1024);
     expect(view.color).toBe('#232529');
     expect(view.scale).toBe(0.8);
