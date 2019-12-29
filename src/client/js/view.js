@@ -40,10 +40,6 @@ class View {
     this.setupCanvas();
   }
 
-  drawBackround() {
-    this.drawImage(this.assets.background);
-  }
-
   drawCircle(x, y, radius, color) {
     this.ctx.beginPath();
     this.ctx.arc(x * this.scale, y * this.scale, radius * this.scale, 0, 2 * Math.PI, false);
