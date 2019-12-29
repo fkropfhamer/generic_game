@@ -4,7 +4,7 @@ import { Mode } from '../../server/enums';
 class View {
   constructor() {
     this.scale = 1;
-    this.windowHeight = window.innerHeight;
+    this.windowHeight = window.innerHeight - 50;
     this.windowWidth = window.innerWidth;
     this.color = '#232529';
 
@@ -34,7 +34,7 @@ class View {
   }
 
   resize() {
-    this.windowHeight = window.innerHeight;
+    this.windowHeight = window.innerHeight - 50;
     this.windowWidth = window.innerWidth;
 
     this.setupCanvas();
@@ -109,6 +109,9 @@ class View {
   }
 
   showTimer(timer) {
+    const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
+    document.getElementById('timeprogress').style.width = `${timeLeftPercentage}%`;
+    // console.log('timer', Math.round((timer / maxTime) * 100));
     if (!this.timerDisplay) {
       const div = document.createElement('div');
       div.style.position = 'absolute';
