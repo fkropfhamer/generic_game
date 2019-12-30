@@ -3,7 +3,7 @@ import Client from '../../src/client/js/client';
 describe('game client', () => {
   let game;
   let view;
-  let assets;
+  let images;
   let socket;
 
   beforeEach(() => {
@@ -19,13 +19,13 @@ describe('game client', () => {
       }),
       hideStartScreen: jest.fn(),
     };
-    assets = {};
-    game = new Client(view, assets);
+    images = {};
+    game = new Client(view, images);
   });
 
   test('constructor', () => {
     expect(game.view).toBe(view);
-    expect(game.assets).toBe(assets);
+    expect(game.images).toBe(images);
 
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
     expect(view.hideStartScreen).toHaveBeenCalledTimes(1);
