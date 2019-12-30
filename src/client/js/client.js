@@ -107,6 +107,7 @@ export default class Client {
   }
 
   shoot(e) {
+    this.audios.splash.play();
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
     this.socket.emit('shoot', { angle });
