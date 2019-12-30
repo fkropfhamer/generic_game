@@ -1,10 +1,11 @@
 import config from '../../server/config';
 
 export default class Client {
-  constructor(view, assets) {
+  constructor(view, images, audios) {
     this.isWaiting = true;
     this.view = view;
-    this.assets = assets;
+    this.images = images;
+    this.audios = audios;
     this.view.showStartScreen(this.setup.bind(this));
   }
 
@@ -19,11 +20,11 @@ export default class Client {
   }
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded) {
-    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
+    this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
     if (lives < 3) {
-      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
+      this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
-    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
+    this.view.drawImageAtAngle(this.images[face], x, y, angle, 0.5);
     if (isShielded) {
       this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
     }

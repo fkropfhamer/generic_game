@@ -40,7 +40,7 @@ class View {
   }
 
   drawBackround() {
-    this.drawImage(this.assets.background);
+    this.drawImage(this.images.background);
   }
 
   drawCircle(x, y, radius, color) {
@@ -346,13 +346,13 @@ class View {
     const checkbox3 = document.createElement('input');
     const checkbox4 = document.createElement('input');
 
-    const face1Img = this.assets.face1;
+    const face1Img = this.images.face1;
 
-    const face2Img = this.assets.face2;
+    const face2Img = this.images.face2;
 
-    const face3Img = this.assets.face3;
+    const face3Img = this.images.face3;
 
-    const face4Img = this.assets.face4;
+    const face4Img = this.images.face4;
 
     checkbox1.type = 'checkbox';
     checkbox1.checked = true;
