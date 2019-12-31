@@ -63,7 +63,10 @@ export default class Client {
         player.isShielded
       );
     });
+
     this.powerUp.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
+
+    View.updateTeamLiveBar(this.teamLives);
   }
 
   drawPlayerIndicator() {
@@ -160,6 +163,7 @@ export default class Client {
     this.walls = data.walls;
     this.isShielded = data.isShielded;
     this.powerUp = data.powerUp;
+    this.teamLives = data.teamLives;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -181,6 +185,7 @@ export default class Client {
     this.walls = data.walls;
     this.isShielded = data.isShielded;
     this.powerUp = data.powerUp;
+    this.teamLives = data.teamLives;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,

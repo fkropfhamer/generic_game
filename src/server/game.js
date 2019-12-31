@@ -27,7 +27,13 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls, this.powerUps);
+      player.notifyStart(
+        this.getOtherPlayers(player),
+        this.timer,
+        this.walls,
+        this.powerUps,
+        this.calculateTeamLives()
+      );
       player.game = this;
       player.isWaiting = false;
     });
@@ -130,6 +136,17 @@ export default class Game {
         }
       }
     });
+  }
+
+  calculateTeamLives() {
+    const blueLives = this.players
+      .filter((player) => player.color === Color.BLUE)
+      .reduce((a, b) => a + b.lives, 0);
+    const redLives = this.players
+      .filter((player) => player.color === Color.RED)
+      .reduce((a, b) => a + b.lives, 0);
+
+    return { blueLives, redLives };
   }
 
   checkPlayerHitsPowerUp(player) {
@@ -269,7 +286,8 @@ export default class Game {
         bullets,
         this.timer,
         this.walls,
-        this.powerUps
+        this.powerUps,
+        this.calculateTeamLives()
       );
     });
   }

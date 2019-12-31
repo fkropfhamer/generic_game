@@ -61,7 +61,7 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls, powerUp) {
+  notifyStart(otherPlayers, timer, walls, powerUp, teamLives) {
     this.isWaiting = false;
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     this.socket.emit('start', {
@@ -75,6 +75,7 @@ export default class Player {
       timer,
       walls,
       powerUp,
+      teamLives,
     });
   }
 
@@ -83,8 +84,8 @@ export default class Player {
     this.socket.emit('wait', { numberOfPlayers });
   }
 
-  notifyUpdate(players, bullets, timer, walls, powerUp) {
-    const mappedPlayers = Util.mapPlayers(players);
+  notifyUpdate(otherPlayers, bullets, timer, walls, powerUp, teamLives) {
+    const mappedPlayers = Util.mapPlayers(otherPlayers);
     const mappedPowerups = PowerUp.mapPowerups(powerUp);
     this.socket.emit('update', {
       x: this.x,
@@ -98,6 +99,7 @@ export default class Player {
       timer,
       walls,
       powerUp: mappedPowerups,
+      teamLives,
     });
   }
 

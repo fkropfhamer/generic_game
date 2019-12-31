@@ -144,4 +144,18 @@ describe('game test', () => {
     expect(player1.notifyUpdate.mock.calls.length).toBe(1);
     expect(player2.notifyUpdate.mock.calls.length).toBe(1);
   });
+
+  test('game calculate team lives 2 players', () => {
+    player1.lives = 3;
+    player2.lives = 3;
+    expect(game.calculateTeamLives()).toEqual({ redLives: 3, blueLives: 3 });
+  });
+
+  test('game calculate team lives 4 players', () => {
+    player1.lives = 3;
+    player2.lives = 3;
+    game.players.push({ color: 'blue', lives: 1 });
+    game.players.push({ color: 'red', lives: 4 });
+    expect(game.calculateTeamLives()).toEqual({ redLives: 7, blueLives: 4 });
+  });
 });

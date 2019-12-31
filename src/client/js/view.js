@@ -218,6 +218,15 @@ class View {
     };
   }
 
+  static updateTeamLiveBar(teamLives) {
+    const livesSum = teamLives.redLives + teamLives.blueLives;
+    const redLivePercentage = Math.round((teamLives.redLives / livesSum) * 100);
+    const blueLivePercentage = Math.round((teamLives.blueLives / livesSum) * 100);
+
+    document.getElementById('redlivebar').style.width = `${redLivePercentage}%`;
+    document.getElementById('bluelivebar').style.width = `${blueLivePercentage}%`;
+  }
+
   static hideStartScreen() {
     document.getElementById('startscreen').style.display = 'none';
   }
