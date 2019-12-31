@@ -107,7 +107,6 @@ export default class Client {
   }
 
   shoot(e) {
-    this.audios.splash.play();
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
     this.socket.emit('shoot', { angle });
@@ -217,6 +216,10 @@ export default class Client {
     this.view.showLoseScreen();
   }
 
+  onSplashSound() {
+    this.audios.splash.play();
+  }
+
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
@@ -228,5 +231,6 @@ export default class Client {
     this.socket.on('time over', this.onTimeOver.bind(this));
     this.socket.on('win', this.onWin.bind(this));
     this.socket.on('lose', this.onLose.bind(this));
+    this.socket.on('splash sound', this.onSplashSound.bind(this));
   }
 }

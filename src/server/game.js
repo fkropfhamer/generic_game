@@ -106,6 +106,12 @@ export default class Game {
     this.bullets.push(bullet);
   }
 
+  splashSoundForPlayers() {
+    this.players.forEach((player) => {
+      player.notifySplashSound();
+    });
+  }
+
   checkBulletHitsPlayer(player) {
     this.bullets.forEach((bullet) => {
       if (bullet.color !== player.color) {
@@ -119,6 +125,7 @@ export default class Game {
           player.hitAngle = hitAngle;
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
+          this.splashSoundForPlayers();
           if (player.isShielded) {
             player.isShielded = false;
           } else {

@@ -117,6 +117,10 @@ export default class Player {
     this.socket.emit('lose');
   }
 
+  notifySplashSound() {
+    this.socket.emit('splash sound');
+  }
+
   update() {
     if (this.shootingCount > 0) this.shootingCount -= 1;
 

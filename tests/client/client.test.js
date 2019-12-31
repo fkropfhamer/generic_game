@@ -35,7 +35,7 @@ describe('game client', () => {
     expect(game.socket).toEqual(socket);
     expect(global.io).toHaveBeenCalledTimes(1);
 
-    expect(game.socket.on).toHaveBeenCalledTimes(8);
+    expect(game.socket.on).toHaveBeenCalledTimes(9);
     expect(game.socket.on.mock.calls[0][0]).toBe('connect');
     expect(game.socket.on.mock.calls[1][0]).toBe('start');
     expect(game.socket.on.mock.calls[2][0]).toBe('update');
@@ -44,6 +44,7 @@ describe('game client', () => {
     expect(game.socket.on.mock.calls[5][0]).toBe('time over');
     expect(game.socket.on.mock.calls[6][0]).toBe('win');
     expect(game.socket.on.mock.calls[7][0]).toBe('lose');
+    expect(game.socket.on.mock.calls[8][0]).toBe('splash sound');
 
     expect(game.pressedUp).toBe(false);
     expect(game.pressedDown).toBe(false);
