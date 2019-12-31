@@ -14,6 +14,7 @@ import face4 from '../img/face4.png';
 import AssetLoader from './assetloader';
 import Client from './client';
 import splash from '../sound/flyswatter4.mp3';
+import backgroundMusic from '../sound/Tec.mp3';
 
 window.onload = () => {
   const view = new View();
@@ -33,7 +34,10 @@ window.onload = () => {
       { name: 'face4', url: face4 },
       // { name: 'background', url: background },
     ]),
-    AssetLoader.loadAudios([{ name: 'splash', url: splash }]),
+    AssetLoader.loadAudios([
+      { name: 'splash', url: splash },
+      { name: 'backgroundMusic', url: backgroundMusic },
+    ]),
   ]).then((assets) => {
     // let sounds;
     // let images;

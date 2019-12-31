@@ -161,6 +161,7 @@ export default class Client {
     this.walls = data.walls;
     this.isShielded = data.isShielded;
     this.powerUp = data.powerUp;
+    this.audios.backgroundMusic.play();
     this.draw();
     this.setupKeyPressedEvents();
   }
