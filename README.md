@@ -84,6 +84,7 @@
 - webpack
 - babel
 - express
+- bootstrap
             
 ### code style:
 - eslint
