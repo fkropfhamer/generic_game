@@ -2,7 +2,7 @@ import config from '../../server/config';
 import { Mode } from '../../server/enums';
 import background from '../img/background.png';
 
-class View {
+export default class View {
   constructor() {
     this.scale = 1;
     this.windowHeight = window.innerHeight;
@@ -262,5 +262,3 @@ class View {
     document.getElementById('startscreen').style.display = 'none';
   }
 }
-
-export default View;
