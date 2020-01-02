@@ -152,7 +152,6 @@ export default class Game {
   checkPlayerHitsPowerUp(player) {
     this.powerUps.forEach((powerUp) => {
       if (Util.collisionCircleCircle(powerUp, player)) {
-        console.log(powerUp);
         powerUp.update(player);
         this.powerUps = this.powerUps.filter((p) => !Object.is(powerUp, p));
       }

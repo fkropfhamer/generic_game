@@ -194,4 +194,18 @@ describe('Util test', () => {
     expect(Object.isFrozen(frozenTestObject)).toBe(true);
     expect(Object.isFrozen(frozenTestObject.object1)).toBe(true);
   });
+
+  test('collisin rect circle', () => {
+    const rect = {
+      x: 1,
+      y: 1,
+      angle: 0,
+      width: 1,
+      height: 1,
+    };
+
+    const circle = { x: 1, y: 1, radius: 2 };
+
+    expect(Util.collisionRectCircle(rect, circle)).toEqual({ angle: Math.PI * 1.5, dis: 0.5 });
+  });
 });

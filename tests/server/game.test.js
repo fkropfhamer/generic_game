@@ -89,6 +89,15 @@ describe('game test', () => {
     expect(game.end.mock.calls.length).toBe(1);
   });
 
+  test('game player disconnected game has ended', () => {
+    game.playerDied = jest.fn();
+    game.ended = true;
+
+    game.playerDisconnected(player1);
+
+    expect(game.playerDied).toHaveBeenCalledTimes(0);
+  });
+
   test('game time is over', () => {
     game.end = jest.fn();
     game.timeIsOver();
@@ -143,6 +152,18 @@ describe('game test', () => {
 
     expect(player1.notifyUpdate.mock.calls.length).toBe(1);
     expect(player2.notifyUpdate.mock.calls.length).toBe(1);
+  });
+
+  test('game update bullets', () => {
+    const bullet1 = { update: jest.fn() };
+    const bullet2 = { update: jest.fn() };
+
+    game.bullets = [bullet1, bullet2];
+
+    game.update();
+
+    expect(bullet1.update).toHaveBeenCalledTimes(1);
+    expect(bullet2.update).toHaveBeenCalledTimes(1);
   });
 
   test('game calculate team lives 2 players', () => {
@@ -229,5 +250,173 @@ describe('game test', () => {
 
     expect(deadBluePlayer.notifyWin).toHaveBeenCalledTimes(1);
     expect(deadRedPlayer.notifyLose).toHaveBeenCalledTimes(1);
+  });
+
+  test('game checkwallcollisionbullet', () => {
+    const bullet = {
+      x: 20,
+      y: 10,
+      radius: 6,
+      color: 'grey',
+    };
+
+    const wall = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    game.walls = [wall];
+    game.bullets = [bullet];
+
+    game.checkWallCollisionBullet(bullet);
+
+    expect(game.bullets).toEqual([]);
+    expect(wall.fillColor).toBe('grey');
+  });
+
+  test('game checkwallcollisionplayer', () => {
+    const wall = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const player = { x: 15, y: 10, radius: 5 };
+
+    game.walls = [wall];
+
+    game.checkWallCollisionPlayer(player);
+
+    expect(player.x).toBe(42.5);
+    expect(player.y).toBe(10);
+  });
+
+  test('game checkplayerhitspowerup', () => {
+    const powerUp = {
+      x: 0,
+      y: 0,
+      radius: 1,
+      update: jest.fn(),
+    };
+
+    const player = {
+      x: 1,
+      y: 1,
+      radius: 1,
+    };
+
+    game.powerUps = [powerUp];
+    game.checkPlayerHitsPowerUp(player);
+
+    expect(game.powerUps).toEqual([]);
+    expect(powerUp.update).toHaveBeenCalledTimes(1);
+  });
+
+  test('game checkbulletshitsplayer', () => {
+    const bullet = {
+      x: 0,
+      y: 0,
+      radius: 2,
+      color: '',
+    };
+
+    const player = {
+      x: 1,
+      y: 0,
+      radius: 1,
+      lives: 3,
+      color: 'test',
+      angle: 0,
+    };
+
+    game.bullets = [bullet];
+
+    game.checkBulletHitsPlayer(player);
+
+    expect(player.lives).toBe(2);
+    expect(game.bullets).toEqual([]);
+    expect(player.hitAngle).toBe(Math.PI);
+  });
+
+  test('game checkbulletshitsplayer player is shielded', () => {
+    const bullet = {
+      x: 0,
+      y: 0,
+      radius: 2,
+      color: '',
+    };
+
+    const player = {
+      x: 1,
+      y: 0,
+      radius: 1,
+      lives: 3,
+      color: 'test',
+      isShielded: true,
+    };
+
+    game.bullets = [bullet];
+
+    game.checkBulletHitsPlayer(player);
+
+    expect(player.lives).toBe(3);
+    expect(player.isShielded).toBe(false);
+    expect(game.bullets).toEqual([]);
+  });
+
+  test('game checkbullethitsplayer player died', () => {
+    const bullet = {
+      x: 0,
+      y: 0,
+      radius: 2,
+      color: '',
+    };
+
+    const player = {
+      x: 1,
+      y: 0,
+      radius: 1,
+      lives: 1,
+      color: 'test',
+    };
+
+    game.playerDied = jest.fn();
+    game.bullets = [bullet];
+
+    game.checkBulletHitsPlayer(player);
+
+    expect(player.lives).toBe(0);
+    expect(game.bullets).toEqual([]);
+    expect(game.playerDied).toHaveBeenCalledTimes(1);
+    expect(game.playerDied).toHaveBeenCalledWith(player);
+  });
+
+  test('game checkbullethitsplayer no teamfire', () => {
+    const bullet = {
+      x: 0,
+      y: 0,
+      radius: 2,
+      color: 'test',
+    };
+
+    const player = {
+      x: 1,
+      y: 0,
+      radius: 1,
+      lives: 1,
+      color: 'test',
+    };
+
+    game.bullets = [bullet];
+
+    game.checkBulletHitsPlayer(player);
+
+    expect(player.lives).toBe(1);
+    expect(game.bullets).toEqual([bullet]);
   });
 });
