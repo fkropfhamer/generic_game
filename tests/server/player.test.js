@@ -203,6 +203,12 @@ describe('player test', () => {
     expect(socket.emit.mock.calls[0][0]).toBe('time over');
   });
 
+  test('player notify death', () => {
+    player.notifyDeath();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('death');
+  });
+
   test('player update no button in bound', () => {
     player.x = 100;
     player.y = 200;
