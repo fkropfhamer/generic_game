@@ -274,19 +274,10 @@ export default class Game {
       this.checkPlayerHitsPowerUp(player);
     });
 
-    const mappedBullets = this.bullets.map((b) => {
-      return {
-        x: b.x,
-        y: b.y,
-        angle: b.angle,
-        color: b.color,
-      };
-    });
-
     this.players.concat(this.deadPlayers).forEach((player) => {
       player.notifyUpdate(
         this.getOtherPlayers(player),
-        mappedBullets,
+        this.bullets,
         this.timer,
         this.walls,
         this.powerUps,

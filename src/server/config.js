@@ -11,6 +11,7 @@ const config = Util.deepFreeze({
   PLAYER_LIVES: 3,
   BULLET_RADIUS: 10,
   TEAM_SIZE: 2,
+  POWERUP_RADIUS: 10,
 
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,

@@ -17,4 +17,15 @@ export default class Bullet {
     this.y += this.speed * Math.sin(this.angle);
     this.duration -= 1;
   }
+
+  static mapBullets(bullets) {
+    return bullets.map((bullet) => {
+      return {
+        x: bullet.x,
+        y: bullet.y,
+        angle: bullet.angle,
+        color: bullet.color,
+      };
+    });
+  }
 }

@@ -64,8 +64,7 @@ export default class Client {
       );
     });
 
-    this.powerUp.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
-
+    this.powerUps.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
     View.updateTeamLiveBar(this.teamLives);
   }
 
@@ -162,8 +161,8 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.powerUp = data.powerUp;
     this.teamLives = data.teamLives;
+    this.powerUps = data.powerUps;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -184,8 +183,8 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.powerUp = data.powerUp;
     this.teamLives = data.teamLives;
+    this.powerUps = data.powerUps;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,

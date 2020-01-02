@@ -65,4 +65,24 @@ describe('bullet test', () => {
     expect(Math.round(bullet.y)).toBe(204);
     expect(bullet.duration).toBe(999);
   });
+
+  test('map players', () => {
+    const bullet1 = {
+      x: 1,
+      y: 2,
+      angle: 3,
+      color: 4,
+    };
+    const bullet2 = {
+      x: 5,
+      y: 6,
+      angle: 7,
+      color: 8,
+    };
+
+    const bullets = [bullet1, bullet2];
+
+    const mappedBullets = Bullet.mapBullets(bullets);
+    expect(mappedBullets).toEqual(bullets);
+  });
 });

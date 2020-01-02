@@ -1,10 +1,11 @@
 import { powerUpTypes } from './enums';
+import config from './config';
 
 export default class PowerUp {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
-    this.radius = 10;
+    this.radius = config.POWERUP_RADIUS;
     this.color = type === powerUpTypes.SHIELD ? 'brown' : 'green';
     this.type = type;
   }
@@ -27,9 +28,7 @@ export default class PowerUp {
   }
 
   static addShieldUpdate(player) {
-    if (!player.isShielded) {
-      player.isShielded = true;
-    }
+    player.isShielded = true;
   }
 
   update(player) {
@@ -41,7 +40,7 @@ export default class PowerUp {
         PowerUp.addShieldUpdate(player);
         break;
       default:
-        throw Error('type does not exist');
+        throw Error(`${this.type} type does not exist`);
     }
   }
 }

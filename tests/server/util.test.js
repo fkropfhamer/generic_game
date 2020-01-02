@@ -112,4 +112,11 @@ describe('Util test', () => {
     expect(Util.collisionCircleCircle(circle2, circle2)).toBe(true);
     expect(Util.collisionCircleCircle(circle1, circle2)).toBe(false);
   });
+
+  test('deepfreeze', () => {
+    const testObject = { value1: 1, object1: { value2: 'test' } };
+    const frozenTestObject = Util.deepFreeze(testObject);
+    expect(Object.isFrozen(frozenTestObject)).toBe(true);
+    expect(Object.isFrozen(frozenTestObject.object1)).toBe(true);
+  });
 });
