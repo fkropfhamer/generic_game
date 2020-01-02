@@ -218,6 +218,12 @@ export default class Client {
     this.isEnded = true;
   }
 
+  onDeath() {
+    console.log('death');
+    View.showDeathMessage();
+    this.isDead = true;
+  }
+
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
@@ -228,5 +234,6 @@ export default class Client {
     this.socket.on('time over', this.onTimeOver.bind(this));
     this.socket.on('win', this.onWin.bind(this));
     this.socket.on('lose', this.onLose.bind(this));
+    this.socket.on('death', this.onDeath.bind(this));
   }
 }

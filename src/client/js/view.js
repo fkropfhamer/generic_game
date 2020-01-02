@@ -167,14 +167,17 @@ class View {
   }
 
   static showTimeOverScreen() {
+    this.hideDeathMessage();
     document.getElementById('timeoverscreen').style.display = 'initial';
   }
 
   static showWinScreen() {
+    this.hideDeathMessage();
     document.getElementById('winscreen').style.display = 'initial';
   }
 
   static showLoseScreen() {
+    this.hideDeathMessage();
     document.getElementById('losescreen').style.display = 'initial';
   }
 
@@ -216,6 +219,14 @@ class View {
       const mode = teamgame ? Mode.TEAMS : Mode.NORMAL;
       callback(face, mode);
     };
+  }
+
+  static showDeathMessage() {
+    document.getElementById('deathmessage').style.display = 'initial';
+  }
+
+  static hideDeathMessage() {
+    document.getElementById('deathmessage').style.display = 'none';
   }
 
   static updateTeamLiveBar(teamLives) {

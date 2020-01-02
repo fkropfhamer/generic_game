@@ -115,6 +115,10 @@ export default class Player {
     this.socket.emit('lose');
   }
 
+  notifyDeath() {
+    this.socket.emit('death');
+  }
+
   update() {
     if (this.shootingCount > 0) this.shootingCount -= 1;
 

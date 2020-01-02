@@ -184,6 +184,8 @@ export default class Game {
 
   playerDied(player) {
     this.deadPlayers.push(player);
+    player.x = -500;
+    player.y = -500;
     const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
     const teamBlue = remainingPlayers.filter((p) => p.color === Color.BLUE);
     const teamRed = remainingPlayers.filter((p) => p.color === Color.RED);
@@ -210,6 +212,7 @@ export default class Game {
       this.end();
     } else {
       this.players = remainingPlayers;
+      player.notifyDeath();
     }
   }
 
@@ -233,7 +236,7 @@ export default class Game {
   }
 
   timeIsOver() {
-    this.players.forEach((player) => player.notifyTimeOver());
+    this.players.concat(this.deadPlayers).forEach((player) => player.notifyTimeOver());
     this.end();
   }
 
@@ -271,7 +274,7 @@ export default class Game {
       this.checkPlayerHitsPowerUp(player);
     });
 
-    const bullets = this.bullets.map((b) => {
+    const mappedBullets = this.bullets.map((b) => {
       return {
         x: b.x,
         y: b.y,
@@ -280,10 +283,10 @@ export default class Game {
       };
     });
 
-    this.players.forEach((player) => {
+    this.players.concat(this.deadPlayers).forEach((player) => {
       player.notifyUpdate(
         this.getOtherPlayers(player),
-        bullets,
+        mappedBullets,
         this.timer,
         this.walls,
         this.powerUps,
