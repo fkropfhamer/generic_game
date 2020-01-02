@@ -1,6 +1,6 @@
 export default class Util {
   constructor() {
-    throw Error('Util is an abstract class and and cant initiated');
+    throw Error('Util is an abstract class and and can´t initiated');
   }
 
   static halfIfAnotherKeyIsPressed(key1, key2) {

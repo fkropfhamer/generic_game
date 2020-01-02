@@ -2,6 +2,13 @@ import Util from '../../src/server/util';
 import config from '../../src/server/config';
 
 describe('Util test', () => {
+  test('constructor', () => {
+    expect(() => {
+      const util = new Util();
+      util.halfIfAnotherKeyIsPressed();
+    }).toThrow('Util is an abstract class and and can´t initiated');
+  });
+
   test('halve if two keys are pressed', () => {
     expect(Util.halfIfAnotherKeyIsPressed(true, true)).toBe(0.5);
   });
@@ -26,6 +33,8 @@ describe('Util test', () => {
         color: 'red',
         lives: 4,
         face: 'face1',
+        hitAngle: Math.PI * 2,
+        isShielded: true,
       },
       {
         x: 300,
@@ -34,6 +43,8 @@ describe('Util test', () => {
         color: 'blue',
         lives: 1,
         face: 'face3',
+        hitAngle: Math.PI,
+        isShielded: false,
       },
     ];
 
@@ -102,6 +113,70 @@ describe('Util test', () => {
     const circle2 = { x: config.PLAYER_RADIUS + 14, y: config.PLAYER_RADIUS + 14 };
 
     expect(Util.collisionRectCircle(rect, circle2)).toBe(false);
+  });
+
+  test('collision rect circle top', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 10, y: 20, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: Math.PI / 2, dis: 5 });
+  });
+
+  test('collision rect circle bottom', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 10, y: 0, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: Math.PI * 1.5, dis: 5 });
+  });
+
+  test('collision rect circle left', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 0, y: 10, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: Math.PI, dis: 5 });
+  });
+
+  test('collision rect circle right', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 20, y: 10, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: 0, dis: 5 });
   });
 
   test('collision circle circle', () => {
