@@ -1,6 +1,10 @@
+import express from 'express';
 import Server from '../../src/server/server';
 import Player from '../../src/server/player';
 import Game from '../../src/server/game';
+
+// eslint-disable-next-line global-require
+jest.mock('express', () => require('jest-express'));
 
 jest.mock('../../src/server/player');
 jest.mock('../../src/server/game');
@@ -19,8 +23,6 @@ jest.mock('socket.io', () => {
 });
 
 describe('server', () => {
-  // TODO: Clean up tests!
-
   let server;
 
   beforeEach(() => {
@@ -28,9 +30,6 @@ describe('server', () => {
     Player.mockClear();
 
     server = new Server();
-    server.listen = jest.fn((port) => {
-      return { port };
-    });
   });
 
   test('constructor', () => {
@@ -43,11 +42,10 @@ describe('server', () => {
 
     server.listen(port);
 
-    // expect(server.fileServer).toEqual({ port });
-    // expect(server.listen.mock.calls.length).toBe(1);
-    // expect(server.listen.mock.calls[0][0]).toBe(port);
+    expect(express.static).toHaveBeenCalledTimes(1);
+    expect(express.static).toHaveBeenCalledWith('public');
 
-    // expect(server.io.webSocket).toBe(server.fileServer);
+    expect(server.io.webSocket).toBe(server.fileServer);
   });
 
   test('server connection event', () => {
