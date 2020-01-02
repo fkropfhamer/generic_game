@@ -35,7 +35,6 @@ describe('game test', () => {
     expect(game.players).toEqual([player1, player2]);
     expect(game.bullets).toEqual([]);
     expect(game.deadPlayers).toEqual([]);
-    // TODO: expect(game.walls).toEqual(config.walls);
   });
 
   test('test game start', () => {

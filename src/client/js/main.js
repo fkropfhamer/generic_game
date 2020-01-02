@@ -13,7 +13,6 @@ import face2 from '../img/face2.png';
 import face3 from '../img/face3.png';
 import face4 from '../img/face4.png';
 import AssetLoader from './assetloader';
-// import background from '../img/background.png';
 import Client from './client';
 
 window.onload = () => {

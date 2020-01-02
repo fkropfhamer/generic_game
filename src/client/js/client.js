@@ -32,7 +32,7 @@ export default class Client {
 
   draw() {
     this.view.reset();
-    this.view.showTimer(this.timer);
+    View.showTimer(this.timer);
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
@@ -50,7 +50,6 @@ export default class Client {
       this.isShielded
     );
     this.drawPlayerIndicator();
-    this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,

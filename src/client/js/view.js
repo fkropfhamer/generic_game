@@ -93,7 +93,6 @@ export default class View {
   }
 
   reset() {
-    // this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, Math.ceil(this.width), Math.ceil(this.height));
   }
 
@@ -124,48 +123,9 @@ export default class View {
     this.ctx.fill();
   }
 
-  showTimer(timer) {
+  static showTimer(timer) {
     const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
     document.getElementById('timeprogress').style.width = `${timeLeftPercentage}%`;
-    if (!this.timerDisplay) {
-      const div = document.createElement('div');
-      div.style.position = 'absolute';
-      div.style.left = '25%';
-      div.style.top = '75%';
-
-      const timerDisplay = document.createElement('h1');
-
-      timerDisplay.innerHTML = `${timer}`;
-
-      div.appendChild(timerDisplay);
-
-      document.getElementById('root').appendChild(div);
-
-      this.timerDisplay = timerDisplay;
-    } else if (timer.toString() !== this.timerDisplay.innerHTML) {
-      this.timerDisplay.innerHTML = `${timer}`;
-    }
-  }
-
-  showPlayerColorInfo(playerColor) {
-    const playerColorInfo = document.createElement('div');
-    playerColorInfo.style.backgroundColor = this.color;
-    playerColorInfo.style.position = 'absolute';
-    playerColorInfo.style.left = '75%';
-    playerColorInfo.style.top = '25%';
-    playerColorInfo.style.width = '5px';
-    playerColorInfo.style.height = '5px';
-
-    const colorInfoText = document.createElement('h1');
-    colorInfoText.style.fontSize = '30px';
-    colorInfoText.style.color = '#FFFFFF';
-    colorInfoText.innerHTML = `Your colour is ${playerColor}`;
-
-    playerColorInfo.appendChild(colorInfoText);
-
-    document.getElementById('root').appendChild(playerColorInfo);
-
-    this.playerColorInfo = playerColorInfo;
   }
 
   hidePlayerColorInfo() {

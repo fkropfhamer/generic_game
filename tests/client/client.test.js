@@ -1,5 +1,5 @@
 import Client from '../../src/client/js/client';
-// import View from '../../src/client/js/view';
+
 jest.mock('../../src/client/js/view');
 
 describe('client', () => {
@@ -26,12 +26,10 @@ describe('client', () => {
   });
 
   test('constructor', () => {
-    // TODO: mock static methods
     expect(game.view).toBe(view);
     expect(game.assets).toBe(assets);
 
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
-    // expect(view.hideStartScreen).toHaveBeenCalledTimes(1);
   });
 
   test('client setup', () => {
