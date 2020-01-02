@@ -158,4 +158,76 @@ describe('game test', () => {
     game.players.push({ color: 'red', lives: 4 });
     expect(game.calculateTeamLives()).toEqual({ redLives: 7, blueLives: 4 });
   });
+
+  test('game end', () => {
+    game.end();
+
+    expect(game.ended).toBe(true);
+  });
+
+  test('game checkPlayerCollisionPlayer', () => {
+    game.players[0].x = 0;
+    game.players[0].y = 0;
+    game.players[0].radius = 1;
+
+    const player = { x: 1, y: 0, radius: 2 };
+
+    game.checkPlayerCollisionPlayer(player);
+    expect(player.x).toBe(11);
+    expect(player.y).toBe(0);
+  });
+
+  test('game playerdied teamgame not over', () => {
+    const player = { x: 0, y: 0, notifyDeath: jest.fn() };
+    game.playerDied(player);
+
+    expect(game.players).toEqual([player1, player2]);
+    expect(player.x).toBe(-500);
+    expect(player.y).toBe(-500);
+    expect(player.notifyDeath).toHaveBeenCalledTimes(1);
+  });
+
+  test('game playerdied red wins', () => {
+    game.playerDied(game.players[0]);
+
+    expect(player1.notifyLose).toHaveBeenCalledTimes(1);
+    expect(player2.notifyWin).toHaveBeenCalledTimes(1);
+  });
+
+  test('game playerdied blue wins', () => {
+    game.playerDied(game.players[1]);
+
+    expect(player1.notifyWin).toHaveBeenCalledTimes(1);
+    expect(player2.notifyLose).toHaveBeenCalledTimes(1);
+  });
+
+  test('game playerdied teamgame over notify dead players red wins', () => {
+    const deadBluePlayer = { color: 'blue', notifyLose: jest.fn() };
+    const deadRedPlayer = { color: 'red', notifyWin: jest.fn() };
+
+    game.deadPlayers = [deadBluePlayer, deadRedPlayer];
+
+    game.playerDied(game.players[0]);
+
+    expect(player1.notifyLose).toHaveBeenCalledTimes(1);
+    expect(player2.notifyWin).toHaveBeenCalledTimes(1);
+
+    expect(deadRedPlayer.notifyWin).toHaveBeenCalledTimes(1);
+    expect(deadBluePlayer.notifyLose).toHaveBeenCalledTimes(1);
+  });
+
+  test('game playerdied teamgame over notify dead players blue wins', () => {
+    const deadBluePlayer = { color: 'blue', notifyWin: jest.fn() };
+    const deadRedPlayer = { color: 'red', notifyLose: jest.fn() };
+
+    game.deadPlayers = [deadBluePlayer, deadRedPlayer];
+
+    game.playerDied(game.players[1]);
+
+    expect(player2.notifyLose).toHaveBeenCalledTimes(1);
+    expect(player1.notifyWin).toHaveBeenCalledTimes(1);
+
+    expect(deadBluePlayer.notifyWin).toHaveBeenCalledTimes(1);
+    expect(deadRedPlayer.notifyLose).toHaveBeenCalledTimes(1);
+  });
 });
