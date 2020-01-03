@@ -18,11 +18,9 @@ export default class View {
   }
 
   setupCanvas() {
-    if (this.windowWidth !== config.FIELD_WIDTH) {
-      this.scale = this.windowWidth / config.FIELD_WIDTH;
-      if (config.FIELD_HEIGHT * this.scale > this.windowHeight) {
-        this.scale = this.windowHeight / config.FIELD_HEIGHT;
-      }
+    this.scale = this.windowWidth / config.FIELD_WIDTH;
+    if (config.FIELD_HEIGHT * this.scale > this.windowHeight) {
+      this.scale = this.windowHeight / config.FIELD_HEIGHT;
     }
     this.width = config.FIELD_WIDTH * this.scale;
     this.height = config.FIELD_HEIGHT * this.scale;
