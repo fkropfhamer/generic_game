@@ -8,6 +8,7 @@ describe('view', () => {
 
   Object.defineProperty(document, 'getElementById', {
     value: (id) => {
+      if (elements[id]) return elements[id];
       const element = { id, appendChild: jest.fn(), style: {} };
       elements[id] = element;
       return element;
@@ -251,5 +252,139 @@ describe('view', () => {
     View.hideWaitingScreen();
 
     expect(elements.waitingscreen.style.display).toBe('none');
+  });
+
+  test('view show time over screen', () => {
+    View.showTimeOverScreen();
+
+    expect(elements.deathmessage.style.display).toBe('none');
+    expect(elements.timeoverscreen.style.display).toBe('initial');
+  });
+
+  test('view show win screen', () => {
+    View.showWinScreen();
+
+    expect(elements.deathmessage.style.display).toBe('none');
+    expect(elements.winscreen.style.display).toBe('initial');
+  });
+
+  test('view show lose screen', () => {
+    View.showLoseScreen();
+
+    expect(elements.deathmessage.style.display).toBe('none');
+    expect(elements.losescreen.style.display).toBe('initial');
+  });
+
+  test('view show death message', () => {
+    View.showDeathMessage();
+
+    expect(elements.deathmessage.style.display).toBe('initial');
+  });
+
+  test('view hide death message', () => {
+    View.hideDeathMessage();
+
+    expect(elements.deathmessage.style.display).toBe('none');
+  });
+
+  test('view update team live bar', () => {
+    const mockTeamLives = {
+      redLives: 1,
+      blueLives: 3,
+    };
+
+    View.updateTeamLiveBar(mockTeamLives);
+
+    expect(elements.redlivebar.style.width).toBe('25%');
+    expect(elements.bluelivebar.style.width).toBe('75%');
+  });
+
+  test('view hide start screen', () => {
+    View.hideStartScreen();
+
+    expect(elements.startscreen.style.display).toBe('none');
+  });
+
+  test('view show start screen', () => {
+    const assets = {
+      face1: { classList: { add: jest.fn() } },
+      face2: { classList: { add: jest.fn() } },
+      face3: { classList: { add: jest.fn() } },
+      face4: { classList: { add: jest.fn() } },
+    };
+
+    const callback = jest.fn();
+    view.assets = assets;
+
+    view.showStartScreen(callback);
+
+    expect(elements.startscreen.style.display).toBe('initial');
+
+    expect(assets.face1.classList.add).toHaveBeenCalledTimes(1);
+    expect(assets.face1.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(assets.face2.classList.add).toHaveBeenCalledTimes(1);
+    expect(assets.face2.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(assets.face3.classList.add).toHaveBeenCalledTimes(1);
+    expect(assets.face3.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(assets.face4.classList.add).toHaveBeenCalledTimes(1);
+    expect(assets.face4.classList.add).toHaveBeenCalledWith('img-thumbnail');
+
+    expect(elements['choice1-label'].appendChild).toHaveBeenCalledTimes(1);
+    expect(elements['choice1-label'].appendChild).toHaveBeenCalledWith(assets.face1);
+    expect(elements['choice2-label'].appendChild).toHaveBeenCalledTimes(1);
+    expect(elements['choice2-label'].appendChild).toHaveBeenCalledWith(assets.face2);
+    expect(elements['choice3-label'].appendChild).toHaveBeenCalledTimes(1);
+    expect(elements['choice3-label'].appendChild).toHaveBeenCalledWith(assets.face3);
+    expect(elements['choice4-label'].appendChild).toHaveBeenCalledTimes(1);
+    expect(elements['choice4-label'].appendChild).toHaveBeenCalledWith(assets.face4);
+  });
+
+  test('view show start screen onclick nothing checked', () => {
+    const assets = {
+      face1: { classList: { add: jest.fn() } },
+      face2: { classList: { add: jest.fn() } },
+      face3: { classList: { add: jest.fn() } },
+      face4: { classList: { add: jest.fn() } },
+    };
+
+    const callback = jest.fn();
+    view.assets = assets;
+
+    view.showStartScreen(callback);
+
+    elements.startbutton.onclick();
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith('face1', 'normal');
+  });
+
+  test('view show start screen onclick everything checked', () => {
+    const assets = {
+      face1: { classList: { add: jest.fn() } },
+      face2: { classList: { add: jest.fn() } },
+      face3: { classList: { add: jest.fn() } },
+      face4: { classList: { add: jest.fn() } },
+    };
+
+    const callback = jest.fn();
+    view.assets = assets;
+
+    view.showStartScreen(callback);
+    elements.startbutton.onclick();
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenNthCalledWith(1, 'face1', 'normal');
+
+    elements.choice1.checked = true;
+    elements.choice2.checked = true;
+    elements.choice3.checked = true;
+    elements.choice4.checked = true;
+
+    elements['teamgame-checkbox'].checked = true;
+
+    elements.startbutton.onclick();
+
+    expect(callback).toHaveBeenCalledTimes(2);
+    expect(callback).toHaveBeenNthCalledWith(2, 'face4', 'teams');
   });
 });
