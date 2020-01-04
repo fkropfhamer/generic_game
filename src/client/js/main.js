@@ -39,8 +39,6 @@ window.onload = () => {
       { name: 'backgroundMusic', url: backgroundMusic },
     ]),
   ]).then((assets) => {
-    // let sounds;
-    // let images;
     const [images, audios] = assets;
     view.images = images;
     view.audios = audios;
