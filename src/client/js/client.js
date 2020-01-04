@@ -117,11 +117,14 @@ export default class Client {
   keyPressed(e) {
     if (e.code === 'ArrowDown' || e.code === 'KeyS') {
       this.pressedDown = true;
-    } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+    }
+    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
       this.pressedUp = true;
-    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+    }
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
       this.pressedRight = true;
-    } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+    }
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
       this.pressedLeft = true;
     }
   }
@@ -133,11 +136,9 @@ export default class Client {
     if (e.code === 'ArrowRight' || e.code === 'KeyD') {
       this.pressedRight = false;
     }
-
     if (e.code === 'ArrowUp' || e.code === 'KeyW') {
       this.pressedUp = false;
     }
-
     if (e.code === 'ArrowDown' || e.code === 'KeyS') {
       this.pressedDown = false;
     }
@@ -169,7 +170,7 @@ export default class Client {
 
   onConnected() {
     console.log('connected');
-    this.connected = true;
+    this.isConnected = true;
   }
 
   onUpdate(data) {
