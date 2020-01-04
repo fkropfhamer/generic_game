@@ -1,4 +1,8 @@
 class AssetLoader {
+  constructor() {
+    throw Error('Assetloader is an abstract class and and cant be initiated');
+  }
+
   static loadImage(name, url) {
     return new Promise((resolve) => {
       const image = new Image();
