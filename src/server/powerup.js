@@ -6,7 +6,6 @@ export default class PowerUp {
     this.x = x;
     this.y = y;
     this.radius = config.POWERUP_RADIUS;
-    this.color = type === powerUpTypes.SHIELD ? 'brown' : 'green';
     this.type = type;
   }
 
@@ -15,8 +14,8 @@ export default class PowerUp {
       return {
         x: p.x,
         y: p.y,
+        type: p.type,
         radius: p.radius,
-        color: p.color,
       };
     });
   }
@@ -35,14 +34,14 @@ export default class PowerUp {
     player.speed *= 2;
     setTimeout(() => {
       player.speed = config.PLAYER_SPEED;
-    }, 5000);
+    }, config.POWERUP_DURATION);
   }
 
   static addBulletUpdate(player) {
     player.fireRateActivated = true;
     setTimeout(() => {
       player.fireRateActivated = false;
-    }, 5000);
+    }, config.POWERUP_DURATION);
   }
 
   update(player) {

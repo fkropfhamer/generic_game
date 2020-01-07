@@ -13,6 +13,9 @@ import face2 from '../img/face2.png';
 import face3 from '../img/face3.png';
 import face4 from '../img/face4.png';
 import speedPowerup from '../img/speedPowerup.png';
+import healthPowerup from '../img/healthPowerup.png';
+import fireratePowerup from '../img/fireratePowerup.png';
+import shieldPowerup from '../img/shieldPowerup.png';
 import AssetLoader from './assetloader';
 // import background from '../img/background.png';
 import Client from './client';
@@ -33,6 +36,9 @@ window.onload = () => {
     { name: 'face3', url: face3 },
     { name: 'face4', url: face4 },
     { name: 'speed', url: speedPowerup },
+    { name: 'health', url: healthPowerup },
+    { name: 'shield', url: shieldPowerup },
+    { name: 'firerate', url: fireratePowerup },
   ]).then((assets) => {
     view.assets = assets;
     // eslint-disable-next-line no-new

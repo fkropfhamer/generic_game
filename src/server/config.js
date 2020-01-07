@@ -4,15 +4,15 @@ import Util from './util';
 const config = Util.deepFreeze({
   BULLET_SPEED: 5,
   BULLET_DURATION: 1000,
-  PLAYER_SPEED: 1,
+  PLAYER_SPEED: 1.5,
   PLAYER_RADIUS: 27.5,
   PLAYER_REPULSION: 10,
   GAME_DURATION: 60,
   PLAYER_LIVES: 3,
   BULLET_RADIUS: 10,
   TEAM_SIZE: 2,
-  POWERUP_RADIUS: 10,
-  POWERUP_DURATION: 5000,
+  POWERUP_RADIUS: 30,
+  POWERUP_DURATION: 7500,
 
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,
@@ -28,14 +28,14 @@ const config = Util.deepFreeze({
   NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_WALLS: 12,
   POWER_UPS: [
-    { x: 480, y: 455, type: powerUpTypes.ADDHEALTH },
+    { x: 480, y: 455, type: powerUpTypes.FIRERATE },
     { x: 800, y: 455, type: powerUpTypes.SHIELD },
-    { x: 480, y: 265, type: powerUpTypes.SPEED },
-    { x: 800, y: 265, type: powerUpTypes.ADDHEALTH },
+    { x: 480, y: 265, type: powerUpTypes.SHIELD },
+    { x: 800, y: 265, type: powerUpTypes.FIRERATE },
     { x: 150, y: 360, type: powerUpTypes.ADDHEALTH },
-    { x: 640, y: 100, type: powerUpTypes.SHIELD },
-    { x: 1130, y: 360, type: powerUpTypes.FIRERATE },
-    { x: 640, y: 620, type: powerUpTypes.ADDHEALTH },
+    { x: 640, y: 100, type: powerUpTypes.SPEED },
+    { x: 1130, y: 360, type: powerUpTypes.ADDHEALTH },
+    { x: 640, y: 620, type: powerUpTypes.SPEED },
   ],
 
   constraintWalls: {

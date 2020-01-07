@@ -95,6 +95,16 @@ export default class View {
     this.ctx.clearRect(0, 0, Math.ceil(this.width), Math.ceil(this.height));
   }
 
+  drawImage(image, x, y, width, height) {
+    this.ctx.drawImage(
+      image,
+      this.scale * x,
+      this.scale * y,
+      this.scale * width,
+      this.scale * height
+    );
+  }
+
   drawImageAtAngle(image, x, y, angle, scale = 1) {
     const imgWidth = Math.round(image.width * scale * this.scale);
     const imgHeight = Math.round(image.height * scale * this.scale);
