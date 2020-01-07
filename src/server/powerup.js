@@ -31,6 +31,17 @@ export default class PowerUp {
     player.isShielded = true;
   }
 
+  static addSpeedUpdate(player) {
+    player.speed *= 2;
+    setTimeout(() => {
+      player.speed = config.PLAYER_SPEED;
+    }, 5000);
+  }
+
+  // static addBulletUpdate(player) {
+
+  // }
+
   update(player) {
     switch (this.type) {
       case powerUpTypes.ADDHEALTH:
@@ -38,6 +49,9 @@ export default class PowerUp {
         break;
       case powerUpTypes.SHIELD:
         PowerUp.addShieldUpdate(player);
+        break;
+      case powerUpTypes.SPEED:
+        PowerUp.addSpeedUpdate(player);
         break;
       default:
         throw Error(`${this.type} type does not exist`);
