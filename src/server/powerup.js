@@ -38,9 +38,12 @@ export default class PowerUp {
     }, 5000);
   }
 
-  // static addBulletUpdate(player) {
-
-  // }
+  static addBulletUpdate(player) {
+    player.fireRateActivated = true;
+    setTimeout(() => {
+      player.fireRateActivated = false;
+    }, 5000);
+  }
 
   update(player) {
     switch (this.type) {
@@ -52,6 +55,9 @@ export default class PowerUp {
         break;
       case powerUpTypes.SPEED:
         PowerUp.addSpeedUpdate(player);
+        break;
+      case powerUpTypes.FIRERATE:
+        PowerUp.addBulletUpdate(player);
         break;
       default:
         throw Error(`${this.type} type does not exist`);

@@ -33,7 +33,7 @@ const config = Util.deepFreeze({
     { x: 800, y: 265, type: powerUpTypes.ADDHEALTH },
     { x: 150, y: 360, type: powerUpTypes.ADDHEALTH },
     { x: 640, y: 100, type: powerUpTypes.SHIELD },
-    { x: 1130, y: 360, type: powerUpTypes.SPEED },
+    { x: 1130, y: 360, type: powerUpTypes.FIRERATE },
     { x: 640, y: 620, type: powerUpTypes.ADDHEALTH },
   ],
 

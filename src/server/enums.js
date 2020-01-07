@@ -1,6 +1,8 @@
 export const powerUpTypes = Object.freeze({
   ADDHEALTH: 'health',
   SHIELD: 'shield',
+  SPEED: 'speed',
+  FIRERATE: 'firerate',
 });
 
 export const Color = Object.freeze({

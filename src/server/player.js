@@ -13,6 +13,7 @@ export default class Player {
     this.radius = config.PLAYER_RADIUS;
     this.shootingCount = 0;
     this.isShielded = false;
+    this.fireRateActivated = false;
   }
 
   onKeysPressed(data) {
@@ -30,7 +31,11 @@ export default class Player {
     if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
-      this.shootingCount = config.SHOOTING_RATE;
+      if (this.fireRateActivated === true) {
+        this.shootingCount = config.SHOOTING_RATE / 4;
+      } else {
+        this.shootingCount = config.SHOOTING_RATE;
+      }
     }
   }
 
