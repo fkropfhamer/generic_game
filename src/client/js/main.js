@@ -12,6 +12,7 @@ import face1 from '../img/face1.png';
 import face2 from '../img/face2.png';
 import face3 from '../img/face3.png';
 import face4 from '../img/face4.png';
+import speedPowerup from '../img/speedPowerup.png';
 import AssetLoader from './assetloader';
 // import background from '../img/background.png';
 import Client from './client';
@@ -31,6 +32,7 @@ window.onload = () => {
     { name: 'face2', url: face2 },
     { name: 'face3', url: face3 },
     { name: 'face4', url: face4 },
+    { name: 'speed', url: speedPowerup },
   ]).then((assets) => {
     view.assets = assets;
     // eslint-disable-next-line no-new
