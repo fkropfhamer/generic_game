@@ -1,7 +1,7 @@
 import config from './config';
 import Util from './util';
 import PowerUp from './powerup';
-import { Color } from './enums';
+import { Color, powerUpTypes } from './enums';
 
 export default class Game {
   constructor(players) {
@@ -59,7 +59,13 @@ export default class Game {
 
   setupPowerups() {
     config.POWER_UPS.forEach((powerUp) => {
-      this.powerUps.push(new PowerUp(powerUp.x, powerUp.y, powerUp.type));
+      this.powerUps.push(
+        new PowerUp(
+          powerUp.x,
+          powerUp.y,
+          config.POWERUP_TYPES[Math.floor(Math.random() * config.POWERUP_TYPES.length)]
+        )
+      );
     });
     this.placeRandomPowerUp();
   }

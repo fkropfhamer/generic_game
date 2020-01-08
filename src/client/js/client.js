@@ -64,7 +64,7 @@ export default class Client {
       );
     });
 
-    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.5));
+    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.4));
     View.updateTeamLiveBar(this.teamLives);
   }
 
