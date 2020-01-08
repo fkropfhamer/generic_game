@@ -44,7 +44,7 @@ export default class Game {
 
   placeRandomPowerUp() {
     setInterval(() => {
-      if (this.randomPowerUps.length < 3) {
+      if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
         do {
           const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
           if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
@@ -52,13 +52,13 @@ export default class Game {
             console.log(randomPowerUp.type);
             break;
           }
-        } while (this.randomPowerUps.length < 3);
+        } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
       }
     }, 3000);
   }
 
   setupPowerups() {
-    config.POWER_UPS.forEach((powerUp) => {
+    config.POWER_UPS_POSITION.forEach((powerUp) => {
       this.powerUps.push(
         new PowerUp(
           powerUp.x,
