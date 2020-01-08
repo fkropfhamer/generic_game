@@ -14,8 +14,8 @@ export default class PowerUp {
       return {
         x: p.x,
         y: p.y,
-        type: p.type,
         radius: p.radius,
+        type: p.type,
       };
     });
   }
