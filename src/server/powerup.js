@@ -31,7 +31,7 @@ export default class PowerUp {
   }
 
   static addSpeedUpdate(player) {
-    player.speed *= 2;
+    player.speed = 2 * config.PLAYER_SPEED;
     setTimeout(() => {
       player.speed = config.PLAYER_SPEED;
     }, config.POWERUP_DURATION);

@@ -30,19 +30,6 @@ export default class Client {
     }
   }
 
-  // drawRandomPowerUp() {
-  //   setTimeout(() => {
-  //     const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
-  //     this.view.drawImage(
-  //       this.assets[randomPowerUp.type],
-  //       randomPowerUp.x,
-  //       randomPowerUp.y,
-  //       randomPowerUp.radius,
-  //       randomPowerUp.radius
-  //     );
-  //   }, 3000);
-  // }
-
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
@@ -80,7 +67,6 @@ export default class Client {
     this.powerUps.forEach((p) =>
       this.view.drawImage(this.assets[p.type], p.x, p.y, p.radius, p.radius)
     );
-    // this.drawRandomPowerUp();
     View.updateTeamLiveBar(this.teamLives);
   }
 

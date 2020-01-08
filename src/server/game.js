@@ -10,6 +10,7 @@ export default class Game {
     this.deadPlayers = [];
     this.walls = [];
     this.powerUps = [];
+    this.randomPowerUps = [];
     this.setupPowerups();
     this.setupWalls();
   }
@@ -31,7 +32,7 @@ export default class Game {
         this.getOtherPlayers(player),
         this.timer,
         this.walls,
-        this.powerUps,
+        this.randomPowerUps,
         this.calculateTeamLives()
       );
       player.game = this;
@@ -41,10 +42,26 @@ export default class Game {
     this.interval = setInterval(this.loop.bind(this), 10);
   }
 
+  placeRandomPowerUp() {
+    setInterval(() => {
+      if (this.randomPowerUps.length < 3) {
+        do {
+          const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
+          if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
+            this.randomPowerUps.push(randomPowerUp);
+            console.log(randomPowerUp.type);
+            break;
+          }
+        } while (this.randomPowerUps.length < 3);
+      }
+    }, 3000);
+  }
+
   setupPowerups() {
     config.POWER_UPS.forEach((powerUp) => {
       this.powerUps.push(new PowerUp(powerUp.x, powerUp.y, powerUp.type));
     });
+    this.placeRandomPowerUp();
   }
 
   setupWalls() {
@@ -150,10 +167,10 @@ export default class Game {
   }
 
   checkPlayerHitsPowerUp(player) {
-    this.powerUps.forEach((powerUp) => {
+    this.randomPowerUps.forEach((powerUp) => {
       if (Util.collisionCircleCircle(powerUp, player)) {
         powerUp.update(player);
-        this.powerUps = this.powerUps.filter((p) => !Object.is(powerUp, p));
+        this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
   }
@@ -279,7 +296,7 @@ export default class Game {
         this.bullets,
         this.timer,
         this.walls,
-        this.powerUps,
+        this.randomPowerUps,
         this.calculateTeamLives()
       );
     });
