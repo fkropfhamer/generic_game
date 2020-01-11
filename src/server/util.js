@@ -1,9 +1,24 @@
 export default class Util {
+  constructor() {
+    throw Error('Util is an abstract class and and cant initiated');
+  }
+
   static halfIfAnotherKeyIsPressed(key1, key2) {
     if (key1 || key2) {
       return 0.5;
     }
     return 1;
+  }
+
+  static deepFreeze(object) {
+    const propNames = Object.getOwnPropertyNames(object);
+
+    propNames.forEach((propName) => {
+      const value = object[propName];
+      object[propName] = value && typeof value === 'object' ? this.deepFreeze(value) : value;
+    });
+
+    return Object.freeze(object);
   }
 
   static mapPlayers(players) {
@@ -16,6 +31,7 @@ export default class Util {
         lives: player.lives,
         face: player.face,
         hitAngle: player.hitAngle,
+        isShielded: player.isShielded,
       };
     });
   }
