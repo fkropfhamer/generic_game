@@ -17,6 +17,7 @@ const config = Util.deepFreeze({
   MAX_POWERUPS_ON_FIELD: 5,
   POWERUP_TYPES: [
     powerUpTypes.FIRERATE,
+    powerUpTypes.FREEZE,
     powerUpTypes.SPEED,
     powerUpTypes.SPEED,
     powerUpTypes.SHIELD,
@@ -28,6 +29,7 @@ const config = Util.deepFreeze({
     powerUpTypes.SHIELD,
     powerUpTypes.SPEED,
     powerUpTypes.SPEED,
+    powerUpTypes.FREEZE,
     powerUpTypes.FIRERATE,
   ],
 
