@@ -1,7 +1,8 @@
 import config from '../../server/config';
 
-class Game {
+export default class Client {
   constructor(view, assets) {
+    this.isWaiting = true;
     this.view = view;
     this.assets = assets;
     this.view.showStartScreen(this.setup.bind(this));
@@ -17,24 +18,36 @@ class Game {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded) {
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
     this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
+    if (isShielded) {
+      this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
+    }
   }
 
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
-    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.bulletRadius, b.color));
+    this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
       this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
     );
 
-    this.drawPlayer(this.color, this.lives, this.face, this.x, this.y, this.angle, this.hitAngle);
+    this.drawPlayer(
+      this.color,
+      this.lives,
+      this.face,
+      this.x,
+      this.y,
+      this.angle,
+      this.hitAngle,
+      this.isShielded
+    );
     this.drawPlayerIndicator();
     this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
@@ -45,9 +58,11 @@ class Game {
         player.x,
         player.y,
         player.angle,
-        player.hitAngle
+        player.hitAngle,
+        player.isShielded
       );
     });
+    this.powerUps.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
   }
 
   drawPlayerIndicator() {
@@ -91,7 +106,6 @@ class Game {
   }
 
   shoot(e) {
-    console.log('shoot', e.clientX, e.clientY);
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
     this.socket.emit('shoot', { angle });
@@ -128,9 +142,9 @@ class Game {
 
   onStart(data) {
     console.log('game starting!');
-    if (this.waiting) {
+    if (this.isWaiting) {
       this.view.hideWaitingScreen();
-      this.waiting = false;
+      this.isWaiting = false;
     }
 
     this.x = data.x;
@@ -143,6 +157,8 @@ class Game {
     this.timer = data.timer;
     this.bullets = [];
     this.walls = data.walls;
+    this.isShielded = data.isShielded;
+    this.powerUps = data.powerUps;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -162,6 +178,8 @@ class Game {
     this.lives = data.lives;
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
+    this.isShielded = data.isShielded;
+    this.powerUps = data.powerUps;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,
@@ -174,7 +192,7 @@ class Game {
   onWait(data) {
     console.log('you have to wait!');
     this.view.showWaitingScreen(data.numberOfPlayers);
-    this.waiting = true;
+    this.isWaiting = true;
   }
 
   onOpponentDisconnected() {
@@ -209,5 +227,3 @@ class Game {
     this.socket.on('lose', this.onLose.bind(this));
   }
 }
-
-export default Game;

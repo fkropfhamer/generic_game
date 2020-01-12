@@ -1,4 +1,4 @@
-import Game from '../../src/client/js/game';
+import Client from '../../src/client/js/client';
 
 describe('game client', () => {
   let game;
@@ -20,7 +20,7 @@ describe('game client', () => {
       hideStartScreen: jest.fn(),
     };
     assets = {};
-    game = new Game(view, assets);
+    game = new Client(view, assets);
   });
 
   test('constructor', () => {

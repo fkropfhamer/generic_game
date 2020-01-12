@@ -1,4 +1,4 @@
-import GameHandler from './gamehandler';
+import Server from './server';
 
-const server = new GameHandler();
+const server = new Server();
 server.listen(8080);
