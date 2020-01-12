@@ -54,7 +54,7 @@ export default class Game {
           }
         } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
       }
-    }, 3000);
+    }, config.POWERUP_SPAWN_DELAY);
   }
 
   setupPowerups() {

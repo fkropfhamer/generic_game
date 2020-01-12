@@ -16,6 +16,7 @@ import speedPowerup from '../img/speedPowerup.png';
 import healthPowerup from '../img/healthPowerup.png';
 import fireratePowerup from '../img/fireratePowerup.png';
 import shieldPowerup from '../img/shieldPowerup.png';
+import freezePowerup from '../img/freezePowerup.png';
 import AssetLoader from './assetloader';
 // import background from '../img/background.png';
 import Client from './client';
@@ -39,6 +40,7 @@ window.onload = () => {
     { name: 'health', url: healthPowerup },
     { name: 'shield', url: shieldPowerup },
     { name: 'firerate', url: fireratePowerup },
+    { name: 'freeze', url: freezePowerup },
   ]).then((assets) => {
     view.assets = assets;
     // eslint-disable-next-line no-new
