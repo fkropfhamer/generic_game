@@ -7,11 +7,6 @@ export default class IceSand {
     this.y = y;
     this.radius = config.ICESAND_RADIUS;
     this.type = type;
-    if (this.type === iceSandTypes.ICE) {
-      this.color = 'blue';
-    } else {
-      this.color = 'brown';
-    }
   }
 
   static mapIceSand(iceSandField) {
@@ -20,7 +15,6 @@ export default class IceSand {
         x: isf.x,
         y: isf.y,
         radius: isf.radius,
-        color: isf.color,
       };
     });
   }

@@ -10,6 +10,7 @@ import face1 from '../img/face1.png';
 import face2 from '../img/face2.png';
 import face3 from '../img/face3.png';
 import face4 from '../img/face4.png';
+import sand from '../img/sand.png';
 // import background from '../img/background.png';
 import AssetLoader from './assetloader';
 import Client from './client';
@@ -29,6 +30,7 @@ window.onload = () => {
     { name: 'face2', url: face2 },
     { name: 'face3', url: face3 },
     { name: 'face4', url: face4 },
+    { name: 'sand', url: sand },
     // { name: 'background', url: background },
   ]).then((assets) => {
     view.assets = assets;

@@ -162,25 +162,25 @@ export default class Game {
   }
 
   checkPlayerWalksOnIceOrSand(player) {
-    this.iceSandFields.forEach((iceSandField) => {
+    this.iceSandFields.forEach((field) => {
       // eslint-disable-next-line prettier/prettier
-      if (Util.collisionCircleCircle(iceSandField, player) && (iceSandField.type === iceSandTypes.ICE)) {
+      if (Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.ICE)) {
         this.onSand = false;
         this.onIce = true;
-        iceSandField.update(player);
+        field.update(player);
       }
       // eslint-disable-next-line prettier/prettier
-      if (Util.collisionCircleCircle(iceSandField, player) && (iceSandField.type === iceSandTypes.SAND)) {
+      if (Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.SAND)) {
         this.onSand = true;
         this.onIce = false;
-        iceSandField.update(player);
+        field.update(player);
       }
       // eslint-disable-next-line prettier/prettier
-      if (!Util.collisionCircleCircle(iceSandField, player) && (iceSandField.type === iceSandTypes.SAND)) {
+      if (!Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.SAND)) {
         this.onSand = false;
       }
       // eslint-disable-next-line prettier/prettier
-      if (!Util.collisionCircleCircle(iceSandField, player) && (iceSandField.type === iceSandTypes.ICE)) {
+      if (!Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.ICE)) {
         this.onIce = false;
       } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
         player.speed = config.PLAYER_SPEED;

@@ -88,6 +88,7 @@ class View {
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
+    console.log('image', image);
     const imgWidth = image.width * scale * this.scale;
     const imgHeight = image.height * scale * this.scale;
 

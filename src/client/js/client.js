@@ -1,4 +1,5 @@
 import config from '../../server/config';
+import { iceSandTypes } from '../../server/enums';
 
 export default class Client {
   constructor(view, assets) {
@@ -32,7 +33,6 @@ export default class Client {
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
-    this.iceSandFields.forEach((isf) => this.view.drawCircle(isf.x, isf.y, isf.radius, isf.color));
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
@@ -64,6 +64,9 @@ export default class Client {
       );
     });
     this.powerUps.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
+    this.iceSandFields.forEach((isf) =>
+      this.view.drawImageAtAngle(this.assets.sand, isf.x, isf.y, 0, 1)
+    );
   }
 
   drawPlayerIndicator() {
