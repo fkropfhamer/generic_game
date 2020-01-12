@@ -182,27 +182,27 @@ export default class Game {
 
   checkPlayerWalksOnIceOrSand(player) {
     this.iceSandFields.forEach((field) => {
-      // eslint-disable-next-line prettier/prettier
-      if (Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.ICE)) {
-        this.onSand = false;
-        this.onIce = true;
-        field.update(player);
-      }
-      // eslint-disable-next-line prettier/prettier
-      if (Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.SAND)) {
-        this.onSand = true;
-        this.onIce = false;
-        field.update(player);
-      }
-      // eslint-disable-next-line prettier/prettier
-      if (!Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.SAND)) {
-        this.onSand = false;
-      }
-      // eslint-disable-next-line prettier/prettier
-      if (!Util.collisionCircleCircle(field, player) && (field.type === iceSandTypes.ICE)) {
-        this.onIce = false;
-      } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
-        player.speed = config.PLAYER_SPEED;
+      const collides = Util.collisionCircleCircle(field, player);
+      if (collides) {
+        if (field.type === iceSandTypes.ICE) {
+          this.onSand = false;
+          this.onIce = true;
+          field.update(player);
+        }
+        if (field.type === iceSandTypes.SAND) {
+          this.onSand = true;
+          this.onIce = false;
+          field.update(player);
+        }
+      } else {
+        if (field.type === iceSandTypes.SAND) {
+          this.onSand = false;
+        }
+        if (field.type === iceSandTypes.ICE) {
+          this.onIce = false;
+        } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+          player.speed = config.PLAYER_SPEED;
+        }
       }
     });
   }
