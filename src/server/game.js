@@ -1,7 +1,8 @@
 import config from './config';
 import Util from './util';
 import PowerUp from './powerup';
-import { Color, powerUpTypes } from './enums';
+import IceSand from './iceSand';
+import { Color, powerUpTypes, iceSandTypes } from './enums';
 
 export default class Game {
   constructor(players) {
@@ -11,8 +12,12 @@ export default class Game {
     this.walls = [];
     this.powerUps = [];
     this.randomPowerUps = [];
+    this.iceSandFields = [];
     this.setupPowerups();
+    this.setupIceSandFields();
     this.setupWalls();
+    this.onIce = false;
+    this.onSand = false;
   }
 
   start() {
@@ -33,7 +38,8 @@ export default class Game {
         this.timer,
         this.walls,
         this.randomPowerUps,
-        this.calculateTeamLives()
+        this.calculateTeamLives(),
+        this.iceSandFields
       );
       player.game = this;
       player.isWaiting = false;
@@ -68,6 +74,12 @@ export default class Game {
       );
     });
     this.placeRandomPowerUp();
+  }
+
+  setupIceSandFields() {
+    config.ICE_SAND_FIELDS.forEach((iceSandField) => {
+      this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+    });
   }
 
   setupWalls() {
@@ -177,6 +189,33 @@ export default class Game {
       if (Util.collisionCircleCircle(powerUp, player)) {
         powerUp.update(player);
         this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
+      }
+    });
+  }
+
+  checkPlayerWalksOnIceOrSand(player) {
+    this.iceSandFields.forEach((field) => {
+      const collides = Util.collisionCircleCircle(field, player);
+      if (collides) {
+        if (field.type === iceSandTypes.ICE) {
+          this.onSand = false;
+          this.onIce = true;
+          field.update(player);
+        }
+        if (field.type === iceSandTypes.SAND) {
+          this.onSand = true;
+          this.onIce = false;
+          field.update(player);
+        }
+      } else {
+        if (field.type === iceSandTypes.SAND) {
+          this.onSand = false;
+        }
+        if (field.type === iceSandTypes.ICE) {
+          this.onIce = false;
+        } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+          player.speed = config.PLAYER_SPEED;
+        }
       }
     });
   }
@@ -303,6 +342,7 @@ export default class Game {
         this.timer,
         this.walls,
         this.randomPowerUps,
+        this.iceSandFields,
         this.calculateTeamLives()
       );
     });

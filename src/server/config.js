@@ -1,4 +1,4 @@
-import { powerUpTypes } from './enums';
+import { powerUpTypes, iceSandTypes } from './enums';
 import Util from './util';
 
 const config = Util.deepFreeze({
@@ -31,6 +31,10 @@ const config = Util.deepFreeze({
     powerUpTypes.SPEED,
     powerUpTypes.FREEZE,
     powerUpTypes.FIRERATE,
+  ],
+  ICE_SAND_FIELDS: [
+    { x: 750, y: 250, type: iceSandTypes.ICE },
+    { x: 750, y: 550, type: iceSandTypes.SAND },
   ],
 
   FIELD_WIDTH: 1280, // 16:9

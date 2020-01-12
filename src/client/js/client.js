@@ -1,5 +1,6 @@
 import config from '../../server/config';
 import View from './view';
+import { iceSandTypes } from '../../server/enums';
 
 export default class Client {
   constructor(view, assets) {
@@ -65,6 +66,9 @@ export default class Client {
     });
 
     this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.4));
+    this.iceSandFields.forEach((isf) =>
+      this.view.drawImageAtAngle(this.assets.sand, isf.x, isf.y, 0, 1)
+    );
     View.updateTeamLiveBar(this.teamLives);
   }
 
@@ -164,6 +168,7 @@ export default class Client {
     this.isShielded = data.isShielded;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
+    this.iceSandFields = data.iceSandFields;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -186,6 +191,7 @@ export default class Client {
     this.isShielded = data.isShielded;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
+    this.iceSandFields = data.iceSandFields;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,
