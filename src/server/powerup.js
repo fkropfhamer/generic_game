@@ -6,8 +6,16 @@ export default class PowerUp {
     this.x = x;
     this.y = y;
     this.radius = config.POWERUP_RADIUS;
-    this.color = type === powerUpTypes.SHIELD ? 'brown' : 'green';
     this.type = type;
+    if (this.type === powerUpTypes.SHIELD) {
+      this.color = 'brown';
+    } else if (this.type === powerUpTypes.FREEZE) {
+      this.color = 'blue';
+    } else if (this.type === powerUpTypes.ADDHEALTH) {
+      this.color = 'green';
+    } else {
+      this.color = 'yellow';
+    }
   }
 
   static mapPowerups(powerUp) {
@@ -31,10 +39,18 @@ export default class PowerUp {
     player.isShielded = true;
   }
 
+  static freezeUp(player) {
+    player.freezingOthers = true;
+    player.gotFreezed = false;
+  }
+
   update(player) {
     switch (this.type) {
       case powerUpTypes.ADDHEALTH:
         PowerUp.addHealthUpdate(player);
+        break;
+      case powerUpTypes.FREEZE:
+        PowerUp.freezeUp(player);
         break;
       case powerUpTypes.SHIELD:
         PowerUp.addShieldUpdate(player);

@@ -14,6 +14,7 @@ const config = Util.deepFreeze({
   TEAM_SIZE: 2,
   POWERUP_RADIUS: 10,
   ICESAND_RADIUS: 70,
+  FREEZE_DURATION: 1000000,
 
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,
@@ -32,7 +33,7 @@ const config = Util.deepFreeze({
     { x: 480, y: 455, type: powerUpTypes.ADDHEALTH },
     { x: 800, y: 455, type: powerUpTypes.SHIELD },
     { x: 480, y: 265, type: powerUpTypes.SHIELD },
-    { x: 800, y: 265, type: powerUpTypes.ADDHEALTH },
+    { x: 200, y: 550, type: powerUpTypes.FREEZE },
   ],
   ICE_SAND_FIELDS: [
     { x: 750, y: 250, type: iceSandTypes.ICE },

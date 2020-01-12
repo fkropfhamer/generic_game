@@ -54,7 +54,6 @@ export default class Game {
   }
 
   setupIceSandFields() {
-    console.log('config.ICE_SAND_FIELDS', config.ICE_SAND_FIELDS);
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
     });
@@ -137,6 +136,14 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
+          if (player.gotFreezed) {
+            this.players.forEach((p) => {
+              console.log('freezing deactivated');
+              p.gotFreezed = false;
+              p.freezingOthers = false;
+            });
+          }
+
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
           if (player.isShielded) {
             player.isShielded = false;
@@ -156,6 +163,18 @@ export default class Game {
       if (Util.collisionCircleCircle(powerUp, player)) {
         console.log(powerUp);
         powerUp.update(player);
+        if (player.freezingOthers) {
+          this.players.forEach((freezedPlayer) => {
+            if (!Object.is(freezedPlayer, player)) {
+              freezedPlayer.gotFreezed = true;
+              freezedPlayer.freezingOthers = false;
+              setTimeout(() => {
+                freezedPlayer.gotFreezed = false;
+                player.freezingOthers = false;
+              }, config.FREEZE_DURATION);
+            }
+          });
+        }
         this.powerUps = this.powerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
@@ -293,7 +312,9 @@ export default class Game {
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      player.update();
+      if (!player.gotFreezed) {
+        player.update();
+      }
       this.checkWallCollisionPlayer(player);
 
       this.checkBulletHitsPlayer(player);
