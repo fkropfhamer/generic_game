@@ -10,8 +10,10 @@ export default class Game {
     this.deadPlayers = [];
     this.walls = [];
     this.powerUps = [];
+    this.portals = [];
     this.setupPowerups();
     this.setupWalls();
+    this.setupPortals();
   }
 
   start() {
@@ -32,7 +34,8 @@ export default class Game {
         this.timer,
         this.walls,
         this.powerUps,
-        this.calculateTeamLives()
+        this.calculateTeamLives(),
+        this.portals
       );
       player.game = this;
       player.isWaiting = false;
@@ -44,6 +47,12 @@ export default class Game {
   setupPowerups() {
     config.POWER_UPS.forEach((powerUp) => {
       this.powerUps.push(new PowerUp(powerUp.x, powerUp.y, powerUp.type));
+    });
+  }
+
+  setupPortals() {
+    config.portals.forEach((portal) => {
+      this.portals.push(portal);
     });
   }
 
@@ -156,6 +165,25 @@ export default class Game {
         this.powerUps = this.powerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
+  }
+
+  checkPlayerHitsPortal(player) {
+    this.portals
+      .filter((p) => p.activated)
+      .forEach((portal) => {
+        const portal1 = { x: portal.x1, y: portal.y1, radius: config.PORTAL_RADIUS - 2 * config.PLAYER_RADIUS};
+        const portal2 = { x: portal.x2, y: portal.y2, radius: config.PORTAL_RADIUS - 2 * config.PLAYER_RADIUS};
+        if (Util.collisionCircleCircle(portal1, player)) {
+          player.x = portal.x2 - (player.x - portal.x1) * 1.1;
+          player.y = portal.y2 - (player.y - portal.y1) * 1.1;
+          console.log('1-if');
+        }      
+        if (Util.collisionCircleCircle(portal2, player)) {
+          player.x = portal.x1 - (player.x - portal.x2) * 1.1;
+          player.y = portal.y1 - (player.y - portal.y2) * 1.1;
+          console.log('2-if');
+        } 
+      });
   }
 
   checkWallCollisionPlayer(player) {
@@ -271,6 +299,7 @@ export default class Game {
 
       this.checkBulletHitsPlayer(player);
       this.checkPlayerHitsPowerUp(player);
+      this.checkPlayerHitsPortal(player);
     });
 
     this.players.concat(this.deadPlayers).forEach((player) => {
@@ -280,7 +309,8 @@ export default class Game {
         this.timer,
         this.walls,
         this.powerUps,
-        this.calculateTeamLives()
+        this.calculateTeamLives(),
+        this.portals
       );
     });
   }

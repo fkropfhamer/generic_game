@@ -12,6 +12,10 @@ const config = Util.deepFreeze({
   BULLET_RADIUS: 10,
   TEAM_SIZE: 2,
   POWERUP_RADIUS: 10,
+  POWERUP_SHIELD_DISTANCE_TO_PLAYER: 5,
+  POWERUP_SHIELD_LINEWIDTH: 6,
+  PORTAL_RADIUS: 41.25, // 1.5*PLAYER_RADIUS
+  PORTAL_RING_LINEWIDTH: 3,
 
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,
@@ -31,6 +35,16 @@ const config = Util.deepFreeze({
     { x: 800, y: 455, type: powerUpTypes.SHIELD },
     { x: 480, y: 265, type: powerUpTypes.SHIELD },
     { x: 800, y: 265, type: powerUpTypes.ADDHEALTH },
+  ],
+
+  portals: [
+    {
+      x1: 300,
+      y1: 100,
+      x2: 900,
+      y2: 600,
+      activated: true,
+    },
   ],
 
   constraintWalls: {

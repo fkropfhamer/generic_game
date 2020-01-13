@@ -26,7 +26,16 @@ export default class Client {
     }
     this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
     if (isShielded) {
-      this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
+      this.view.drawPartOfRing(
+        x,
+        y,
+        config.PLAYER_RADIUS,
+        config.POWERUP_SHIELD_DISTANCE_TO_PLAYER,
+        0,
+        2 * Math.PI,
+        config.POWERUP_SHIELD_LINEWIDTH,
+        color
+      );
     }
   }
 
@@ -65,6 +74,29 @@ export default class Client {
 
     this.powerUps.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
     View.updateTeamLiveBar(this.teamLives);
+
+    this.portals.forEach((p) => {
+      if (p.activated) {
+        this.view.drawNestedPartsOfRings(
+          p.x1,
+          p.y1,
+          config.PORTAL_RADIUS,
+          0,
+          2 * Math.PI,
+          3,
+          'grey'
+        );
+        this.view.drawNestedPartsOfRings(
+          p.x2,
+          p.y2,
+          config.PORTAL_RADIUS,
+          0,
+          2 * Math.PI,
+          3,
+          'grey'
+        );
+      }
+    });
   }
 
   drawPlayerIndicator() {
@@ -162,6 +194,7 @@ export default class Client {
     this.isShielded = data.isShielded;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
+    this.portals = data.portals;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -184,6 +217,7 @@ export default class Client {
     this.isShielded = data.isShielded;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
+    this.portals = data.portals;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,
