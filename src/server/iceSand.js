@@ -1,5 +1,5 @@
 import config from './config';
-import iceSandTypes from './enums';
+import { iceSandTypes } from './enums';
 
 export default class IceSand {
   constructor(x, y, type) {
@@ -10,17 +10,20 @@ export default class IceSand {
   }
 
   static mapIceSand(iceSandField) {
+    console.log('isf mapping',iceSandField);
     return iceSandField.map((isf) => {
       return {
         x: isf.x,
         y: isf.y,
         radius: isf.radius,
+        type: isf.type,
       };
     });
   }
 
   manipulatePlayer(player) {
     let walkingOnEffect = 0;
+    console.log('isf-type manipulatePlayer', this.type);
     if (this.type === iceSandTypes.ICE) {
       walkingOnEffect += 100;
     }

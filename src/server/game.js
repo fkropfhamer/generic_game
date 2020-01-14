@@ -38,8 +38,8 @@ export default class Game {
         this.timer,
         this.walls,
         this.randomPowerUps,
-        this.calculateTeamLives(),
-        this.iceSandFields
+        this.iceSandFields,
+        this.calculateTeamLives()
       );
       player.game = this;
       player.isWaiting = false;
@@ -80,6 +80,7 @@ export default class Game {
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
     });
+    console.log('iceSandFields', this.iceSandFields);
   }
 
   setupWalls() {
@@ -333,6 +334,7 @@ export default class Game {
 
       this.checkBulletHitsPlayer(player);
       this.checkPlayerHitsPowerUp(player);
+      this.checkPlayerWalksOnIceOrSand(player);
     });
 
     this.players.concat(this.deadPlayers).forEach((player) => {

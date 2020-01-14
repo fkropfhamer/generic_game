@@ -2,6 +2,7 @@ import Bullet from './bullet';
 import Util from './util';
 import config from './config';
 import PowerUp from './powerup';
+import IceSand from './iceSand';
 
 export default class Player {
   constructor(socket, server) {
@@ -14,6 +15,7 @@ export default class Player {
     this.shootingCount = 0;
     this.isShielded = false;
     this.fireRateActivated = false;
+    this.changedSpeedPowerupActive = false;
   }
 
   onKeysPressed(data) {
@@ -66,10 +68,11 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls, powerUps, teamLives) {
+  notifyStart(otherPlayers, timer, walls, powerUps, iceSandFields, teamLives) {
     this.isWaiting = false;
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
+    const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
@@ -82,6 +85,7 @@ export default class Player {
       walls,
       teamLives,
       powerUps: mappedPowerups,
+      iceSandFields: mappedIceSandFields,
     });
   }
 
@@ -90,10 +94,11 @@ export default class Player {
     this.socket.emit('wait', { numberOfPlayers });
   }
 
-  notifyUpdate(players, bullets, timer, walls, powerUps, teamLives) {
+  notifyUpdate(players, bullets, timer, walls, powerUps, iceSandFields, teamLives) {
     const mappedPlayers = Util.mapPlayers(players);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedBullets = Bullet.mapBullets(bullets);
+    const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -107,6 +112,7 @@ export default class Player {
       walls,
       teamLives,
       powerUps: mappedPowerups,
+      iceSandFields: mappedIceSandFields,
     });
   }
 
