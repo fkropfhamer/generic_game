@@ -160,6 +160,14 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
+          if (player.gotFreezed) {
+            this.players.forEach((p) => {
+              console.log('freezing deactivated');
+              p.gotFreezed = false;
+              p.freezingOthers = false;
+            });
+          }
+
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
           if (player.isShielded) {
             player.isShielded = false;
@@ -189,6 +197,18 @@ export default class Game {
     this.randomPowerUps.forEach((powerUp) => {
       if (Util.collisionCircleCircle(powerUp, player)) {
         powerUp.update(player);
+        if (player.freezingOthers) {
+          this.players.forEach((freezedPlayer) => {
+            if (!Object.is(freezedPlayer, player)) {
+              freezedPlayer.gotFreezed = true;
+              freezedPlayer.freezingOthers = false;
+              setTimeout(() => {
+                freezedPlayer.gotFreezed = false;
+                player.freezingOthers = false;
+              }, config.FREEZE_DURATION);
+            }
+          });
+        }
         this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
@@ -329,7 +349,9 @@ export default class Game {
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      player.update();
+      if (!player.gotFreezed) {
+        player.update();
+      }
       this.checkWallCollisionPlayer(player);
 
       this.checkBulletHitsPlayer(player);

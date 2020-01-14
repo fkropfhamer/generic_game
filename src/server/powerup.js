@@ -44,8 +44,16 @@ export default class PowerUp {
     }, config.POWERUP_DURATION);
   }
 
+  static freezeUp(player) {
+    player.freezingOthers = true;
+    player.gotFreezed = false;
+  }
+
   update(player) {
     switch (this.type) {
+      case powerUpTypes.FREEZE:
+        PowerUp.freezeUp(player);
+        break;
       case powerUpTypes.ADDHEALTH:
         PowerUp.addHealthUpdate(player);
         break;

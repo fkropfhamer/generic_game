@@ -16,6 +16,8 @@ export default class Player {
     this.isShielded = false;
     this.fireRateActivated = false;
     this.changedSpeedPowerupActive = false;
+    this.freezingOthers = false;
+    this.gotFreezed = false;
   }
 
   onKeysPressed(data) {
