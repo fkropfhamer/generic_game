@@ -18,6 +18,7 @@ import fireratePowerup from '../img/fireratePowerup.png';
 import shieldPowerup from '../img/shieldPowerup.png';
 import freezePowerup from '../img/freezePowerup.png';
 import sand from '../img/sand.png';
+import ice from '../img/ice.png';
 import AssetLoader from './assetloader';
 // import background from '../img/background.png';
 import Client from './client';
@@ -43,6 +44,7 @@ window.onload = () => {
     { name: 'firerate', url: fireratePowerup },
     { name: 'freeze', url: freezePowerup },
     { name: 'sand', url: sand },
+    { name: 'ice', url: ice },
   ]).then((assets) => {
     view.assets = assets;
     // eslint-disable-next-line no-new

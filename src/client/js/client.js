@@ -67,7 +67,7 @@ export default class Client {
 
     this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.4));
     this.iceSandFields.forEach((isf) =>
-      this.view.drawImageAtAngle(this.assets.sand, isf.x, isf.y, 0, 1)
+      this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 1)
     );
     View.updateTeamLiveBar(this.teamLives);
   }

@@ -80,7 +80,6 @@ export default class Game {
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
     });
-    console.log('iceSandFields', this.iceSandFields);
   }
 
   setupWalls() {
