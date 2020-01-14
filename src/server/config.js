@@ -1,10 +1,10 @@
-import { powerUpTypes } from './enums';
+import { powerUpTypes, iceSandTypes } from './enums';
 import Util from './util';
 
 const config = Util.deepFreeze({
   BULLET_SPEED: 5,
   BULLET_DURATION: 1000,
-  PLAYER_SPEED: 1.5,
+  PLAYER_SPEED: 3,
   PLAYER_RADIUS: 25,
   PLAYER_REPULSION: 10,
   GAME_DURATION: 180,
@@ -12,6 +12,8 @@ const config = Util.deepFreeze({
   BULLET_RADIUS: 10,
   TEAM_SIZE: 2,
   POWERUP_RADIUS: 20,
+  ICESAND_RADIUS: 70,
+  FREEZE_DURATION: 1000000,
   POWERUP_DURATION: 7500,
   POWERUP_SPAWN_DELAY: 5000,
   MAX_POWERUPS_ON_FIELD: 3,
@@ -31,6 +33,10 @@ const config = Util.deepFreeze({
     powerUpTypes.SPEED,
     powerUpTypes.FREEZE,
     powerUpTypes.FIRERATE,
+  ],
+  ICE_SAND_FIELDS: [
+    { x: 750, y: 250, type: iceSandTypes.ICE },
+    { x: 750, y: 550, type: iceSandTypes.SAND },
   ],
 
   FIELD_WIDTH: 1280, // 16:9
