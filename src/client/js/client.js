@@ -20,7 +20,8 @@ export default class Client {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, gotFreezed) {
+    console.log('gotFreezed außerhalb if', gotFreezed, x, y);
     this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
@@ -29,13 +30,17 @@ export default class Client {
     if (isShielded) {
       this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
     }
+    if (gotFreezed) {
+      console.log('gotFreezed-draw');
+      this.view.drawImageAtAngle(this.assets.playerIced, x, y, 0, 0.5);
+    }
   }
 
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
     this.iceSandFields.forEach((isf) =>
-      this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 0.3)
+      this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 1)
     );
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
@@ -51,7 +56,8 @@ export default class Client {
       this.y,
       this.angle,
       this.hitAngle,
-      this.isShielded
+      this.isShielded,
+      this.gotFreezed
     );
     this.drawPlayerIndicator();
     this.displayPlayerColorInfo();
@@ -64,7 +70,8 @@ export default class Client {
         player.y,
         player.angle,
         player.hitAngle,
-        player.isShielded
+        player.isShielded,
+        player.gotFreezed
       );
     });
 
@@ -192,6 +199,7 @@ export default class Client {
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
+    this.gotFreezed = data.gotFreezed;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,

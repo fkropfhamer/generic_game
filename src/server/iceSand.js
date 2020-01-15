@@ -29,7 +29,6 @@ export default class IceSand {
       walkingOnEffect -= 2;
     }
     player.speed = config.PLAYER_SPEED + walkingOnEffect;
-    console.log('player.speed', player.speed);
     player.changedSpeedActive = true;
   }
 

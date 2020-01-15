@@ -18,7 +18,10 @@ const config = Util.deepFreeze({
   POWERUP_SPAWN_DELAY: 5000,
   MAX_POWERUPS_ON_FIELD: 3,
   POWERUP_TYPES: [
-    powerUpTypes.FIRERATE,
+    powerUpTypes.FREEZE,
+    powerUpTypes.FREEZE,
+    powerUpTypes.FREEZE,
+    /** powerUpTypes.FIRERATE,
     powerUpTypes.FREEZE,
     powerUpTypes.SPEED,
     powerUpTypes.SPEED,
@@ -32,7 +35,7 @@ const config = Util.deepFreeze({
     powerUpTypes.SPEED,
     powerUpTypes.SPEED,
     powerUpTypes.FREEZE,
-    powerUpTypes.FIRERATE,
+    powerUpTypes.FIRERATE, */
   ],
   ICE_SAND_FIELDS: [
     { x: 750, y: 250, type: iceSandTypes.ICE },

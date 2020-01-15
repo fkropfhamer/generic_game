@@ -88,6 +88,7 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
+      gotFreezed: this.gotFreezed,
     });
   }
 
@@ -115,6 +116,7 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
+      gotFreezed: this.gotFreezed,
     });
   }
 
