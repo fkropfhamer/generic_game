@@ -34,6 +34,9 @@ export default class Client {
   draw() {
     this.view.reset();
     this.view.showTimer(this.timer);
+    this.iceSandFields.forEach((isf) =>
+      this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 0.3)
+    );
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
@@ -66,9 +69,6 @@ export default class Client {
     });
 
     this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.4));
-    this.iceSandFields.forEach((isf) =>
-      this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 1)
-    );
     View.updateTeamLiveBar(this.teamLives);
   }
 
