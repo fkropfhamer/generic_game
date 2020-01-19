@@ -32,6 +32,7 @@ export default class Util {
         face: player.face,
         hitAngle: player.hitAngle,
         isShielded: player.isShielded,
+        gotFreezed: player.gotFreezed,
       };
     });
   }
