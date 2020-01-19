@@ -128,7 +128,7 @@ export default class View {
     if (!this.timerDisplay) {
       const div = document.createElement('div');
       div.style.position = 'absolute';
-      div.style.left = '25%';
+      div.style.left = '15%';
       div.style.top = '75%';
 
       const timerDisplay = document.createElement('h1');
@@ -149,7 +149,7 @@ export default class View {
     const playerColorInfo = document.createElement('div');
     playerColorInfo.style.backgroundColor = this.color;
     playerColorInfo.style.position = 'absolute';
-    playerColorInfo.style.left = '75%';
+    playerColorInfo.style.left = '85%';
     playerColorInfo.style.top = '25%';
     playerColorInfo.style.width = '5px';
     playerColorInfo.style.height = '5px';
