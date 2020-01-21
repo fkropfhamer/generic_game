@@ -36,6 +36,9 @@ export default class Client {
         color
       );
     }
+    if (gotFreezed) {
+      this.view.drawImageAtAngle(this.assets.playerIced, x, y, 0, 0.5);
+    }
   }
 
   drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
@@ -58,9 +61,6 @@ export default class Client {
         config.PORTAL_COLOR,
         timer % config.PORTAL_ANIMATION
       );
-    }
-    if (gotFreezed) {
-      this.view.drawImageAtAngle(this.assets.playerIced, x, y, 0, 0.5);
     }
   }
 
@@ -232,11 +232,8 @@ export default class Client {
     this.gotFreezed = data.gotFreezed;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
-<<<<<<< HEAD
     this.iceSandFields = data.iceSandFields;
-=======
     this.portals = data.portals;
->>>>>>> portal
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,

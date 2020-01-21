@@ -42,7 +42,7 @@ export default class Game {
         this.randomPowerUps,
         this.iceSandFields,
         this.calculateTeamLives(),
-        this.portals,
+        this.portals
       );
       player.game = this;
       player.isWaiting = false;
@@ -253,9 +253,8 @@ export default class Game {
   }
 
   checkSomethingHitsPortal(something) {
-
     this.portals
-      .filter((p) => p.starttime > this.timer && p.endtime < this.timer)
+      .filter((p) => p.starttime >= this.timer && p.endtime <= this.timer)
       .forEach((portal) => {
         const portal1 = {
           x: portal.x1,
@@ -407,7 +406,7 @@ export default class Game {
         this.randomPowerUps,
         this.iceSandFields,
         this.calculateTeamLives(),
-        this.portals,
+        this.portals
       );
     });
   }
