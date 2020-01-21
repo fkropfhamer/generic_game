@@ -29,7 +29,6 @@ export default class IceSand {
       walkingOnEffect = config.SAND_SPEED;
     }
     player.speed = config.PLAYER_SPEED * walkingOnEffect;
-    player.changedSpeedActive = true;
   }
 
   update(player) {

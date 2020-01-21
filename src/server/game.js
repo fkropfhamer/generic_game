@@ -233,6 +233,9 @@ export default class Game {
         }
         if (field.type === iceSandTypes.ICE) {
           this.onIce = false;
+        }
+        if (player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+          player.speed = 2 * config.PLAYER_SPEED;
         } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
           player.speed = config.PLAYER_SPEED;
         }
