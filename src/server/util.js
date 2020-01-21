@@ -43,7 +43,8 @@ export default class Util {
         y1: portal.y1,
         x2: portal.x2,
         y2: portal.y2,
-        activated: portal.activated,
+        starttime: portal.starttime,
+        endtime: portal.endtime,
       };
     });
   }
