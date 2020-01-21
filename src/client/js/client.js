@@ -37,6 +37,29 @@ export default class Client {
     }
   }
 
+  drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
+    if (starttime > this.timer && endtime < this.timer) {
+      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, 'black');
+      this.view.drawNestedRings(
+        x1,
+        y1,
+        config.PORTAL_RADIUS,
+        config.PORTAL_RING_LINEWIDTH,
+        config.PORTAL_COLOR,
+        timer % config.PORTAL_ANIMATION
+      );
+      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, 'black');
+      this.view.drawNestedRings(
+        x2,
+        y2,
+        config.PORTAL_RADIUS,
+        config.PORTAL_RING_LINEWIDTH,
+        config.PORTAL_COLOR,
+        timer % config.PORTAL_ANIMATION
+      );
+    }
+  }
+
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
@@ -73,28 +96,9 @@ export default class Client {
     this.powerUps.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
     View.updateTeamLiveBar(this.teamLives);
 
-    this.portals
-      .filter((p) => p.starttime > this.timer && p.endtime < this.timer)
-      .forEach((p) => {
-        this.view.drawCircle(p.x1, p.y1, config.PORTAL_RADIUS, 'black');
-        this.view.drawNestedRings(
-          p.x1,
-          p.y1,
-          config.PORTAL_RADIUS,
-          3,
-          'grey',
-          this.timer % config.PORTAL_ANIMATION
-        );
-        this.view.drawCircle(p.x2, p.y2, config.PORTAL_RADIUS, 'black');
-        this.view.drawNestedRings(
-          p.x2,
-          p.y2,
-          config.PORTAL_RADIUS,
-          3,
-          'grey',
-          this.timer % config.PORTAL_ANIMATION
-        );
-      });
+    this.portals.forEach((p) => {
+      this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
+    });
   }
 
   drawPlayerIndicator() {
