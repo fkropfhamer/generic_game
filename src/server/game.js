@@ -13,11 +13,13 @@ export default class Game {
     this.powerUps = [];
     this.randomPowerUps = [];
     this.iceSandFields = [];
+    this.portals = [];
     this.setupPowerups();
     this.setupIceSandFields();
     this.setupWalls();
     this.onIce = false;
     this.onSand = false;
+    this.setupPortals();
   }
 
   start() {
@@ -39,7 +41,8 @@ export default class Game {
         this.walls,
         this.randomPowerUps,
         this.iceSandFields,
-        this.calculateTeamLives()
+        this.calculateTeamLives(),
+        this.portals,
       );
       player.game = this;
       player.isWaiting = false;
@@ -79,6 +82,12 @@ export default class Game {
   setupIceSandFields() {
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+    });
+  }
+
+  setupPortals() {
+    config.portals.forEach((portal) => {
+      this.portals.push(portal);
     });
   }
 
@@ -243,6 +252,32 @@ export default class Game {
     });
   }
 
+  checkSomethingHitsPortal(something) {
+
+    this.portals
+      .filter((p) => p.starttime > this.timer && p.endtime < this.timer)
+      .forEach((portal) => {
+        const portal1 = {
+          x: portal.x1,
+          y: portal.y1,
+          radius: config.PORTAL_RADIUS - 2 * something.radius,
+        };
+        const portal2 = {
+          x: portal.x2,
+          y: portal.y2,
+          radius: config.PORTAL_RADIUS - 2 * something.radius,
+        };
+        if (Util.collisionCircleCircle(portal1, something)) {
+          something.x = portal.x2 - (something.x - portal.x1) * 1.1;
+          something.y = portal.y2 - (something.y - portal.y1) * 1.1;
+        }
+        if (Util.collisionCircleCircle(portal2, something)) {
+          something.x = portal.x1 - (something.x - portal.x2) * 1.1;
+          something.y = portal.y1 - (something.y - portal.y2) * 1.1;
+        }
+      });
+  }
+
   checkWallCollisionPlayer(player) {
     this.walls.forEach((wall) => {
       const playerCollides = Util.collisionRectCircle(wall, player);
@@ -348,6 +383,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update();
       this.checkWallCollisionBullet(bullet);
+      this.checkSomethingHitsPortal(bullet);
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
@@ -359,6 +395,7 @@ export default class Game {
       this.checkBulletHitsPlayer(player);
       this.checkPlayerHitsPowerUp(player);
       this.checkPlayerWalksOnIceOrSand(player);
+      this.checkSomethingHitsPortal(player);
     });
 
     this.players.concat(this.deadPlayers).forEach((player) => {
@@ -369,7 +406,8 @@ export default class Game {
         this.walls,
         this.randomPowerUps,
         this.iceSandFields,
-        this.calculateTeamLives()
+        this.calculateTeamLives(),
+        this.portals,
       );
     });
   }

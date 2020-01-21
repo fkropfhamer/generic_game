@@ -37,6 +37,19 @@ export default class Util {
     });
   }
 
+  static mapPortals(portals) {
+    return portals.map((portal) => {
+      return {
+        x1: portal.x1,
+        y1: portal.y1,
+        x2: portal.x2,
+        y2: portal.y2,
+        starttime: portal.starttime,
+        endtime: portal.endtime,
+      };
+    });
+  }
+
   static pointDistance(point1, point2) {
     return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
   }

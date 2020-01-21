@@ -21,7 +21,6 @@ import sand from '../img/sand.png';
 import ice from '../img/ice.png';
 import playerIced from '../img/playerIced.png';
 import AssetLoader from './assetloader';
-// import background from '../img/background.png';
 import Client from './client';
 
 window.onload = () => {

@@ -50,14 +50,14 @@ export default class View {
     this.ctx.fill();
   }
 
-  drawRing(x, y, radius, color) {
+  drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
-    const scaledRadius = Math.round((radius + 5) * this.scale);
+    const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
     this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
-    this.ctx.lineWidth = 6;
+    this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = color;
     this.ctx.stroke();
   }
@@ -90,8 +90,23 @@ export default class View {
     this.ctx.stroke();
   }
 
+  drawNestedRings(x, y, outerRadius, lineWidth, color, state) {
+    const numberOfRings = Math.round(outerRadius / (2 * lineWidth));
+
+    this.drawCircle(x, y, outerRadius, 'black');
+    for (let i = 0; i < numberOfRings; i++) {
+      this.drawRing(
+        x,
+        y,
+        i * 2 * lineWidth - Math.cos((2 * Math.PI * state) / config.PORTAL_ANIMATION),
+        2 * lineWidth,
+        lineWidth,
+        color
+      );
+    }
+  }
+
   reset() {
-    // this.ctx.fillStyle = this.color;
     this.ctx.clearRect(0, 0, Math.ceil(this.width), Math.ceil(this.height));
   }
 
@@ -122,7 +137,7 @@ export default class View {
     this.ctx.fill();
   }
 
-  showTimer(timer) {
+  static showTimer(timer) {
     const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
     document.getElementById('timeprogress').style.width = `${timeLeftPercentage}%`;
     if (!this.timerDisplay) {

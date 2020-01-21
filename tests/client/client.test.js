@@ -1,5 +1,8 @@
 import Client from '../../src/client/js/client';
+<<<<<<< HEAD
 import config from '../../src/server/config';
+=======
+>>>>>>> portal
 
 jest.mock('../../src/client/js/view');
 
@@ -41,11 +44,16 @@ describe('client', () => {
   });
 
   test('constructor', () => {
+<<<<<<< HEAD
     expect(client.isWaiting).toBe(true);
     expect(client.view).toBe(view);
     expect(client.assets).toBe(assets);
+=======
+    expect(game.view).toBe(view);
+    expect(game.assets).toBe(assets);
+
+>>>>>>> portal
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
-    // expect(view.hideStartScreen).toHaveBeenCalledTimes(1);
   });
 
   test('client setup', () => {

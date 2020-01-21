@@ -39,6 +39,13 @@ const config = Util.deepFreeze({
     { x: 750, y: 250, type: iceSandTypes.ICE },
     { x: 750, y: 550, type: iceSandTypes.SAND },
   ],
+  POWERUP_SHIELD_DISTANCE_TO_PLAYER: 5,
+  POWERUP_SHIELD_LINEWIDTH: 6,
+
+  PORTAL_RADIUS: 41.25, // 1.5*PLAYER_RADIUS
+  PORTAL_RING_LINEWIDTH: 3,
+  PORTAL_ANIMATION: 5,
+  PORTAL_COLOR: 'grey',
 
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,
@@ -66,6 +73,17 @@ const config = Util.deepFreeze({
     { x: 150, y: 620 },
     { x: 640, y: 620 },
     { x: 1130, y: 620 },
+  ],
+
+  portals: [
+    {
+      x1: 300,
+      y1: 100,
+      x2: 900,
+      y2: 600,
+      starttime: 50,
+      endtime: 35,
+    },
   ],
 
   constraintWalls: {

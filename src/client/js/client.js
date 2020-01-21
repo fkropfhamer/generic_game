@@ -27,7 +27,37 @@ export default class Client {
     }
     this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
     if (isShielded) {
-      this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
+      this.view.drawRing(
+        x,
+        y,
+        config.PLAYER_RADIUS,
+        config.POWERUP_SHIELD_DISTANCE_TO_PLAYER,
+        config.POWERUP_SHIELD_LINEWIDTH,
+        color
+      );
+    }
+  }
+
+  drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
+    if (starttime > this.timer && endtime < this.timer) {
+      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, 'black');
+      this.view.drawNestedRings(
+        x1,
+        y1,
+        config.PORTAL_RADIUS,
+        config.PORTAL_RING_LINEWIDTH,
+        config.PORTAL_COLOR,
+        timer % config.PORTAL_ANIMATION
+      );
+      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, 'black');
+      this.view.drawNestedRings(
+        x2,
+        y2,
+        config.PORTAL_RADIUS,
+        config.PORTAL_RING_LINEWIDTH,
+        config.PORTAL_COLOR,
+        timer % config.PORTAL_ANIMATION
+      );
     }
     if (gotFreezed) {
       this.view.drawImageAtAngle(this.assets.playerIced, x, y, 0, 0.5);
@@ -58,7 +88,6 @@ export default class Client {
       this.gotFreezed
     );
     this.drawPlayerIndicator();
-    this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -75,6 +104,10 @@ export default class Client {
 
     this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.4));
     View.updateTeamLiveBar(this.teamLives);
+
+    this.portals.forEach((p) => {
+      this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
+    });
   }
 
   drawPlayerIndicator() {
@@ -175,6 +208,7 @@ export default class Client {
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
+    this.portals = data.portals;
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -198,7 +232,11 @@ export default class Client {
     this.gotFreezed = data.gotFreezed;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
+<<<<<<< HEAD
     this.iceSandFields = data.iceSandFields;
+=======
+    this.portals = data.portals;
+>>>>>>> portal
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,
