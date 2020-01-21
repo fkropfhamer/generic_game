@@ -41,28 +41,24 @@ export default class View {
     this.setupCanvas();
   }
 
-  drawPartOfCircle(x, y, radius, StartAngle, EndAngle, color) {
+  drawCircle(x, y, radius, color) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
     const scaledRadius = Math.round(radius * this.scale);
 
     this.ctx.beginPath();
-    this.ctx.arc(scaledX, scaledY, scaledRadius, StartAngle, EndAngle, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
 
-  drawCircle(x, y, radius, color) {
-    this.drawPartOfCircle(x, y, radius, 0, 2 * Math.PI, color);
-  }
-
-  drawPartOfRing(x, y, radiusObject, distanceToObject, Startangle, Endangle, lineWidth, color) {
+  drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
     const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
-    this.ctx.arc(scaledX, scaledY, scaledRadius, Startangle, Endangle, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = color;
     this.ctx.stroke();
@@ -96,18 +92,16 @@ export default class View {
     this.ctx.stroke();
   }
 
-  drawNestedPartsOfRings(x, y, outerRadius, Startangle, Endangle, lineWidth, color) {
+  drawNestedRings(x, y, outerRadius, lineWidth, color, state) {
     const numberOfRings = Math.round(outerRadius / (2 * lineWidth));
 
-    this.drawPartOfCircle(x, y, outerRadius, Startangle, Endangle, 'black');
+    this.drawCircle(x, y, outerRadius, 'black');
     for (let i = 0; i < numberOfRings; i++) {
-      this.drawPartOfRing(
+      this.drawRing(
         x,
         y,
-        i * 2 * lineWidth,
+        i * 2 * lineWidth - Math.cos((2 * Math.PI * state) / config.PORTAL_ANIMATION),
         2 * lineWidth,
-        Startangle,
-        Endangle,
         lineWidth,
         color
       );

@@ -167,22 +167,28 @@ export default class Game {
     });
   }
 
-  checkPlayerHitsPortal(player) {
+  checkSomethingHitsPortal(something) {
     this.portals
       .filter((p) => p.activated)
       .forEach((portal) => {
-        const portal1 = { x: portal.x1, y: portal.y1, radius: config.PORTAL_RADIUS - 2 * config.PLAYER_RADIUS};
-        const portal2 = { x: portal.x2, y: portal.y2, radius: config.PORTAL_RADIUS - 2 * config.PLAYER_RADIUS};
-        if (Util.collisionCircleCircle(portal1, player)) {
-          player.x = portal.x2 - (player.x - portal.x1) * 1.1;
-          player.y = portal.y2 - (player.y - portal.y1) * 1.1;
-          console.log('1-if');
-        }      
-        if (Util.collisionCircleCircle(portal2, player)) {
-          player.x = portal.x1 - (player.x - portal.x2) * 1.1;
-          player.y = portal.y1 - (player.y - portal.y2) * 1.1;
-          console.log('2-if');
-        } 
+        const portal1 = {
+          x: portal.x1,
+          y: portal.y1,
+          radius: config.PORTAL_RADIUS - 2 * something.radius,
+        };
+        const portal2 = {
+          x: portal.x2,
+          y: portal.y2,
+          radius: config.PORTAL_RADIUS - 2 * something.radius,
+        };
+        if (Util.collisionCircleCircle(portal1, something)) {
+          something.x = portal.x2 - (something.x - portal.x1) * 1.1;
+          something.y = portal.y2 - (something.y - portal.y1) * 1.1;
+        }
+        if (Util.collisionCircleCircle(portal2, something)) {
+          something.x = portal.x1 - (something.x - portal.x2) * 1.1;
+          something.y = portal.y1 - (something.y - portal.y2) * 1.1;
+        }
       });
   }
 
@@ -291,6 +297,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update();
       this.checkWallCollisionBullet(bullet);
+      this.checkSomethingHitsPortal(bullet);
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
@@ -299,7 +306,7 @@ export default class Game {
 
       this.checkBulletHitsPlayer(player);
       this.checkPlayerHitsPowerUp(player);
-      this.checkPlayerHitsPortal(player);
+      this.checkSomethingHitsPortal(player);
     });
 
     this.players.concat(this.deadPlayers).forEach((player) => {
