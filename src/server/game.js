@@ -168,8 +168,9 @@ export default class Game {
   }
 
   checkSomethingHitsPortal(something) {
+
     this.portals
-      .filter((p) => p.activated)
+      .filter((p) => p.starttime > this.timer && p.endtime < this.timer)
       .forEach((portal) => {
         const portal1 = {
           x: portal.x1,

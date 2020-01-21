@@ -73,8 +73,9 @@ export default class Client {
     this.powerUps.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
     View.updateTeamLiveBar(this.teamLives);
 
-    this.portals.forEach((p) => {
-      if (p.activated) {
+    this.portals
+      .filter((p) => p.starttime > this.timer && p.endtime < this.timer)
+      .forEach((p) => {
         this.view.drawCircle(p.x1, p.y1, config.PORTAL_RADIUS, 'black');
         this.view.drawNestedRings(
           p.x1,
@@ -93,8 +94,7 @@ export default class Client {
           'grey',
           this.timer % config.PORTAL_ANIMATION
         );
-      }
-    });
+      });
   }
 
   drawPlayerIndicator() {
