@@ -204,7 +204,7 @@ export default class Game {
               setTimeout(() => {
                 freezedPlayer.gotFreezed = false;
                 player.freezingOthers = false;
-              }, config.FREEZE_DURATION);
+              }, config.POWERUP_DURATION);
             }
           });
         }
