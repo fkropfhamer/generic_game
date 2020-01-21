@@ -66,7 +66,7 @@ export default class Client {
 
   draw() {
     this.view.reset();
-    this.view.showTimer(this.timer);
+    View.showTimer(this.timer);
     this.iceSandFields.forEach((isf) =>
       this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 1)
     );

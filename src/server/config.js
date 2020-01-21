@@ -81,7 +81,7 @@ const config = Util.deepFreeze({
       y1: 100,
       x2: 900,
       y2: 600,
-      starttime: 50,
+      starttime: 160,
       endtime: 35,
     },
   ],
