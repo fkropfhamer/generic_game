@@ -1,8 +1,5 @@
 import Client from '../../src/client/js/client';
-<<<<<<< HEAD
 import config from '../../src/server/config';
-=======
->>>>>>> portal
 
 jest.mock('../../src/client/js/view');
 
@@ -44,15 +41,10 @@ describe('client', () => {
   });
 
   test('constructor', () => {
-<<<<<<< HEAD
     expect(client.isWaiting).toBe(true);
     expect(client.view).toBe(view);
     expect(client.assets).toBe(assets);
-=======
-    expect(game.view).toBe(view);
-    expect(game.assets).toBe(assets);
 
->>>>>>> portal
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
   });
 
@@ -89,7 +81,7 @@ describe('client', () => {
     expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, assets.blue2life, 4, 8, 0, 0.5);
     expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(3, assets.face1, 4, 8, 0, 0.5);
     expect(view.drawRing).toHaveBeenCalledTimes(1);
-    expect(view.drawRing).toHaveBeenCalledWith(4, 8, config.PLAYER_RADIUS, 'blue');
+    expect(view.drawRing).toHaveBeenCalledWith(4, 8, config.PLAYER_RADIUS, 5, 6, 'blue');
   });
 
   test('client draw', () => {
@@ -103,6 +95,8 @@ describe('client', () => {
     client.isShielded = true;
     client.timer = 100;
     client.bullets = [{ x: 1, y: 2, color: 'blue' }];
+    client.iceSandFields = [{}];
+    client.portals = [{}];
     client.walls = [
       {
         x: 1,
@@ -141,18 +135,36 @@ describe('client', () => {
     client.draw();
 
     expect(view.reset).toHaveBeenCalledTimes(1);
-    expect(view.showTimer).toHaveBeenCalledTimes(1);
-    expect(view.showTimer).toHaveBeenCalledWith(100);
-    expect(view.drawCircle).toHaveBeenCalledTimes(2);
+    expect(view.drawCircle).toHaveBeenCalledTimes(1);
     expect(view.drawCircle).toHaveBeenNthCalledWith(1, 1, 2, config.BULLET_RADIUS, 'blue');
     expect(view.drawRectangle).toHaveBeenCalledTimes(1);
     expect(view.drawRectangle).toHaveBeenCalledWith(1, 2, 4, 3, 5, 'green', 'black');
     expect(client.drawPlayer).toHaveBeenCalledTimes(2);
-    expect(client.drawPlayer).toHaveBeenNthCalledWith(1, 'pink', 3, 'face12', 5, 10, 2, 4, true);
+    expect(client.drawPlayer).toHaveBeenNthCalledWith(
+      1,
+      'pink',
+      3,
+      'face12',
+      5,
+      10,
+      2,
+      4,
+      true,
+      undefined
+    );
     expect(client.drawPlayerIndicator).toHaveBeenCalledTimes(1);
-    expect(client.displayPlayerColorInfo).toHaveBeenCalledTimes(1);
-    expect(client.drawPlayer).toHaveBeenNthCalledWith(2, 'grey', 2, 'face2', 1, 2, 3, 7, false);
-    expect(view.drawCircle).toHaveBeenNthCalledWith(2, 1, 2, 3, 'brown');
+    expect(client.drawPlayer).toHaveBeenNthCalledWith(
+      2,
+      'grey',
+      2,
+      'face2',
+      1,
+      2,
+      3,
+      7,
+      false,
+      undefined
+    );
   });
 
   test('client draw player indicator', () => {

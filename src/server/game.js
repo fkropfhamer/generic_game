@@ -2,7 +2,7 @@ import config from './config';
 import Util from './util';
 import PowerUp from './powerup';
 import IceSand from './iceSand';
-import { Color, powerUpTypes, iceSandTypes } from './enums';
+import { Color, iceSandTypes } from './enums';
 
 export default class Game {
   constructor(players) {

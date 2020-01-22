@@ -40,7 +40,7 @@ describe('game test', () => {
   test('test game start', () => {
     game.start();
 
-    expect(game.timer).toBe(60);
+    expect(game.timer).toBe(180);
     expect(game.count).toBe(0);
 
     expect(game.players[0].x).toBe(config.PLAYER_STARTING_POSITIONS[0].x);
@@ -55,9 +55,9 @@ describe('game test', () => {
     expect(game.players[1].notifyStart.mock.calls.length).toBe(1);
 
     expect(game.players[0].notifyStart.mock.calls[0][0]).toEqual([player2]);
-    expect(game.players[0].notifyStart.mock.calls[0][1]).toBe(60);
+    expect(game.players[0].notifyStart.mock.calls[0][1]).toBe(180);
     expect(game.players[1].notifyStart.mock.calls[0][0]).toEqual([player1]);
-    expect(game.players[1].notifyStart.mock.calls[0][1]).toBe(60);
+    expect(game.players[1].notifyStart.mock.calls[0][1]).toBe(180);
 
     expect(game.players[0].game).toBe(game);
     expect(game.players[1].game).toBe(game);
@@ -291,7 +291,7 @@ describe('game test', () => {
 
     game.checkWallCollisionPlayer(player);
 
-    expect(player.x).toBe(42.5);
+    expect(player.x).toBe(40);
     expect(player.y).toBe(10);
   });
 
@@ -309,10 +309,10 @@ describe('game test', () => {
       radius: 1,
     };
 
-    game.powerUps = [powerUp];
+    game.randomPowerUps = [powerUp];
     game.checkPlayerHitsPowerUp(player);
 
-    expect(game.powerUps).toEqual([]);
+    expect(game.randomPowerUps).toEqual([]);
     expect(powerUp.update).toHaveBeenCalledTimes(1);
   });
 

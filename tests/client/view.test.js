@@ -121,12 +121,12 @@ describe('view', () => {
     view.ctx = mockContext;
     view.scale = 1;
 
-    view.drawRing(1, 2, 3, 'test');
+    view.drawRing(1, 2, 3, 4, 5, 'test');
 
     expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
     expect(mockContext.arc).toHaveBeenCalledTimes(1);
-    expect(mockContext.arc).toHaveBeenCalledWith(1, 2, 8, 0, 2 * Math.PI, false);
-    expect(mockContext.lineWidth).toBe(6);
+    expect(mockContext.arc).toHaveBeenCalledWith(1, 2, 7, 0, 2 * Math.PI, false);
+    expect(mockContext.lineWidth).toBe(5);
     expect(mockContext.strokeStyle).toBe('test');
     expect(mockContext.stroke).toHaveBeenCalledTimes(1);
   });
@@ -229,9 +229,9 @@ describe('view', () => {
   });
 
   test('view show timer', () => {
-    view.showTimer(30);
+    View.showTimer(30);
 
-    expect(elements.timeprogress.style.width).toBe('50%');
+    expect(elements.timeprogress.style.width).toBe('17%');
   });
 
   test('view show waiting player === 1', () => {

@@ -51,14 +51,14 @@ describe('powerup', () => {
       x: 1,
       y: 2,
       radius: 3,
-      color: 4,
+      type: 4,
     };
 
     const mappedPowerUp = {
       x: 1,
       y: 2,
       radius: config.POWERUP_RADIUS,
-      color: 'green',
+      type: powerUpTypes.ADDHEALTH,
     };
 
     const mappedPowerUps = PowerUp.mapPowerups([powerup, powerup2]);
