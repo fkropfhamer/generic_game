@@ -1,6 +1,5 @@
 import config from '../../server/config';
 import View from './view';
-import { iceSandTypes } from '../../server/enums';
 
 export default class Client {
   constructor(view, assets) {
