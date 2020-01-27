@@ -127,19 +127,6 @@ export default class Client {
     this.socket.emit('update angle', { angle });
   }
 
-  displayPlayerColorInfo() {
-    const displayTimeColorInfoUntil = 50;
-    if (!this.view.playerColorInfo) {
-      if (this.timer <= displayTimeColorInfoUntil) {
-        this.view.hidePlayerColorInfo();
-      } else {
-        this.view.showPlayerColorInfo(this.color);
-      }
-    } else if (this.timer <= displayTimeColorInfoUntil) {
-      this.view.hidePlayerColorInfo();
-    }
-  }
-
   calculateAngle(x1, y1, x2, y2) {
     const scaledx2 = x2 * this.view.scale;
     const scaledy2 = y2 * this.view.scale;
