@@ -1,10 +1,18 @@
 import Client from '../../src/client/js/client';
+import config from '../../src/server/config';
 
-describe('game client', () => {
-  let game;
+jest.mock('../../src/client/js/view');
+
+const mockAddEventListener = jest.fn();
+
+Object.defineProperty(window, 'addEventListener', { value: mockAddEventListener });
+
+describe('client', () => {
+  let client;
   let view;
   let images;
   let socket;
+  let audios;
 
   beforeEach(() => {
     socket = {
@@ -13,46 +21,410 @@ describe('game client', () => {
     };
 
     global.io = jest.fn(() => socket);
+
     view = {
-      showStartScreen: jest.fn((fn) => {
-        fn('face1', 'normal');
-      }),
+      showStartScreen: jest.fn(),
       hideStartScreen: jest.fn(),
+      drawImageAtAngle: jest.fn(),
+      drawRing: jest.fn(),
+      reset: jest.fn(),
+      showTimer: jest.fn(),
+      drawPlayerIndicator: jest.fn(),
+      showPlayerColorInfo: jest.fn(),
+      drawCircle: jest.fn(),
+      drawRectangle: jest.fn(),
     };
+
+    audios = { backgroundMusic: { play: jest.fn() }, splash: { play: jest.fn() } };
+
     images = {};
-    game = new Client(view, images);
+    client = new Client(view, images, audios);
+    client.socket = socket;
   });
 
   test('constructor', () => {
-    expect(game.view).toBe(view);
-    expect(game.images).toBe(images);
-
+    expect(client.view).toBe(view);
+    expect(client.audios).toBe(audios);
+    expect(client.images).toBe(images);
+    expect(client.isWaiting).toBe(true);
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
-    expect(view.hideStartScreen).toHaveBeenCalledTimes(1);
   });
 
-  test('game setup', () => {
-    expect(game.socket).toEqual(socket);
+  test('client setup', () => {
+    client.setupSocket = jest.fn();
+    client.setup('face1', 'normal');
+    expect(client.setupSocket).toHaveBeenCalledTimes(1);
+    expect(client.socket).toEqual(socket);
+
+    expect(client.pressedUp).toBe(false);
+    expect(client.pressedDown).toBe(false);
+    expect(client.pressedLeft).toBe(false);
+    expect(client.pressedRight).toBe(false);
+
+    expect(client.socket.emit).toHaveBeenCalledTimes(1);
+    expect(client.socket.emit.mock.calls[0][0]).toBe('ready');
+    expect(client.socket.emit.mock.calls[0][1]).toEqual({ face: 'face1', mode: 'normal' });
+  });
+
+  test('client draw player', () => {
+    client.drawPlayer('blue', 3, 'face1', 4, 8, 0, 0, false);
+
+    expect(view.drawImageAtAngle).toHaveBeenCalledTimes(2);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, images.blue, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, images.face1, 4, 8, 0, 0.5);
+    expect(view.drawRing).toHaveBeenCalledTimes(0);
+  });
+
+  test('client draw player shield and lives < 3', () => {
+    client.drawPlayer('blue', 2, 'face1', 4, 8, 0, 0, true);
+
+    expect(view.drawImageAtAngle).toHaveBeenCalledTimes(3);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, images.blue, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, images.blue2life, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(3, images.face1, 4, 8, 0, 0.5);
+    expect(view.drawRing).toHaveBeenCalledTimes(1);
+    expect(view.drawRing).toHaveBeenCalledWith(4, 8, config.PLAYER_RADIUS, 5, 6, 'blue');
+  });
+
+  test('client draw', () => {
+    client.color = 'pink';
+    client.face = 'face12';
+    client.lives = 3;
+    client.x = 5;
+    client.y = 10;
+    client.angle = 2;
+    client.hitAngle = 4;
+    client.isShielded = true;
+    client.timer = 100;
+    client.bullets = [{ x: 1, y: 2, color: 'blue' }];
+    client.iceSandFields = [{}];
+    client.portals = [{}];
+    client.walls = [
+      {
+        x: 1,
+        y: 2,
+        width: 3,
+        height: 4,
+        angle: 5,
+        fillColor: 'green',
+        strokeColor: 'black',
+      },
+    ];
+    client.otherPlayers = [
+      {
+        x: 1,
+        y: 2,
+        color: 'grey',
+        lives: 2,
+        face: 'face2',
+        angle: 3,
+        hitAngle: 7,
+        isShielded: false,
+      },
+    ];
+    client.powerUps = [
+      {
+        x: 1,
+        y: 2,
+        radius: 3,
+        color: 'brown',
+      },
+    ];
+    client.drawPlayer = jest.fn();
+    client.displayPlayerColorInfo = jest.fn();
+    client.drawPlayerIndicator = jest.fn();
+
+    client.draw();
+
+    expect(view.reset).toHaveBeenCalledTimes(1);
+    expect(view.drawCircle).toHaveBeenCalledTimes(1);
+    expect(view.drawCircle).toHaveBeenNthCalledWith(1, 1, 2, config.BULLET_RADIUS, 'blue');
+    expect(view.drawRectangle).toHaveBeenCalledTimes(1);
+    expect(view.drawRectangle).toHaveBeenCalledWith(1, 2, 4, 3, 5, 'green', 'black');
+    expect(client.drawPlayer).toHaveBeenCalledTimes(2);
+    expect(client.drawPlayer).toHaveBeenNthCalledWith(
+      1,
+      'pink',
+      3,
+      'face12',
+      5,
+      10,
+      2,
+      4,
+      true,
+      undefined
+    );
+    expect(client.drawPlayerIndicator).toHaveBeenCalledTimes(1);
+    expect(client.drawPlayer).toHaveBeenNthCalledWith(
+      2,
+      'grey',
+      2,
+      'face2',
+      1,
+      2,
+      3,
+      7,
+      false,
+      undefined
+    );
+  });
+
+  test('client draw player indicator', () => {
+    client.x = 1;
+    client.y = 2;
+
+    client.drawPlayerIndicator();
+
+    expect(view.drawPlayerIndicator).toHaveBeenCalledTimes(1);
+    expect(view.drawPlayerIndicator).toHaveBeenCalledWith(1, 2);
+  });
+
+  test('client setup key pressed events', () => {
+    client.setupKeyPressedEvents();
+
+    expect(mockAddEventListener).toHaveBeenCalledTimes(4);
+    expect(mockAddEventListener.mock.calls[0][0]).toBe('keydown');
+    expect(mockAddEventListener.mock.calls[1][0]).toBe('keyup');
+    expect(mockAddEventListener.mock.calls[2][0]).toBe('click');
+    expect(mockAddEventListener.mock.calls[3][0]).toBe('mousemove');
+  });
+
+  test('client mouse move', () => {
+    client.x = 4;
+    client.y = 5;
+    client.calculateAngle = jest.fn(() => 1);
+
+    client.mouseMove({ clientX: 2, clientY: 3 });
+
+    expect(client.calculateAngle).toHaveBeenCalledTimes(1);
+    expect(client.calculateAngle).toHaveBeenCalledWith(2, 3, 4, 5);
+    expect(client.angle).toBe(1);
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('update angle', { angle: 1 });
+  });
+
+  test('client calculate angle', () => {
+    view.scale = 1;
+    view.canvas = { offsetTop: 0, offsetLeft: 0 };
+    const angle = client.calculateAngle(1, 2, 4, 2);
+    expect(angle).toBe(Math.PI);
+  });
+
+  test('client shoot', () => {
+    client.calculateAngle = jest.fn(() => 10);
+    client.x = 1;
+    client.y = 2;
+
+    client.shoot({ clientX: 3, clientY: 4 });
+
+    expect(client.angle).toBe(10);
+    expect(client.calculateAngle).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('shoot', { angle: 10 });
+  });
+
+  test('client key pressed ArrowDown', () => {
+    const event = { code: 'ArrowDown' };
+    client.keyPressed(event);
+
+    expect(client.pressedDown).toBe(true);
+  });
+
+  test('client key pressed ArrowUp', () => {
+    const event = { code: 'ArrowUp' };
+    client.keyPressed(event);
+
+    expect(client.pressedUp).toBe(true);
+  });
+
+  test('client key pressed ArrowRight', () => {
+    const event = { code: 'ArrowRight' };
+    client.keyPressed(event);
+
+    expect(client.pressedRight).toBe(true);
+  });
+
+  test('client key pressed ArrowLeft', () => {
+    const event = { code: 'ArrowLeft' };
+    client.keyPressed(event);
+
+    expect(client.pressedLeft).toBe(true);
+  });
+
+  test('client key pressed not used key', () => {
+    const event = { code: 'test' };
+    client.keyPressed(event);
+
+    expect(client.pressedDown).toBeFalsy();
+    expect(client.pressedLeft).toBeFalsy();
+    expect(client.pressedRight).toBeFalsy();
+    expect(client.pressedUp).toBeFalsy();
+  });
+
+  test('client key up ArrowDown', () => {
+    const event = { code: 'ArrowDown' };
+    client.keyUp(event);
+
+    expect(client.pressedDown).toBe(false);
+  });
+
+  test('client key up ArrowUp', () => {
+    const event = { code: 'ArrowUp' };
+    client.keyUp(event);
+
+    expect(client.pressedUp).toBe(false);
+  });
+
+  test('client key up ArrowRight', () => {
+    const event = { code: 'ArrowRight' };
+    client.keyUp(event);
+
+    expect(client.pressedRight).toBe(false);
+  });
+
+  test('client key up ArrowLeft', () => {
+    const event = { code: 'ArrowLeft' };
+    client.keyUp(event);
+
+    expect(client.pressedLeft).toBe(false);
+  });
+
+  test('client on start is waiting', () => {
+    client.isWaiting = true;
+    client.draw = jest.fn();
+    client.setupKeyPressedEvents = jest.fn();
+    const mockData = {
+      x: 1,
+      y: 2,
+      angle: 3,
+      color: 4,
+      lives: 5,
+      face: 6,
+      players: 7,
+      timer: 8,
+      walls: 9,
+      isShielded: 10,
+      teamLives: 11,
+      powerUps: 12,
+    };
+
+    client.onStart(mockData);
+
+    expect(audios.backgroundMusic.play).toHaveBeenCalledTimes(1);
+    expect(client.isWaiting).toBe(false);
+    expect(client.x).toBe(1);
+    expect(client.y).toBe(2);
+    expect(client.angle).toBe(3);
+    expect(client.color).toBe(4);
+    expect(client.lives).toBe(5);
+    expect(client.face).toBe(6);
+    expect(client.otherPlayers).toBe(7);
+    expect(client.timer).toBe(8);
+    expect(client.walls).toBe(9);
+    expect(client.isShielded).toBe(10);
+    expect(client.teamLives).toBe(11);
+    expect(client.powerUps).toBe(12);
+    expect(client.bullets).toEqual([]);
+    expect(client.draw).toHaveBeenCalledTimes(1);
+    expect(client.setupKeyPressedEvents).toHaveBeenCalledTimes(1);
+  });
+
+  test('client on update', () => {
+    client.draw = jest.fn();
+
+    const mockData = {
+      x: 1,
+      y: 2,
+      angle: 3,
+      lives: 5,
+      players: 7,
+      timer: 8,
+      walls: 9,
+      isShielded: 10,
+      teamLives: 11,
+      powerUps: 12,
+      bullets: 13,
+    };
+
+    client.onUpdate(mockData);
+
+    expect(client.x).toBe(1);
+    expect(client.y).toBe(2);
+    expect(client.angle).toBe(3);
+    expect(client.lives).toBe(5);
+    expect(client.otherPlayers).toBe(7);
+    expect(client.timer).toBe(8);
+    expect(client.walls).toBe(9);
+    expect(client.isShielded).toBe(10);
+    expect(client.teamLives).toBe(11);
+    expect(client.powerUps).toBe(12);
+    expect(client.bullets).toEqual(13);
+    expect(client.draw).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('keyspressed', {
+      up: undefined,
+      down: undefined,
+      left: undefined,
+      right: undefined,
+    });
+  });
+
+  test('client on connected', () => {
+    client.onConnected();
+
+    expect(client.isConnected).toBe(true);
+  });
+
+  test('client onWait', () => {
+    client.onWait({ numberofPlayers: 3 });
+
+    expect(client.isWaiting).toBe(true);
+  });
+
+  test('client on time over', () => {
+    client.onTimeOver();
+
+    expect(client.isEnded).toBe(true);
+  });
+
+  test('client on win', () => {
+    client.onWin();
+
+    expect(client.isEnded).toBe(true);
+  });
+
+  test('client on lose', () => {
+    client.onLose();
+
+    expect(client.isEnded).toBe(true);
+  });
+
+  test('client on death', () => {
+    client.onDeath();
+
+    expect(client.isDead).toBe(true);
+  });
+
+  test('client on spash sound', () => {
+    client.onSplashSound();
+
+    expect(audios.splash.play).toHaveBeenCalledTimes(1);
+  });
+
+  test('client setup socket', () => {
+    client.setupSocket();
+
     expect(global.io).toHaveBeenCalledTimes(1);
 
-    expect(game.socket.on).toHaveBeenCalledTimes(9);
-    expect(game.socket.on.mock.calls[0][0]).toBe('connect');
-    expect(game.socket.on.mock.calls[1][0]).toBe('start');
-    expect(game.socket.on.mock.calls[2][0]).toBe('update');
-    expect(game.socket.on.mock.calls[3][0]).toBe('wait');
-    expect(game.socket.on.mock.calls[4][0]).toBe('opponent disconnected');
-    expect(game.socket.on.mock.calls[5][0]).toBe('time over');
-    expect(game.socket.on.mock.calls[6][0]).toBe('win');
-    expect(game.socket.on.mock.calls[7][0]).toBe('lose');
-    expect(game.socket.on.mock.calls[8][0]).toBe('splash sound');
-
-    expect(game.pressedUp).toBe(false);
-    expect(game.pressedDown).toBe(false);
-    expect(game.pressedLeft).toBe(false);
-    expect(game.pressedRight).toBe(false);
-
-    expect(game.socket.emit).toHaveBeenCalledTimes(1);
-    expect(game.socket.emit.mock.calls[0][0]).toBe('ready');
-    expect(game.socket.emit.mock.calls[0][1]).toEqual({ face: 'face1', mode: 'normal' });
+    expect(client.socket.on).toHaveBeenCalledTimes(9);
+    expect(client.socket.on.mock.calls[0][0]).toBe('connect');
+    expect(client.socket.on.mock.calls[1][0]).toBe('start');
+    expect(client.socket.on.mock.calls[2][0]).toBe('update');
+    expect(client.socket.on.mock.calls[3][0]).toBe('wait');
+    expect(client.socket.on.mock.calls[4][0]).toBe('time over');
+    expect(client.socket.on.mock.calls[5][0]).toBe('win');
+    expect(client.socket.on.mock.calls[6][0]).toBe('lose');
+    expect(client.socket.on.mock.calls[7][0]).toBe('splash sound');
+    expect(client.socket.on.mock.calls[8][0]).toBe('death');
   });
 });

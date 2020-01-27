@@ -1,4 +1,5 @@
 import config from '../../server/config';
+import View from './view';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -10,7 +11,7 @@ export default class Client {
   }
 
   setup(face, mode) {
-    this.view.hideStartScreen();
+    View.hideStartScreen();
     this.setupSocket();
     this.pressedUp = false;
     this.pressedDown = false;
@@ -19,20 +20,56 @@ export default class Client {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, gotFreezed) {
     this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
     this.view.drawImageAtAngle(this.images[face], x, y, angle, 0.5);
     if (isShielded) {
-      this.view.drawRing(x, y, config.PLAYER_RADIUS, color);
+      this.view.drawRing(
+        x,
+        y,
+        config.PLAYER_RADIUS,
+        config.POWERUP_SHIELD_DISTANCE_TO_PLAYER,
+        config.POWERUP_SHIELD_LINEWIDTH,
+        color
+      );
+    }
+    if (gotFreezed) {
+      this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, 0.5);
+    }
+  }
+
+  drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
+    if (starttime > this.timer && endtime < this.timer) {
+      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, 'black');
+      this.view.drawNestedRings(
+        x1,
+        y1,
+        config.PORTAL_RADIUS,
+        config.PORTAL_RING_LINEWIDTH,
+        config.PORTAL_COLOR,
+        timer % config.PORTAL_ANIMATION
+      );
+      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, 'black');
+      this.view.drawNestedRings(
+        x2,
+        y2,
+        config.PORTAL_RADIUS,
+        config.PORTAL_RING_LINEWIDTH,
+        config.PORTAL_COLOR,
+        timer % config.PORTAL_ANIMATION
+      );
     }
   }
 
   draw() {
     this.view.reset();
-    this.view.showTimer(this.timer);
+    View.showTimer(this.timer);
+    this.iceSandFields.forEach((isf) =>
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
+    );
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
@@ -47,10 +84,10 @@ export default class Client {
       this.y,
       this.angle,
       this.hitAngle,
-      this.isShielded
+      this.isShielded,
+      this.gotFreezed
     );
     this.drawPlayerIndicator();
-    this.displayPlayerColorInfo();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -60,10 +97,17 @@ export default class Client {
         player.y,
         player.angle,
         player.hitAngle,
-        player.isShielded
+        player.isShielded,
+        player.gotFreezed
       );
     });
-    this.powerUp.forEach((p) => this.view.drawCircle(p.x, p.y, p.radius, p.color));
+
+    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, 0.4));
+    View.updateTeamLiveBar(this.teamLives);
+
+    this.portals.forEach((p) => {
+      this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
+    });
   }
 
   drawPlayerIndicator() {
@@ -84,19 +128,6 @@ export default class Client {
     this.socket.emit('update angle', { angle });
   }
 
-  displayPlayerColorInfo() {
-    const displayTimeColorInfoUntil = 50;
-    if (!this.view.playerColorInfo) {
-      if (this.timer <= displayTimeColorInfoUntil) {
-        this.view.hidePlayerColorInfo();
-      } else {
-        this.view.showPlayerColorInfo(this.color);
-      }
-    } else if (this.timer <= displayTimeColorInfoUntil) {
-      this.view.hidePlayerColorInfo();
-    }
-  }
-
   calculateAngle(x1, y1, x2, y2) {
     const scaledx2 = x2 * this.view.scale;
     const scaledy2 = y2 * this.view.scale;
@@ -115,11 +146,14 @@ export default class Client {
   keyPressed(e) {
     if (e.code === 'ArrowDown' || e.code === 'KeyS') {
       this.pressedDown = true;
-    } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+    }
+    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
       this.pressedUp = true;
-    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+    }
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
       this.pressedRight = true;
-    } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+    }
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
       this.pressedLeft = true;
     }
   }
@@ -131,11 +165,9 @@ export default class Client {
     if (e.code === 'ArrowRight' || e.code === 'KeyD') {
       this.pressedRight = false;
     }
-
     if (e.code === 'ArrowUp' || e.code === 'KeyW') {
       this.pressedUp = false;
     }
-
     if (e.code === 'ArrowDown' || e.code === 'KeyS') {
       this.pressedDown = false;
     }
@@ -144,7 +176,7 @@ export default class Client {
   onStart(data) {
     console.log('game starting!');
     if (this.isWaiting) {
-      this.view.hideWaitingScreen();
+      View.hideWaitingScreen();
       this.isWaiting = false;
     }
 
@@ -159,7 +191,11 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.powerUp = data.powerUp;
+    this.gotFreezed = data.gotFreezed;
+    this.teamLives = data.teamLives;
+    this.powerUps = data.powerUps;
+    this.iceSandFields = data.iceSandFields;
+    this.portals = data.portals;
     this.audios.backgroundMusic.play();
     this.draw();
     this.setupKeyPressedEvents();
@@ -167,7 +203,7 @@ export default class Client {
 
   onConnected() {
     console.log('connected');
-    this.connected = true;
+    this.isConnected = true;
   }
 
   onUpdate(data) {
@@ -181,7 +217,11 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.powerUp = data.powerUp;
+    this.gotFreezed = data.gotFreezed;
+    this.teamLives = data.teamLives;
+    this.powerUps = data.powerUps;
+    this.iceSandFields = data.iceSandFields;
+    this.portals = data.portals;
     this.draw();
     this.socket.emit('keyspressed', {
       up: this.pressedUp,
@@ -193,27 +233,31 @@ export default class Client {
 
   onWait(data) {
     console.log('you have to wait!');
-    this.view.showWaitingScreen(data.numberOfPlayers);
+    View.showWaitingScreen(data.numberOfPlayers);
     this.isWaiting = true;
   }
 
-  onOpponentDisconnected() {
-    console.log('opponent disconnected');
-    this.view.showOpponentDisconnectedScreen();
-  }
-
   onTimeOver() {
-    this.view.showTimeOverScreen();
+    View.showTimeOverScreen();
+    this.isEnded = true;
   }
 
   onWin() {
     console.log('win');
-    this.view.showWinScreen();
+    View.showWinScreen();
+    this.isEnded = true;
   }
 
   onLose() {
     console.log('lose');
-    this.view.showLoseScreen();
+    View.showLoseScreen();
+    this.isEnded = true;
+  }
+
+  onDeath() {
+    console.log('death');
+    View.showDeathMessage();
+    this.isDead = true;
   }
 
   onSplashSound() {
@@ -227,10 +271,10 @@ export default class Client {
     this.socket.on('start', this.onStart.bind(this));
     this.socket.on('update', this.onUpdate.bind(this));
     this.socket.on('wait', this.onWait.bind(this));
-    this.socket.on('opponent disconnected', this.onOpponentDisconnected.bind(this));
     this.socket.on('time over', this.onTimeOver.bind(this));
     this.socket.on('win', this.onWin.bind(this));
     this.socket.on('lose', this.onLose.bind(this));
     this.socket.on('splash sound', this.onSplashSound.bind(this));
+    this.socket.on('death', this.onDeath.bind(this));
   }
 }

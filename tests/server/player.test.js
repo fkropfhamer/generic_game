@@ -18,8 +18,8 @@ describe('player test', () => {
   test('player constructor', () => {
     expect(player.socket).toBe(socket);
     expect(player.server).toBe(server);
-    expect(player.speed).toBe(1);
-    expect(player.radius).toBe(27.5);
+    expect(player.speed).toBe(3);
+    expect(player.radius).toBe(25);
     expect(player.angle).toBe(0);
     expect(socket.on.mock.calls.length).toBe(5);
     expect(socket.on.mock.calls[0][0]).toBe('keyspressed');
@@ -121,9 +121,12 @@ describe('player test', () => {
       color: 'blue',
       face: 'face1',
       lives: 2,
+      gotFreezed: undefined,
+      hitAngle: undefined,
+      isShielded: undefined,
     };
 
-    player.notifyStart([opponent], 30);
+    player.notifyStart([opponent], 30, [], [], [], 3, []);
     expect(player.isWaiting).toBe(false);
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('start');
@@ -131,11 +134,17 @@ describe('player test', () => {
       x: 400,
       y: 300,
       face: 'face2',
+      gotFreezed: false,
+      iceSandFields: [],
       lives: 3,
       angle: 0,
       color: 'blue',
       players: [opponent],
       timer: 30,
+      powerUps: [],
+      walls: [],
+      portals: [],
+      teamLives: 3,
     });
   });
 
@@ -162,9 +171,10 @@ describe('player test', () => {
       lives: 3,
       isShielded: true,
       hitAngle: Math.PI,
+      gotFreezed: undefined,
     };
 
-    player.notifyUpdate([opponent], [], 25, [], []);
+    player.notifyUpdate([opponent], [], 25, [], [], [], 3, []);
 
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('update');
@@ -173,13 +183,17 @@ describe('player test', () => {
       y: 300,
       angle: 0,
       lives: 1,
+      gotFreezed: false,
       players: [opponent],
       bullets: [],
       timer: 25,
       walls: [],
-      powerUp: [],
+      powerUps: [],
       isShielded: false,
       hitAngle: Math.PI / 2,
+      iceSandFields: [],
+      portals: [],
+      teamLives: 3,
     });
   });
 
@@ -197,16 +211,16 @@ describe('player test', () => {
     expect(socket.emit.mock.calls[0][0]).toBe('lose');
   });
 
-  test('player notify opponent disconnected', () => {
-    player.notifyOpponentDisconnected();
-    expect(socket.emit.mock.calls.length).toBe(1);
-    expect(socket.emit.mock.calls[0][0]).toBe('opponent disconnected');
-  });
-
   test('player notify time over', () => {
     player.notifyTimeOver();
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('time over');
+  });
+
+  test('player notify death', () => {
+    player.notifyDeath();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('death');
   });
 
   test('player update no button in bound', () => {
@@ -225,7 +239,7 @@ describe('player test', () => {
     player.update();
 
     expect(player.x).toBe(100);
-    expect(player.y).toBe(199);
+    expect(player.y).toBe(197);
   });
 
   test('player update down button', () => {
@@ -235,7 +249,7 @@ describe('player test', () => {
     player.update();
 
     expect(player.x).toBe(100);
-    expect(player.y).toBe(201);
+    expect(player.y).toBe(203);
   });
 
   test('player update left button', () => {
@@ -244,7 +258,7 @@ describe('player test', () => {
     player.pressedLeft = true;
     player.update();
 
-    expect(player.x).toBe(99);
+    expect(player.x).toBe(97);
     expect(player.y).toBe(200);
   });
 
@@ -254,7 +268,7 @@ describe('player test', () => {
     player.pressedRight = true;
     player.update();
 
-    expect(player.x).toBe(101);
+    expect(player.x).toBe(103);
     expect(player.y).toBe(200);
   });
 
@@ -265,8 +279,8 @@ describe('player test', () => {
     player.pressedUp = true;
     player.update();
 
-    expect(player.x).toBe(100.5);
-    expect(player.y).toBe(199.5);
+    expect(player.x).toBe(102.1);
+    expect(player.y).toBe(197.9);
   });
 
   test('player update left button and down', () => {
@@ -276,8 +290,8 @@ describe('player test', () => {
     player.pressedDown = true;
     player.update();
 
-    expect(player.x).toBe(99.5);
-    expect(player.y).toBe(200.5);
+    expect(player.x).toBe(97.9);
+    expect(player.y).toBe(202.1);
   });
 
   test('player update decrements shooting count if gt 0', () => {
