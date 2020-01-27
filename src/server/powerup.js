@@ -7,15 +7,6 @@ export default class PowerUp {
     this.y = y;
     this.radius = config.POWERUP_RADIUS;
     this.type = type;
-    if (this.type === powerUpTypes.SHIELD) {
-      this.color = 'brown';
-    } else if (this.type === powerUpTypes.FREEZE) {
-      this.color = 'blue';
-    } else if (this.type === powerUpTypes.ADDHEALTH) {
-      this.color = 'green';
-    } else {
-      this.color = 'yellow';
-    }
   }
 
   static mapPowerups(powerUp) {
