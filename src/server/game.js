@@ -303,6 +303,7 @@ export default class Game {
       if (bulletCollides) {
         this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         wall.fillColor = bullet.color;
+        this.splashSoundForPlayers();
       }
     });
   }
