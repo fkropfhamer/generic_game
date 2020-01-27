@@ -1,5 +1,6 @@
 import config from '../../server/config';
 import View from './view';
+import { Key } from '../../server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -144,32 +145,32 @@ export default class Client {
   }
 
   keyPressed(e) {
-    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+    if (e.code === Key.ARROW_DOWN || e.code === Key.KEY_S) {
       this.pressedDown = true;
     }
-    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+    if (e.code === Key.ARROW_UP || e.code === Key.KEY_W) {
       this.pressedUp = true;
     }
-    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+    if (e.code === Key.ARROW_RIGHT || e.code === Key.KEY_D) {
       this.pressedRight = true;
     }
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+    if (e.code === Key.ARROW_LEFT || e.code === Key.KEY_A) {
       this.pressedLeft = true;
     }
   }
 
   keyUp(e) {
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
-      this.pressedLeft = false;
+    if (e.code === Key.ARROW_DOWN || e.code === Key.KEY_S) {
+      this.pressedDown = false;
     }
-    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-      this.pressedRight = false;
-    }
-    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+    if (e.code === Key.ARROW_UP || e.code === Key.KEY_W) {
       this.pressedUp = false;
     }
-    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-      this.pressedDown = false;
+    if (e.code === Key.ARROW_RIGHT || e.code === Key.KEY_D) {
+      this.pressedRight = false;
+    }
+    if (e.code === Key.ARROW_LEFT || e.code === Key.KEY_A) {
+      this.pressedLeft = false;
     }
   }
 

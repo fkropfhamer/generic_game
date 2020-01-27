@@ -20,3 +20,14 @@ export const Mode = Object.freeze({
   TEAMS: 'teams',
   NORMAL: 'normal',
 });
+
+export const Key = Object.freeze({
+  ARROW_DOWN: 'ArrowDown',
+  ARROW_UP: 'ArrowUp',
+  ARROW_LEFT: 'ArrowLeft',
+  ARROW_RIGHT: 'ArrowRight',
+  KEY_S: 'KeyS',
+  KEY_W: 'KeyW',
+  KEY_D: 'KeyD',
+  KEY_A: 'KeyA',
+});
