@@ -14,6 +14,7 @@ export default class Player {
     this.radius = config.PLAYER_RADIUS;
     this.shootingCount = 0;
     this.isShielded = false;
+    this.fireRateActivated = false;
     this.changedSpeedPowerupActive = false;
     this.freezingOthers = false;
     this.gotFreezed = false;
@@ -34,7 +35,11 @@ export default class Player {
     if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
-      this.shootingCount = config.SHOOTING_RATE;
+      if (this.fireRateActivated === true) {
+        this.shootingCount = config.SHOOTING_RATE / 4;
+      } else {
+        this.shootingCount = config.SHOOTING_RATE;
+      }
     }
   }
 
@@ -65,11 +70,12 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls, powerUps, iceSandFields) {
+  notifyStart(otherPlayers, timer, walls, powerUps, iceSandFields, teamLives, portals) {
     this.isWaiting = false;
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
+    const mappedPortals = Util.mapPortals(portals);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
@@ -80,8 +86,11 @@ export default class Player {
       players: mappedPlayers,
       timer,
       walls,
+      teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
+      gotFreezed: this.gotFreezed,
+      portals: mappedPortals,
     });
   }
 
@@ -90,11 +99,12 @@ export default class Player {
     this.socket.emit('wait', { numberOfPlayers });
   }
 
-  notifyUpdate(players, bullets, timer, walls, powerUps, iceSandFields) {
+  notifyUpdate(players, bullets, timer, walls, powerUps, iceSandFields, teamLives, portals) {
     const mappedPlayers = Util.mapPlayers(players);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedBullets = Bullet.mapBullets(bullets);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
+    const mappedPortals = Util.mapPortals(portals);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -106,13 +116,12 @@ export default class Player {
       bullets: mappedBullets,
       timer,
       walls,
+      teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
+      gotFreezed: this.gotFreezed,
+      portals: mappedPortals,
     });
-  }
-
-  notifyOpponentDisconnected() {
-    this.socket.emit('opponent disconnected');
   }
 
   notifyTimeOver() {
@@ -125,6 +134,10 @@ export default class Player {
 
   notifyLose() {
     this.socket.emit('lose');
+  }
+
+  notifyDeath() {
+    this.socket.emit('death');
   }
 
   update() {

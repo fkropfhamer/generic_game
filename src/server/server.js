@@ -3,6 +3,7 @@ import express from 'express';
 import Player from './player';
 import Game from './game';
 import config from './config';
+import { Mode } from './enums';
 
 class Server {
   constructor() {
@@ -29,7 +30,7 @@ class Server {
   }
 
   waitingPlayerDisconnected(player) {
-    if (player.mode === 'normal') {
+    if (player.mode === Mode.NORMAL) {
       this.waitingPlayer = false;
     } else {
       this.waitingPlayers = this.waitingPlayers.filter(
@@ -45,7 +46,7 @@ class Server {
   }
 
   playerIsReady(player, mode) {
-    if (mode === 'normal') {
+    if (mode === Mode.NORMAL) {
       if (!this.waitingPlayer) {
         this.waitingPlayer = player;
         player.notifyWaiting(1);
@@ -56,7 +57,7 @@ class Server {
         console.log('game ist starting');
         this.waitingPlayer = false;
       }
-    } else if (mode === 'teams') {
+    } else if (mode === Mode.TEAMS) {
       if (this.waitingPlayers.length === config.TEAM_SIZE * 2 - 1) {
         const game = new Game([player, ...this.waitingPlayers]);
         game.start();

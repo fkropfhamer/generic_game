@@ -1,11 +1,11 @@
 export default class Util {
   constructor() {
-    throw Error('Util is an abstract class and and cant initiated');
+    throw Error('Util is an abstract class and and can´t initiated');
   }
 
   static halfIfAnotherKeyIsPressed(key1, key2) {
     if (key1 || key2) {
-      return 0.5;
+      return 0.7;
     }
     return 1;
   }
@@ -32,6 +32,20 @@ export default class Util {
         face: player.face,
         hitAngle: player.hitAngle,
         isShielded: player.isShielded,
+        gotFreezed: player.gotFreezed,
+      };
+    });
+  }
+
+  static mapPortals(portals) {
+    return portals.map((portal) => {
+      return {
+        x1: portal.x1,
+        y1: portal.y1,
+        x2: portal.x2,
+        y2: portal.y2,
+        starttime: portal.starttime,
+        endtime: portal.endtime,
       };
     });
   }

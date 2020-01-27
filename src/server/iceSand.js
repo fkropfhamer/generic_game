@@ -15,6 +15,7 @@ export default class IceSand {
         x: isf.x,
         y: isf.y,
         radius: isf.radius,
+        type: isf.type,
       };
     });
   }
@@ -22,13 +23,12 @@ export default class IceSand {
   manipulatePlayer(player) {
     let walkingOnEffect = 0;
     if (this.type === iceSandTypes.ICE) {
-      walkingOnEffect += 100;
+      walkingOnEffect = config.ICE_SPEED;
     }
     if (this.type === iceSandTypes.SAND) {
-      walkingOnEffect -= 2;
+      walkingOnEffect = config.SAND_SPEED;
     }
-    player.speed = config.PLAYER_SPEED + walkingOnEffect;
-    player.changedSpeedActive = true;
+    player.speed = config.PLAYER_SPEED * walkingOnEffect;
   }
 
   update(player) {
