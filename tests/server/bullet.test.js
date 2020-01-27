@@ -17,7 +17,6 @@ describe('bullet test', () => {
     expect(bullet.x).toBe(100);
     expect(bullet.y).toBe(200);
     expect(bullet.angle).toBe(Math.PI);
-    expect(bullet.duration).toBe(1000);
     expect(bullet.player).toBe(player);
     expect(bullet.speed).toBe(5);
     expect(bullet.color).toBe('blue');
@@ -27,7 +26,6 @@ describe('bullet test', () => {
 
     expect(bullet.x).toBe(95);
     expect(bullet.y).toBe(200);
-    expect(bullet.duration).toBe(999);
   });
 
   test('update bullet 90 degree', () => {
@@ -36,7 +34,6 @@ describe('bullet test', () => {
 
     expect(bullet.x).toBe(100);
     expect(bullet.y).toBe(205);
-    expect(bullet.duration).toBe(999);
   });
 
   test('update bullet 0 degree', () => {
@@ -45,7 +42,6 @@ describe('bullet test', () => {
 
     expect(bullet.x).toBe(105);
     expect(bullet.y).toBe(200);
-    expect(bullet.duration).toBe(999);
   });
 
   test('update bullet 270 degree', () => {
@@ -54,7 +50,6 @@ describe('bullet test', () => {
 
     expect(bullet.x).toBe(100);
     expect(bullet.y).toBe(195);
-    expect(bullet.duration).toBe(999);
   });
 
   test('update bullet 45 degree', () => {
@@ -63,7 +58,6 @@ describe('bullet test', () => {
 
     expect(Math.round(bullet.x)).toBe(104);
     expect(Math.round(bullet.y)).toBe(204);
-    expect(bullet.duration).toBe(999);
   });
 
   test('map players', () => {

@@ -4,7 +4,6 @@ export default class Bullet {
   constructor(player) {
     this.x = player.x;
     this.y = player.y;
-    this.duration = config.BULLET_DURATION;
     this.player = player;
     this.speed = config.BULLET_SPEED;
     this.angle = player.angle;
@@ -15,7 +14,6 @@ export default class Bullet {
   update() {
     this.x += this.speed * Math.cos(this.angle);
     this.y += this.speed * Math.sin(this.angle);
-    this.duration -= 1;
   }
 
   static mapBullets(bullets) {
