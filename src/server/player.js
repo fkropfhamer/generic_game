@@ -35,7 +35,7 @@ export default class Player {
     if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
-      if (this.fireRateActivated === true) {
+      if (this.fireRateActivated) {
         this.shootingCount = config.SHOOTING_RATE / 4;
       } else {
         this.shootingCount = config.SHOOTING_RATE;

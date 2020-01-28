@@ -62,6 +62,17 @@ describe('player test', () => {
     expect(player.shootingCount).toBe(10);
   });
 
+  test('socket event shoot powerup firerate', () => {
+    player.createBullet = jest.fn();
+    player.game = {};
+    player.fireRateActivated = true;
+    player.onShoot({ angle: Math.PI });
+
+    expect(player.angle).toBe(Math.PI);
+    expect(player.createBullet.mock.calls.length).toBe(1);
+    expect(player.shootingCount).toBe(config.SHOOTING_RATE / 4);
+  });
+
   test('socket event update angle', () => {
     player.onUpdateAngle({ angle: 3000 });
 
@@ -222,6 +233,12 @@ describe('player test', () => {
     expect(socket.emit).toHaveBeenCalledTimes(1);
     expect(socket.emit).toHaveBeenCalledWith('death');
   });
+
+  test('player notify splash sound', () => {
+    player.notifySplashSound();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('splash sound');
+  })
 
   test('player update no button in bound', () => {
     player.x = 100;
