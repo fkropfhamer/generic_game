@@ -238,7 +238,7 @@ describe('player test', () => {
     player.notifySplashSound();
     expect(socket.emit).toHaveBeenCalledTimes(1);
     expect(socket.emit).toHaveBeenCalledWith('splash sound');
-  })
+  });
 
   test('player update no button in bound', () => {
     player.x = 100;
