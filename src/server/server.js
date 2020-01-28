@@ -11,18 +11,20 @@ class Server {
     this.waitingPlayers = [];
   }
 
+  start(port) {
+    this.listen(port);
+    this.setupSocket();
+  }
+
   listen(port) {
     const fileServer = express();
     fileServer.use(express.static('public'));
     this.fileServer = fileServer.listen(port);
-    this.io = io(this.fileServer); // Mache Websocket auf
-    this.setup(); // Config den Websocket
+    this.io = io(this.fileServer); 
   }
 
-  // Öffnet den Websocket
-  setup() {
+  setupSocket() {
     this.io.on('connection', (socket) => {
-      // wenn sich jemand connected -> Dann erstelle einen neuen Player
       console.log('user connected');
       // eslint-disable-next-line no-new
       new Player(socket, this);
