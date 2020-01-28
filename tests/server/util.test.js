@@ -2,12 +2,19 @@ import Util from '../../src/server/util';
 import config from '../../src/server/config';
 
 describe('Util test', () => {
+  test('constructor', () => {
+    expect(() => {
+      const util = new Util();
+      util.halfIfAnotherKeyIsPressed();
+    }).toThrow('Util is an abstract class and and cant be initiated');
+  });
+
   test('halve if two keys are pressed', () => {
-    expect(Util.halfIfAnotherKeyIsPressed(true, true)).toBe(0.5);
+    expect(Util.halfIfAnotherKeyIsPressed(true, true)).toBe(0.7);
   });
   test('halve if another key is pressed', () => {
-    expect(Util.halfIfAnotherKeyIsPressed(false, true)).toBe(0.5);
-    expect(Util.halfIfAnotherKeyIsPressed(true, false)).toBe(0.5);
+    expect(Util.halfIfAnotherKeyIsPressed(false, true)).toBe(0.7);
+    expect(Util.halfIfAnotherKeyIsPressed(true, false)).toBe(0.7);
   });
   test('full if no other key is pressed', () => {
     expect(Util.halfIfAnotherKeyIsPressed(false, false)).toBe(1);
@@ -26,6 +33,8 @@ describe('Util test', () => {
         color: 'red',
         lives: 4,
         face: 'face1',
+        hitAngle: Math.PI * 2,
+        isShielded: true,
       },
       {
         x: 300,
@@ -34,6 +43,8 @@ describe('Util test', () => {
         color: 'blue',
         lives: 1,
         face: 'face3',
+        hitAngle: Math.PI,
+        isShielded: false,
       },
     ];
 
@@ -95,13 +106,77 @@ describe('Util test', () => {
       height: 10,
     };
 
-    const circle = { x: config.playerRadius + 15, y: config.playerRadius + 15 };
+    const circle = { x: config.PLAYER_RADIUS + 15, y: config.PLAYER_RADIUS + 15 };
 
     expect(Util.collisionRectCircle(rect, circle)).toBe(false);
 
-    const circle2 = { x: config.playerRadius + 14, y: config.playerRadius + 14 };
+    const circle2 = { x: config.PLAYER_RADIUS + 14, y: config.PLAYER_RADIUS + 14 };
 
     expect(Util.collisionRectCircle(rect, circle2)).toBe(false);
+  });
+
+  test('collision rect circle top', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 10, y: 20, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: Math.PI / 2, dis: 5 });
+  });
+
+  test('collision rect circle bottom', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 10, y: 0, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: Math.PI * 1.5, dis: 5 });
+  });
+
+  test('collision rect circle left', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 0, y: 10, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: Math.PI, dis: 5 });
+  });
+
+  test('collision rect circle right', () => {
+    const rect = {
+      x: 10,
+      y: 10,
+      angle: 0,
+      width: 10,
+      height: 10,
+    };
+
+    const circle = { x: 20, y: 10, radius: 6 };
+
+    const result = Util.collisionRectCircle(rect, circle);
+
+    expect(result).toEqual({ angle: 0, dis: 5 });
   });
 
   test('collision circle circle', () => {
@@ -111,5 +186,26 @@ describe('Util test', () => {
     expect(Util.collisionCircleCircle(circle1, circle1)).toBe(true);
     expect(Util.collisionCircleCircle(circle2, circle2)).toBe(true);
     expect(Util.collisionCircleCircle(circle1, circle2)).toBe(false);
+  });
+
+  test('deepfreeze', () => {
+    const testObject = { value1: 1, object1: { value2: 'test' } };
+    const frozenTestObject = Util.deepFreeze(testObject);
+    expect(Object.isFrozen(frozenTestObject)).toBe(true);
+    expect(Object.isFrozen(frozenTestObject.object1)).toBe(true);
+  });
+
+  test('collisin rect circle', () => {
+    const rect = {
+      x: 1,
+      y: 1,
+      angle: 0,
+      width: 1,
+      height: 1,
+    };
+
+    const circle = { x: 1, y: 1, radius: 2 };
+
+    expect(Util.collisionRectCircle(rect, circle)).toEqual({ angle: Math.PI * 1.5, dis: 0.5 });
   });
 });

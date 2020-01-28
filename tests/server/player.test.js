@@ -4,22 +4,22 @@ import config from '../../src/server/config';
 describe('player test', () => {
   let player;
   let socket;
-  let gameHandler;
+  let server;
 
   beforeEach(() => {
     socket = {
       on: jest.fn(),
       emit: jest.fn(),
     };
-    gameHandler = { waitingPlayerDisconnected: jest.fn(), playerIsReady: jest.fn() };
-    player = new Player(socket, gameHandler);
+    server = { waitingPlayerDisconnected: jest.fn(), playerIsReady: jest.fn() };
+    player = new Player(socket, server);
   });
 
   test('player constructor', () => {
     expect(player.socket).toBe(socket);
-    expect(player.gameHandler).toBe(gameHandler);
-    expect(player.speed).toBe(1);
-    expect(player.radius).toBe(27.5);
+    expect(player.server).toBe(server);
+    expect(player.speed).toBe(3);
+    expect(player.radius).toBe(25);
     expect(player.angle).toBe(0);
     expect(socket.on.mock.calls.length).toBe(5);
     expect(socket.on.mock.calls[0][0]).toBe('keyspressed');
@@ -44,11 +44,12 @@ describe('player test', () => {
 
   test('socket event shoot', () => {
     player.createBullet = jest.fn();
+    player.game = {};
     player.onShoot({ angle: Math.PI });
 
     expect(player.angle).toBe(Math.PI);
     expect(player.createBullet.mock.calls.length).toBe(1);
-    expect(player.shootingCount).toBe(config.shootingRate);
+    expect(player.shootingCount).toBe(config.SHOOTING_RATE);
   });
 
   test('socket event shoot limited by shooting count', () => {
@@ -61,6 +62,17 @@ describe('player test', () => {
     expect(player.shootingCount).toBe(10);
   });
 
+  test('socket event shoot powerup firerate', () => {
+    player.createBullet = jest.fn();
+    player.game = {};
+    player.fireRateActivated = true;
+    player.onShoot({ angle: Math.PI });
+
+    expect(player.angle).toBe(Math.PI);
+    expect(player.createBullet.mock.calls.length).toBe(1);
+    expect(player.shootingCount).toBe(config.SHOOTING_RATE / 4);
+  });
+
   test('socket event update angle', () => {
     player.onUpdateAngle({ angle: 3000 });
 
@@ -71,15 +83,15 @@ describe('player test', () => {
     player.isWaiting = true;
     player.onDisconnect();
 
-    expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(1);
-    expect(gameHandler.waitingPlayerDisconnected.mock.calls[0][0]).toBe(player);
+    expect(server.waitingPlayerDisconnected.mock.calls.length).toBe(1);
+    expect(server.waitingPlayerDisconnected.mock.calls[0][0]).toBe(player);
   });
 
   test('socket event disconnect game has started', () => {
     player.game = { playerDisconnected: jest.fn() };
     player.onDisconnect();
 
-    expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(0);
+    expect(server.waitingPlayerDisconnected.mock.calls.length).toBe(0);
     expect(player.game.playerDisconnected.mock.calls.length).toBe(1);
     expect(player.game.playerDisconnected.mock.calls[0][0]).toBe(player);
   });
@@ -87,7 +99,7 @@ describe('player test', () => {
   test('socket event disconnect player not waiting and no game', () => {
     player.onDisconnect();
 
-    expect(gameHandler.waitingPlayerDisconnected.mock.calls.length).toBe(0);
+    expect(server.waitingPlayerDisconnected.mock.calls.length).toBe(0);
   });
 
   test('socket event ready', () => {
@@ -95,9 +107,9 @@ describe('player test', () => {
 
     expect(player.face).toBe('face1');
     expect(player.mode).toBe('normal');
-    expect(gameHandler.playerIsReady.mock.calls.length).toBe(1);
-    expect(gameHandler.playerIsReady.mock.calls[0][0]).toBe(player);
-    expect(gameHandler.playerIsReady.mock.calls[0][1]).toBe('normal');
+    expect(server.playerIsReady.mock.calls.length).toBe(1);
+    expect(server.playerIsReady.mock.calls[0][0]).toBe(player);
+    expect(server.playerIsReady.mock.calls[0][1]).toBe('normal');
   });
 
   test('player create bullet', () => {
@@ -120,20 +132,30 @@ describe('player test', () => {
       color: 'blue',
       face: 'face1',
       lives: 2,
+      isFreezed: undefined,
+      hitAngle: undefined,
+      isShielded: undefined,
     };
 
-    player.notifyStart([opponent], 30);
+    player.notifyStart([opponent], 30, [], [], [], 3, []);
+    expect(player.isWaiting).toBe(false);
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('start');
     expect(socket.emit.mock.calls[0][1]).toEqual({
       x: 400,
       y: 300,
       face: 'face2',
+      isFreezed: false,
+      iceSandFields: [],
       lives: 3,
       angle: 0,
       color: 'blue',
       players: [opponent],
       timer: 30,
+      powerUps: [],
+      walls: [],
+      portals: [],
+      teamLives: 3,
     });
   });
 
@@ -149,6 +171,8 @@ describe('player test', () => {
     player.x = 400;
     player.y = 300;
     player.lives = 1;
+    player.hitAngle = Math.PI / 2;
+    player.isShielded = false;
     const opponent = {
       x: 100,
       y: 200,
@@ -156,9 +180,12 @@ describe('player test', () => {
       face: 'face3',
       color: 'blue',
       lives: 3,
+      isShielded: true,
+      hitAngle: Math.PI,
+      isFreezed: undefined,
     };
 
-    player.notifyUpdate([opponent], [], 25);
+    player.notifyUpdate([opponent], [], 25, [], [], [], 3, []);
 
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('update');
@@ -167,9 +194,17 @@ describe('player test', () => {
       y: 300,
       angle: 0,
       lives: 1,
+      isFreezed: false,
       players: [opponent],
       bullets: [],
       timer: 25,
+      walls: [],
+      powerUps: [],
+      isShielded: false,
+      hitAngle: Math.PI / 2,
+      iceSandFields: [],
+      portals: [],
+      teamLives: 3,
     });
   });
 
@@ -187,16 +222,22 @@ describe('player test', () => {
     expect(socket.emit.mock.calls[0][0]).toBe('lose');
   });
 
-  test('player notify opponent disconnected', () => {
-    player.notifyOpponentDisconnected();
-    expect(socket.emit.mock.calls.length).toBe(1);
-    expect(socket.emit.mock.calls[0][0]).toBe('opponent disconnected');
-  });
-
   test('player notify time over', () => {
     player.notifyTimeOver();
     expect(socket.emit.mock.calls.length).toBe(1);
     expect(socket.emit.mock.calls[0][0]).toBe('time over');
+  });
+
+  test('player notify death', () => {
+    player.notifyDeath();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('death');
+  });
+
+  test('player notify splash sound', () => {
+    player.notifySplashSound();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('splash sound');
   });
 
   test('player update no button in bound', () => {
@@ -215,7 +256,7 @@ describe('player test', () => {
     player.update();
 
     expect(player.x).toBe(100);
-    expect(player.y).toBe(199);
+    expect(player.y).toBe(197);
   });
 
   test('player update down button', () => {
@@ -225,7 +266,7 @@ describe('player test', () => {
     player.update();
 
     expect(player.x).toBe(100);
-    expect(player.y).toBe(201);
+    expect(player.y).toBe(203);
   });
 
   test('player update left button', () => {
@@ -234,7 +275,7 @@ describe('player test', () => {
     player.pressedLeft = true;
     player.update();
 
-    expect(player.x).toBe(99);
+    expect(player.x).toBe(97);
     expect(player.y).toBe(200);
   });
 
@@ -244,7 +285,7 @@ describe('player test', () => {
     player.pressedRight = true;
     player.update();
 
-    expect(player.x).toBe(101);
+    expect(player.x).toBe(103);
     expect(player.y).toBe(200);
   });
 
@@ -255,8 +296,8 @@ describe('player test', () => {
     player.pressedUp = true;
     player.update();
 
-    expect(player.x).toBe(100.5);
-    expect(player.y).toBe(199.5);
+    expect(player.x).toBe(102.1);
+    expect(player.y).toBe(197.9);
   });
 
   test('player update left button and down', () => {
@@ -266,8 +307,8 @@ describe('player test', () => {
     player.pressedDown = true;
     player.update();
 
-    expect(player.x).toBe(99.5);
-    expect(player.y).toBe(200.5);
+    expect(player.x).toBe(97.9);
+    expect(player.y).toBe(202.1);
   });
 
   test('player update decrements shooting count if gt 0', () => {

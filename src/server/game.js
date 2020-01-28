@@ -1,32 +1,149 @@
 import config from './config';
 import Util from './util';
+import PowerUp from './powerup';
+import IceSand from './iceSand';
+import { Color, iceSandTypes } from './enums';
 
 export default class Game {
   constructor(players) {
     this.players = players;
     this.bullets = [];
     this.deadPlayers = [];
-    this.walls = config.walls;
+    this.walls = [];
+    this.powerUps = [];
+    this.randomPowerUps = [];
+    this.iceSandFields = [];
+    this.portals = [];
+    this.setupPowerups();
+    this.setupIceSandFields();
+    this.setupWalls();
+    this.setupPortals();
   }
 
   start() {
-    this.timer = config.gameDuration;
+    this.timer = config.GAME_DURATION;
     this.count = 0;
 
     this.players.forEach((player, i) => {
-      player.x = config.playerstartingPositions[i].x;
-      player.y = config.playerstartingPositions[i].y;
-      player.lives = config.playerLives;
-      player.color = i % 2 === 0 ? 'blue' : 'red';
+      player.x = config.PLAYER_STARTING_POSITIONS[i].x;
+      player.y = config.PLAYER_STARTING_POSITIONS[i].y;
+      player.lives = config.PLAYER_LIVES;
+      player.color = i % 2 === 0 ? Color.BLUE : Color.RED;
+      player.game = this;
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(this.getOtherPlayers(player), this.timer, this.walls);
+      player.notifyStart(
+        this.getOtherPlayers(player),
+        this.timer,
+        this.walls,
+        this.randomPowerUps,
+        this.iceSandFields,
+        this.calculateTeamLives(),
+        this.portals
+      );
       player.game = this;
       player.isWaiting = false;
     });
 
     this.interval = setInterval(this.loop.bind(this), 10);
+  }
+
+  placeRandomPowerUp() {
+    setInterval(() => {
+      if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
+        do {
+          const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
+          if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
+            this.randomPowerUps.push(randomPowerUp);
+            console.log(randomPowerUp.type);
+            break;
+          }
+        } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
+      }
+    }, config.POWERUP_SPAWN_DELAY);
+  }
+
+  setupPowerups() {
+    config.POWER_UPS_POSITION.forEach((powerUp) => {
+      this.powerUps.push(
+        new PowerUp(
+          powerUp.x,
+          powerUp.y,
+          config.POWERUP_TYPES[Math.floor(Math.random() * config.POWERUP_TYPES.length)]
+        )
+      );
+    });
+    this.placeRandomPowerUp();
+  }
+
+  setupIceSandFields() {
+    config.ICE_SAND_FIELDS.forEach((iceSandField) => {
+      this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+    });
+  }
+
+  setupPortals() {
+    config.portals.forEach((portal) => {
+      this.portals.push(portal);
+    });
+  }
+
+  setupWalls() {
+    this.setupBarrierWalls();
+    this.setupConstraintWalls();
+  }
+
+  setupConstraintWalls() {
+    const horizontalWidth = config.FIELD_WIDTH / config.NUMBER_OF_HORIZONTAL_WALLS;
+    for (let i = horizontalWidth / 2; i < config.FIELD_WIDTH; i += horizontalWidth) {
+      this.walls.push({
+        ...config.constraintWalls,
+        x: i,
+        width: horizontalWidth,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: i,
+        width: horizontalWidth,
+        y: config.FIELD_HEIGHT - 10,
+      });
+    }
+    const veritcalWidth = config.FIELD_HEIGHT / config.NUMBER_OF_VERTICAL_WALLS;
+    for (let i = veritcalWidth / 2; i < config.FIELD_HEIGHT; i += veritcalWidth) {
+      this.walls.push({
+        ...config.constraintWalls,
+        x: 10,
+        y: i,
+        width: veritcalWidth,
+        angle: Math.PI / 2,
+      });
+      this.walls.push({
+        ...config.constraintWalls,
+        x: config.FIELD_WIDTH - 10,
+        y: i,
+        width: veritcalWidth,
+        angle: Math.PI / 2,
+      });
+    }
+  }
+
+  setupBarrierWalls() {
+    for (let i = 1; i <= 3; i += 1) {
+      for (let j = 1; j <= 3; j += 1) {
+        this.walls.push({
+          ...config.barrierWalls,
+          x: (config.FIELD_WIDTH / 4) * i,
+          y: (config.FIELD_HEIGHT / 4) * j,
+        });
+        this.walls.push({
+          ...config.barrierWalls,
+          x: (config.FIELD_WIDTH / 4) * i,
+          y: (config.FIELD_HEIGHT / 4) * j,
+          angle: -config.barrierWalls.angle,
+        });
+      }
+    }
   }
 
   getOtherPlayers(player) {
@@ -35,6 +152,12 @@ export default class Game {
 
   addBullet(bullet) {
     this.bullets.push(bullet);
+  }
+
+  splashSoundForPlayers() {
+    this.players.forEach((player) => {
+      player.notifySplashSound();
+    });
   }
 
   checkBulletHitsPlayer(player) {
@@ -49,14 +172,116 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
+          if (player.isFreezed) {
+            this.players.forEach((p) => {
+              console.log('freezing deactivated');
+              p.isFreezed = false;
+              p.freezingOthers = false;
+            });
+          }
+
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
-          player.lives -= 1;
-          if (player.lives <= 0) {
-            this.playerDied(player);
+          this.splashSoundForPlayers();
+          if (player.isShielded) {
+            player.isShielded = false;
+          } else {
+            player.lives -= 1;
+            if (player.lives <= 0) {
+              this.playerDied(player);
+            }
           }
         }
       }
     });
+  }
+
+  calculateTeamLives() {
+    const blueLives = this.players
+      .filter((player) => player.color === Color.BLUE)
+      .reduce((a, b) => a + b.lives, 0);
+    const redLives = this.players
+      .filter((player) => player.color === Color.RED)
+      .reduce((a, b) => a + b.lives, 0);
+
+    return { blueLives, redLives };
+  }
+
+  checkPlayerHitsPowerUp(player) {
+    this.randomPowerUps.forEach((powerUp) => {
+      if (Util.collisionCircleCircle(powerUp, player)) {
+        powerUp.update(player);
+        if (player.freezingOthers) {
+          this.players.forEach((freezedPlayer) => {
+            if (!Object.is(freezedPlayer, player)) {
+              freezedPlayer.isFreezed = true;
+              freezedPlayer.freezingOthers = false;
+              setTimeout(() => {
+                freezedPlayer.isFreezed = false;
+                player.freezingOthers = false;
+              }, config.POWERUP_DURATION);
+            }
+          });
+        }
+        this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
+      }
+    });
+  }
+
+  checkPlayerWalksOnIceOrSand(player) {
+    let onSand = false;
+    let onIce = false;
+    this.iceSandFields.forEach((field) => {
+      const collides = Util.collisionCircleCircle(field, player);
+      if (collides) {
+        if (field.type === iceSandTypes.ICE) {
+          onSand = false;
+          onIce = true;
+          field.manipulatePlayer(player);
+        }
+        if (field.type === iceSandTypes.SAND) {
+          onSand = true;
+          onIce = false;
+          field.manipulatePlayer(player);
+        }
+      } else {
+        if (field.type === iceSandTypes.SAND) {
+          onSand = false;
+        }
+        if (field.type === iceSandTypes.ICE) {
+          onIce = false;
+        }
+        if (player.changedSpeedPowerupActive && !onIce && !onSand) {
+          player.speed = 2 * config.PLAYER_SPEED;
+        } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
+          player.speed = config.PLAYER_SPEED;
+        }
+      }
+    });
+  }
+
+  checkSomethingHitsPortal(something) {
+    this.portals
+      .filter((p) => p.starttime >= this.timer && p.endtime <= this.timer)
+      .forEach((portal) => {
+        const portal1 = {
+          x: portal.x1,
+          y: portal.y1,
+          radius: config.PORTAL_RADIUS - 2 * something.radius,
+        };
+        const portal2 = {
+          x: portal.x2,
+          y: portal.y2,
+          radius: config.PORTAL_RADIUS - 2 * something.radius,
+        };
+        if (Util.collisionCircleCircle(portal1, something)) {
+          something.x = portal.x2 - (something.x - portal.x1) * 1.1;
+          something.y = portal.y2 - (something.y - portal.y1) * 1.1;
+        }
+        if (Util.collisionCircleCircle(portal2, something)) {
+          something.x = portal.x1 - (something.x - portal.x2) * 1.1;
+          something.y = portal.y1 - (something.y - portal.y2) * 1.1;
+        }
+      });
   }
 
   checkWallCollisionPlayer(player) {
@@ -64,7 +289,7 @@ export default class Game {
       const playerCollides = Util.collisionRectCircle(wall, player);
       if (playerCollides) {
         const angle = playerCollides.angle + wall.angle;
-        const dis = config.playerRadius - playerCollides.dis;
+        const dis = config.PLAYER_RADIUS - playerCollides.dis;
 
         player.x += dis * Math.cos(angle);
         player.y += dis * Math.sin(angle);
@@ -78,19 +303,22 @@ export default class Game {
       if (bulletCollides) {
         this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         wall.fillColor = bullet.color;
+        this.splashSoundForPlayers();
       }
     });
   }
 
   playerDied(player) {
     this.deadPlayers.push(player);
+    player.x = -500;
+    player.y = -500;
     const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
-    const teamBlue = remainingPlayers.filter((p) => p.color === 'blue');
-    const teamRed = remainingPlayers.filter((p) => p.color === 'red');
+    const teamBlue = remainingPlayers.filter((p) => p.color === Color.BLUE);
+    const teamRed = remainingPlayers.filter((p) => p.color === Color.RED);
 
     if (teamBlue.length === 0) {
       this.deadPlayers.forEach((p) => {
-        if (p.color === 'blue') {
+        if (p.color === Color.BLUE) {
           p.notifyLose();
         } else {
           p.notifyWin();
@@ -100,7 +328,7 @@ export default class Game {
       this.end();
     } else if (teamRed.length === 0) {
       this.deadPlayers.forEach((p) => {
-        if (p.color === 'red') {
+        if (p.color === Color.RED) {
           p.notifyLose();
         } else {
           p.notifyWin();
@@ -110,6 +338,7 @@ export default class Game {
       this.end();
     } else {
       this.players = remainingPlayers;
+      player.notifyDeath();
     }
   }
 
@@ -125,15 +354,15 @@ export default class Game {
         if (Util.collisionCircleCircle(player1, player2)) {
           let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
           alpha = alpha || 0;
-          player1.x += Math.sign(player1.x - player2.x) * config.playerRepulsion * Math.cos(alpha);
-          player1.y += Math.sign(player1.y - player2.y) * config.playerRepulsion * Math.sin(alpha);
+          player1.x += Math.sign(player1.x - player2.x) * config.PLAYER_REPULSION * Math.cos(alpha);
+          player1.y += Math.sign(player1.y - player2.y) * config.PLAYER_REPULSION * Math.sin(alpha);
         }
       }
     });
   }
 
   timeIsOver() {
-    this.players.forEach((player) => player.notifyTimeOver());
+    this.players.concat(this.deadPlayers).forEach((player) => player.notifyTimeOver());
     this.end();
   }
 
@@ -161,26 +390,32 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update();
       this.checkWallCollisionBullet(bullet);
+      this.checkSomethingHitsPortal(bullet);
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      player.update();
+      if (!player.isFreezed) {
+        player.update();
+      }
       this.checkWallCollisionPlayer(player);
 
       this.checkBulletHitsPlayer(player);
+      this.checkPlayerHitsPowerUp(player);
+      this.checkPlayerWalksOnIceOrSand(player);
+      this.checkSomethingHitsPortal(player);
     });
 
-    const bullets = this.bullets.map((b) => {
-      return {
-        x: b.x,
-        y: b.y,
-        angle: b.angle,
-        color: b.color,
-      };
-    });
-
-    this.players.forEach((player) => {
-      player.notifyUpdate(this.getOtherPlayers(player), bullets, this.timer, this.walls);
+    this.players.concat(this.deadPlayers).forEach((player) => {
+      player.notifyUpdate(
+        this.getOtherPlayers(player),
+        this.bullets,
+        this.timer,
+        this.walls,
+        this.randomPowerUps,
+        this.iceSandFields,
+        this.calculateTeamLives(),
+        this.portals
+      );
     });
   }
 }
