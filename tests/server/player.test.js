@@ -121,7 +121,7 @@ describe('player test', () => {
       color: 'blue',
       face: 'face1',
       lives: 2,
-      gotFreezed: undefined,
+      isFreezed: undefined,
       hitAngle: undefined,
       isShielded: undefined,
     };
@@ -134,7 +134,7 @@ describe('player test', () => {
       x: 400,
       y: 300,
       face: 'face2',
-      gotFreezed: false,
+      isFreezed: false,
       iceSandFields: [],
       lives: 3,
       angle: 0,
@@ -171,7 +171,7 @@ describe('player test', () => {
       lives: 3,
       isShielded: true,
       hitAngle: Math.PI,
-      gotFreezed: undefined,
+      isFreezed: undefined,
     };
 
     player.notifyUpdate([opponent], [], 25, [], [], [], 3, []);
@@ -183,7 +183,7 @@ describe('player test', () => {
       y: 300,
       angle: 0,
       lives: 1,
-      gotFreezed: false,
+      isFreezed: false,
       players: [opponent],
       bullets: [],
       timer: 25,

@@ -17,7 +17,7 @@ export default class Player {
     this.fireRateActivated = false;
     this.changedSpeedPowerupActive = false;
     this.freezingOthers = false;
-    this.gotFreezed = false;
+    this.isFreezed = false;
   }
 
   onKeysPressed(data) {
@@ -88,7 +88,7 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
-      gotFreezed: this.gotFreezed,
+      isFreezed: this.isFreezed,
       portals,
     });
   }
@@ -117,7 +117,7 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
-      gotFreezed: this.gotFreezed,
+      isFreezed: this.isFreezed,
       portals,
     });
   }

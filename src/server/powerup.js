@@ -48,7 +48,7 @@ export default class PowerUp {
 
   static freezeUp(player) {
     player.freezingOthers = true;
-    player.gotFreezed = false;
+    player.isFreezed = false;
   }
 
   update(player) {

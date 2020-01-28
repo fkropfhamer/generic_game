@@ -172,10 +172,10 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
-          if (player.gotFreezed) {
+          if (player.isFreezed) {
             this.players.forEach((p) => {
               console.log('freezing deactivated');
-              p.gotFreezed = false;
+              p.isFreezed = false;
               p.freezingOthers = false;
             });
           }
@@ -213,10 +213,10 @@ export default class Game {
         if (player.freezingOthers) {
           this.players.forEach((freezedPlayer) => {
             if (!Object.is(freezedPlayer, player)) {
-              freezedPlayer.gotFreezed = true;
+              freezedPlayer.isFreezed = true;
               freezedPlayer.freezingOthers = false;
               setTimeout(() => {
-                freezedPlayer.gotFreezed = false;
+                freezedPlayer.isFreezed = false;
                 player.freezingOthers = false;
               }, config.POWERUP_DURATION);
             }
@@ -228,10 +228,10 @@ export default class Game {
   }
 
   checkPlayerWalksOnIceOrSand(player) {
+    let onSand = false;
+    let onIce = false;
     this.iceSandFields.forEach((field) => {
       const collides = Util.collisionCircleCircle(field, player);
-      let onSand = false;
-      let onIce = false;
       if (collides) {
         if (field.type === iceSandTypes.ICE) {
           onSand = false;
@@ -394,7 +394,7 @@ export default class Game {
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      if (!player.gotFreezed) {
+      if (!player.isFreezed) {
         player.update();
       }
       this.checkWallCollisionPlayer(player);

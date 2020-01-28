@@ -21,7 +21,7 @@ export default class Client {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, gotFreezed) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
     this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
     if (lives < 3) {
       this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
@@ -37,7 +37,7 @@ export default class Client {
         color
       );
     }
-    if (gotFreezed) {
+    if (isFreezed) {
       this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, 0.5);
     }
   }
@@ -86,7 +86,7 @@ export default class Client {
       this.angle,
       this.hitAngle,
       this.isShielded,
-      this.gotFreezed
+      this.isFreezed
     );
     this.drawPlayerIndicator();
     this.otherPlayers.forEach((player) => {
@@ -99,7 +99,7 @@ export default class Client {
         player.angle,
         player.hitAngle,
         player.isShielded,
-        player.gotFreezed
+        player.isFreezed
       );
     });
 
@@ -192,7 +192,7 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.gotFreezed = data.gotFreezed;
+    this.isFreezed = data.isFreezed;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
@@ -219,7 +219,7 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.gotFreezed = data.gotFreezed;
+    this.isFreezed = data.isFreezed;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
