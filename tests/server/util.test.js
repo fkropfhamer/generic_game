@@ -6,7 +6,7 @@ describe('Util test', () => {
     expect(() => {
       const util = new Util();
       util.halfIfAnotherKeyIsPressed();
-    }).toThrow('Util is an abstract class and and can´t initiated');
+    }).toThrow('Util is an abstract class and and cant be initiated');
   });
 
   test('halve if two keys are pressed', () => {

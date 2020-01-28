@@ -172,15 +172,15 @@ export default class View {
   showStartScreen(callback) {
     document.getElementById('startscreen').style.display = 'initial';
 
-    this.assets.face1.classList.add('img-thumbnail');
-    this.assets.face2.classList.add('img-thumbnail');
-    this.assets.face3.classList.add('img-thumbnail');
-    this.assets.face4.classList.add('img-thumbnail');
+    this.images.face1.classList.add('img-thumbnail');
+    this.images.face2.classList.add('img-thumbnail');
+    this.images.face3.classList.add('img-thumbnail');
+    this.images.face4.classList.add('img-thumbnail');
 
-    document.getElementById('choice1-label').appendChild(this.assets.face1);
-    document.getElementById('choice2-label').appendChild(this.assets.face2);
-    document.getElementById('choice3-label').appendChild(this.assets.face3);
-    document.getElementById('choice4-label').appendChild(this.assets.face4);
+    document.getElementById('choice1-label').appendChild(this.images.face1);
+    document.getElementById('choice2-label').appendChild(this.images.face2);
+    document.getElementById('choice3-label').appendChild(this.images.face3);
+    document.getElementById('choice4-label').appendChild(this.images.face4);
 
     const startButton = document.getElementById('startbutton');
     startButton.onclick = () => {

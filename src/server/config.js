@@ -3,7 +3,6 @@ import Util from './util';
 
 const config = Util.deepFreeze({
   BULLET_SPEED: 5,
-  BULLET_DURATION: 1000,
   PLAYER_SPEED: 3,
   PLAYER_RADIUS: 25,
   PLAYER_REPULSION: 10,

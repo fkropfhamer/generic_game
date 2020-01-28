@@ -10,8 +10,9 @@ Object.defineProperty(window, 'addEventListener', { value: mockAddEventListener 
 describe('client', () => {
   let client;
   let view;
-  let assets;
+  let images;
   let socket;
+  let audios;
 
   beforeEach(() => {
     socket = {
@@ -34,17 +35,18 @@ describe('client', () => {
       drawRectangle: jest.fn(),
     };
 
-    assets = {};
+    audios = { backgroundMusic: { play: jest.fn() }, splash: { play: jest.fn() } };
 
-    client = new Client(view, assets);
+    images = {};
+    client = new Client(view, images, audios);
     client.socket = socket;
   });
 
   test('constructor', () => {
-    expect(client.isWaiting).toBe(true);
     expect(client.view).toBe(view);
-    expect(client.assets).toBe(assets);
-
+    expect(client.audios).toBe(audios);
+    expect(client.images).toBe(images);
+    expect(client.isWaiting).toBe(true);
     expect(view.showStartScreen).toHaveBeenCalledTimes(1);
   });
 
@@ -68,8 +70,8 @@ describe('client', () => {
     client.drawPlayer('blue', 3, 'face1', 4, 8, 0, 0, false);
 
     expect(view.drawImageAtAngle).toHaveBeenCalledTimes(2);
-    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, assets.blue, 4, 8, 0, 0.5);
-    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, assets.face1, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, images.blue, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, images.face1, 4, 8, 0, 0.5);
     expect(view.drawRing).toHaveBeenCalledTimes(0);
   });
 
@@ -77,9 +79,9 @@ describe('client', () => {
     client.drawPlayer('blue', 2, 'face1', 4, 8, 0, 0, true);
 
     expect(view.drawImageAtAngle).toHaveBeenCalledTimes(3);
-    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, assets.blue, 4, 8, 0, 0.5);
-    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, assets.blue2life, 4, 8, 0, 0.5);
-    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(3, assets.face1, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, images.blue, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, images.blue2life, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(3, images.face1, 4, 8, 0, 0.5);
     expect(view.drawRing).toHaveBeenCalledTimes(1);
     expect(view.drawRing).toHaveBeenCalledWith(4, 8, config.PLAYER_RADIUS, 5, 6, 'blue');
   });
@@ -308,6 +310,7 @@ describe('client', () => {
 
     client.onStart(mockData);
 
+    expect(audios.backgroundMusic.play).toHaveBeenCalledTimes(1);
     expect(client.isWaiting).toBe(false);
     expect(client.x).toBe(1);
     expect(client.y).toBe(2);
@@ -402,12 +405,18 @@ describe('client', () => {
     expect(client.isDead).toBe(true);
   });
 
+  test('client on spash sound', () => {
+    client.onSplashSound();
+
+    expect(audios.splash.play).toHaveBeenCalledTimes(1);
+  });
+
   test('client setup socket', () => {
     client.setupSocket();
 
     expect(global.io).toHaveBeenCalledTimes(1);
 
-    expect(client.socket.on).toHaveBeenCalledTimes(8);
+    expect(client.socket.on).toHaveBeenCalledTimes(9);
     expect(client.socket.on.mock.calls[0][0]).toBe('connect');
     expect(client.socket.on.mock.calls[1][0]).toBe('start');
     expect(client.socket.on.mock.calls[2][0]).toBe('update');
@@ -415,6 +424,7 @@ describe('client', () => {
     expect(client.socket.on.mock.calls[4][0]).toBe('time over');
     expect(client.socket.on.mock.calls[5][0]).toBe('win');
     expect(client.socket.on.mock.calls[6][0]).toBe('lose');
-    expect(client.socket.on.mock.calls[7][0]).toBe('death');
+    expect(client.socket.on.mock.calls[7][0]).toBe('splash sound');
+    expect(client.socket.on.mock.calls[8][0]).toBe('death');
   });
 });

@@ -228,6 +228,18 @@ describe('view', () => {
     expect(mockContext.fill).toHaveBeenCalledTimes(1);
   });
 
+  test('draw nested rings', () => {
+    view.drawCircle = jest.fn();
+    view.drawRing = jest.fn();
+
+    view.drawNestedRings(1, 2, 6, 3, 'yellow', 5);
+
+    expect(view.drawCircle).toHaveBeenCalledTimes(1);
+    expect(view.drawCircle).toHaveBeenCalledWith(1, 2, 6, 'black');
+    expect(view.drawRing).toHaveBeenCalledTimes(1);
+    expect(view.drawRing).toHaveBeenCalledWith(1, 2, -1, 6, 3, 'yellow');
+  });
+
   test('view show timer', () => {
     View.showTimer(30);
 
@@ -306,7 +318,7 @@ describe('view', () => {
   });
 
   test('view show start screen', () => {
-    const assets = {
+    const images = {
       face1: { classList: { add: jest.fn() } },
       face2: { classList: { add: jest.fn() } },
       face3: { classList: { add: jest.fn() } },
@@ -314,33 +326,33 @@ describe('view', () => {
     };
 
     const callback = jest.fn();
-    view.assets = assets;
+    view.images = images;
 
     view.showStartScreen(callback);
 
     expect(elements.startscreen.style.display).toBe('initial');
 
-    expect(assets.face1.classList.add).toHaveBeenCalledTimes(1);
-    expect(assets.face1.classList.add).toHaveBeenCalledWith('img-thumbnail');
-    expect(assets.face2.classList.add).toHaveBeenCalledTimes(1);
-    expect(assets.face2.classList.add).toHaveBeenCalledWith('img-thumbnail');
-    expect(assets.face3.classList.add).toHaveBeenCalledTimes(1);
-    expect(assets.face3.classList.add).toHaveBeenCalledWith('img-thumbnail');
-    expect(assets.face4.classList.add).toHaveBeenCalledTimes(1);
-    expect(assets.face4.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(images.face1.classList.add).toHaveBeenCalledTimes(1);
+    expect(images.face1.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(images.face2.classList.add).toHaveBeenCalledTimes(1);
+    expect(images.face2.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(images.face3.classList.add).toHaveBeenCalledTimes(1);
+    expect(images.face3.classList.add).toHaveBeenCalledWith('img-thumbnail');
+    expect(images.face4.classList.add).toHaveBeenCalledTimes(1);
+    expect(images.face4.classList.add).toHaveBeenCalledWith('img-thumbnail');
 
     expect(elements['choice1-label'].appendChild).toHaveBeenCalledTimes(1);
-    expect(elements['choice1-label'].appendChild).toHaveBeenCalledWith(assets.face1);
+    expect(elements['choice1-label'].appendChild).toHaveBeenCalledWith(images.face1);
     expect(elements['choice2-label'].appendChild).toHaveBeenCalledTimes(1);
-    expect(elements['choice2-label'].appendChild).toHaveBeenCalledWith(assets.face2);
+    expect(elements['choice2-label'].appendChild).toHaveBeenCalledWith(images.face2);
     expect(elements['choice3-label'].appendChild).toHaveBeenCalledTimes(1);
-    expect(elements['choice3-label'].appendChild).toHaveBeenCalledWith(assets.face3);
+    expect(elements['choice3-label'].appendChild).toHaveBeenCalledWith(images.face3);
     expect(elements['choice4-label'].appendChild).toHaveBeenCalledTimes(1);
-    expect(elements['choice4-label'].appendChild).toHaveBeenCalledWith(assets.face4);
+    expect(elements['choice4-label'].appendChild).toHaveBeenCalledWith(images.face4);
   });
 
   test('view show start screen onclick nothing checked', () => {
-    const assets = {
+    const images = {
       face1: { classList: { add: jest.fn() } },
       face2: { classList: { add: jest.fn() } },
       face3: { classList: { add: jest.fn() } },
@@ -348,7 +360,7 @@ describe('view', () => {
     };
 
     const callback = jest.fn();
-    view.assets = assets;
+    view.images = images;
 
     view.showStartScreen(callback);
 
@@ -359,7 +371,7 @@ describe('view', () => {
   });
 
   test('view show start screen onclick everything checked', () => {
-    const assets = {
+    const images = {
       face1: { classList: { add: jest.fn() } },
       face2: { classList: { add: jest.fn() } },
       face3: { classList: { add: jest.fn() } },
@@ -367,7 +379,7 @@ describe('view', () => {
     };
 
     const callback = jest.fn();
-    view.assets = assets;
+    view.images = images;
 
     view.showStartScreen(callback);
     elements.startbutton.onclick();

@@ -1,11 +1,13 @@
 import config from '../../server/config';
 import View from './view';
+import { Key } from '../../server/enums';
 
 export default class Client {
-  constructor(view, assets) {
+  constructor(view, images, audios) {
     this.isWaiting = true;
     this.view = view;
-    this.assets = assets;
+    this.images = images;
+    this.audios = audios;
     this.view.showStartScreen(this.setup.bind(this));
   }
 
@@ -19,12 +21,12 @@ export default class Client {
     this.socket.emit('ready', { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, gotFreezed) {
-    this.view.drawImageAtAngle(this.assets[color], x, y, angle, 0.5);
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
+    this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
     if (lives < 3) {
-      this.view.drawImageAtAngle(this.assets[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
+      this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
-    this.view.drawImageAtAngle(this.assets[face], x, y, angle, 0.5);
+    this.view.drawImageAtAngle(this.images[face], x, y, angle, 0.5);
     if (isShielded) {
       this.view.drawRing(
         x,
@@ -35,8 +37,8 @@ export default class Client {
         color
       );
     }
-    if (gotFreezed) {
-      this.view.drawImageAtAngle(this.assets.playerIced, x, y, 0, 0.5);
+    if (isFreezed) {
+      this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, 0.5);
     }
   }
 
@@ -67,7 +69,7 @@ export default class Client {
     this.view.reset();
     View.showTimer(this.timer);
     this.iceSandFields.forEach((isf) =>
-      this.view.drawImageAtAngle(this.assets[isf.type], isf.x, isf.y, 0, 1)
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
     );
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
@@ -84,7 +86,7 @@ export default class Client {
       this.angle,
       this.hitAngle,
       this.isShielded,
-      this.gotFreezed
+      this.isFreezed
     );
     this.drawPlayerIndicator();
     this.otherPlayers.forEach((player) => {
@@ -97,11 +99,11 @@ export default class Client {
         player.angle,
         player.hitAngle,
         player.isShielded,
-        player.gotFreezed
+        player.isFreezed
       );
     });
 
-    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.assets[p.type], p.x, p.y, 0, 0.4));
+    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, 0.4));
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {
@@ -143,32 +145,32 @@ export default class Client {
   }
 
   keyPressed(e) {
-    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+    if (e.code === Key.ARROW_DOWN || e.code === Key.KEY_S) {
       this.pressedDown = true;
     }
-    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+    if (e.code === Key.ARROW_UP || e.code === Key.KEY_W) {
       this.pressedUp = true;
     }
-    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+    if (e.code === Key.ARROW_RIGHT || e.code === Key.KEY_D) {
       this.pressedRight = true;
     }
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+    if (e.code === Key.ARROW_LEFT || e.code === Key.KEY_A) {
       this.pressedLeft = true;
     }
   }
 
   keyUp(e) {
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
-      this.pressedLeft = false;
+    if (e.code === Key.ARROW_DOWN || e.code === Key.KEY_S) {
+      this.pressedDown = false;
     }
-    if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-      this.pressedRight = false;
-    }
-    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+    if (e.code === Key.ARROW_UP || e.code === Key.KEY_W) {
       this.pressedUp = false;
     }
-    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-      this.pressedDown = false;
+    if (e.code === Key.ARROW_RIGHT || e.code === Key.KEY_D) {
+      this.pressedRight = false;
+    }
+    if (e.code === Key.ARROW_LEFT || e.code === Key.KEY_A) {
+      this.pressedLeft = false;
     }
   }
 
@@ -190,11 +192,13 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.gotFreezed = data.gotFreezed;
+    this.isFreezed = data.isFreezed;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
     this.portals = data.portals;
+    this.audios.backgroundMusic.loop = true;
+    this.audios.backgroundMusic.play();
     this.draw();
     this.setupKeyPressedEvents();
   }
@@ -215,7 +219,7 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.gotFreezed = data.gotFreezed;
+    this.isFreezed = data.isFreezed;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
@@ -258,6 +262,10 @@ export default class Client {
     this.isDead = true;
   }
 
+  onSplashSound() {
+    this.audios.splash.play();
+  }
+
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
@@ -268,6 +276,7 @@ export default class Client {
     this.socket.on('time over', this.onTimeOver.bind(this));
     this.socket.on('win', this.onWin.bind(this));
     this.socket.on('lose', this.onLose.bind(this));
+    this.socket.on('splash sound', this.onSplashSound.bind(this));
     this.socket.on('death', this.onDeath.bind(this));
   }
 }

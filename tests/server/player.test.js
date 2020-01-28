@@ -62,6 +62,17 @@ describe('player test', () => {
     expect(player.shootingCount).toBe(10);
   });
 
+  test('socket event shoot powerup firerate', () => {
+    player.createBullet = jest.fn();
+    player.game = {};
+    player.fireRateActivated = true;
+    player.onShoot({ angle: Math.PI });
+
+    expect(player.angle).toBe(Math.PI);
+    expect(player.createBullet.mock.calls.length).toBe(1);
+    expect(player.shootingCount).toBe(config.SHOOTING_RATE / 4);
+  });
+
   test('socket event update angle', () => {
     player.onUpdateAngle({ angle: 3000 });
 
@@ -121,7 +132,7 @@ describe('player test', () => {
       color: 'blue',
       face: 'face1',
       lives: 2,
-      gotFreezed: undefined,
+      isFreezed: undefined,
       hitAngle: undefined,
       isShielded: undefined,
     };
@@ -134,7 +145,7 @@ describe('player test', () => {
       x: 400,
       y: 300,
       face: 'face2',
-      gotFreezed: false,
+      isFreezed: false,
       iceSandFields: [],
       lives: 3,
       angle: 0,
@@ -171,7 +182,7 @@ describe('player test', () => {
       lives: 3,
       isShielded: true,
       hitAngle: Math.PI,
-      gotFreezed: undefined,
+      isFreezed: undefined,
     };
 
     player.notifyUpdate([opponent], [], 25, [], [], [], 3, []);
@@ -183,7 +194,7 @@ describe('player test', () => {
       y: 300,
       angle: 0,
       lives: 1,
-      gotFreezed: false,
+      isFreezed: false,
       players: [opponent],
       bullets: [],
       timer: 25,
@@ -221,6 +232,12 @@ describe('player test', () => {
     player.notifyDeath();
     expect(socket.emit).toHaveBeenCalledTimes(1);
     expect(socket.emit).toHaveBeenCalledWith('death');
+  });
+
+  test('player notify splash sound', () => {
+    player.notifySplashSound();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('splash sound');
   });
 
   test('player update no button in bound', () => {

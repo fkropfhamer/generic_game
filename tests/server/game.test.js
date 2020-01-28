@@ -16,6 +16,7 @@ describe('game test', () => {
       notifyWin: jest.fn(),
       notifyLose: jest.fn(),
       update: jest.fn(),
+      notifySplashSound: jest.fn(),
     };
     player2 = {
       color: 'red',
@@ -26,6 +27,7 @@ describe('game test', () => {
       notifyWin: jest.fn(),
       notifyLose: jest.fn(),
       update: jest.fn(),
+      notifySplashSound: jest.fn(),
     };
 
     game = new Game([player1, player2]);
@@ -338,6 +340,8 @@ describe('game test', () => {
     game.checkBulletHitsPlayer(player);
 
     expect(player.lives).toBe(2);
+    expect(player1.notifySplashSound).toHaveBeenCalledTimes(1);
+    expect(player2.notifySplashSound).toHaveBeenCalledTimes(1);
     expect(game.bullets).toEqual([]);
     expect(player.hitAngle).toBe(Math.PI);
   });

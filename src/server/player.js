@@ -17,7 +17,7 @@ export default class Player {
     this.fireRateActivated = false;
     this.changedSpeedPowerupActive = false;
     this.freezingOthers = false;
-    this.gotFreezed = false;
+    this.isFreezed = false;
   }
 
   onKeysPressed(data) {
@@ -35,7 +35,7 @@ export default class Player {
     if (this.shootingCount === 0 && typeof this.game !== 'undefined') {
       this.angle = data.angle;
       this.createBullet();
-      if (this.fireRateActivated === true) {
+      if (this.fireRateActivated) {
         this.shootingCount = config.SHOOTING_RATE / 4;
       } else {
         this.shootingCount = config.SHOOTING_RATE;
@@ -75,7 +75,6 @@ export default class Player {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    const mappedPortals = Util.mapPortals(portals);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
@@ -89,8 +88,8 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
-      gotFreezed: this.gotFreezed,
-      portals: mappedPortals,
+      isFreezed: this.isFreezed,
+      portals,
     });
   }
 
@@ -104,7 +103,6 @@ export default class Player {
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedBullets = Bullet.mapBullets(bullets);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    const mappedPortals = Util.mapPortals(portals);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -119,8 +117,8 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
-      gotFreezed: this.gotFreezed,
-      portals: mappedPortals,
+      isFreezed: this.isFreezed,
+      portals,
     });
   }
 
@@ -134,6 +132,10 @@ export default class Player {
 
   notifyLose() {
     this.socket.emit('lose');
+  }
+
+  notifySplashSound() {
+    this.socket.emit('splash sound');
   }
 
   notifyDeath() {

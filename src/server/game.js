@@ -17,8 +17,6 @@ export default class Game {
     this.setupPowerups();
     this.setupIceSandFields();
     this.setupWalls();
-    this.onIce = false;
-    this.onSand = false;
     this.setupPortals();
   }
 
@@ -156,6 +154,12 @@ export default class Game {
     this.bullets.push(bullet);
   }
 
+  splashSoundForPlayers() {
+    this.players.forEach((player) => {
+      player.notifySplashSound();
+    });
+  }
+
   checkBulletHitsPlayer(player) {
     this.bullets.forEach((bullet) => {
       if (bullet.color !== player.color) {
@@ -168,15 +172,16 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
-          if (player.gotFreezed) {
+          if (player.isFreezed) {
             this.players.forEach((p) => {
               console.log('freezing deactivated');
-              p.gotFreezed = false;
+              p.isFreezed = false;
               p.freezingOthers = false;
             });
           }
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
+          this.splashSoundForPlayers();
           if (player.isShielded) {
             player.isShielded = false;
           } else {
@@ -208,10 +213,10 @@ export default class Game {
         if (player.freezingOthers) {
           this.players.forEach((freezedPlayer) => {
             if (!Object.is(freezedPlayer, player)) {
-              freezedPlayer.gotFreezed = true;
+              freezedPlayer.isFreezed = true;
               freezedPlayer.freezingOthers = false;
               setTimeout(() => {
-                freezedPlayer.gotFreezed = false;
+                freezedPlayer.isFreezed = false;
                 player.freezingOthers = false;
               }, config.POWERUP_DURATION);
             }
@@ -223,29 +228,31 @@ export default class Game {
   }
 
   checkPlayerWalksOnIceOrSand(player) {
+    let onSand = false;
+    let onIce = false;
     this.iceSandFields.forEach((field) => {
       const collides = Util.collisionCircleCircle(field, player);
       if (collides) {
         if (field.type === iceSandTypes.ICE) {
-          this.onSand = false;
-          this.onIce = true;
-          field.update(player);
+          onSand = false;
+          onIce = true;
+          field.manipulatePlayer(player);
         }
         if (field.type === iceSandTypes.SAND) {
-          this.onSand = true;
-          this.onIce = false;
-          field.update(player);
+          onSand = true;
+          onIce = false;
+          field.manipulatePlayer(player);
         }
       } else {
         if (field.type === iceSandTypes.SAND) {
-          this.onSand = false;
+          onSand = false;
         }
         if (field.type === iceSandTypes.ICE) {
-          this.onIce = false;
+          onIce = false;
         }
-        if (player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+        if (player.changedSpeedPowerupActive && !onIce && !onSand) {
           player.speed = 2 * config.PLAYER_SPEED;
-        } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+        } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
           player.speed = config.PLAYER_SPEED;
         }
       }
@@ -296,6 +303,7 @@ export default class Game {
       if (bulletCollides) {
         this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         wall.fillColor = bullet.color;
+        this.splashSoundForPlayers();
       }
     });
   }
@@ -386,7 +394,7 @@ export default class Game {
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      if (!player.gotFreezed) {
+      if (!player.isFreezed) {
         player.update();
       }
       this.checkWallCollisionPlayer(player);

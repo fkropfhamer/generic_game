@@ -22,33 +22,43 @@ import ice from '../img/ice.png';
 import playerIced from '../img/playerIced.png';
 import AssetLoader from './assetloader';
 import Client from './client';
+import splash from '../sound/flyswatter4.mp3';
+import backgroundMusic from '../sound/Tec.mp3';
 
 window.onload = () => {
   const view = new View();
-  AssetLoader.loadAssets([
-    { name: 'red0life', url: blue },
-    { name: 'red1life', url: red1life },
-    { name: 'red2life', url: red2life },
-    { name: 'red', url: red },
-    { name: 'blue0life', url: red },
-    { name: 'blue1life', url: blue1life },
-    { name: 'blue2life', url: blue2life },
-    { name: 'blue', url: blue },
-    { name: 'face1', url: face1 },
-    { name: 'face2', url: face2 },
-    { name: 'face3', url: face3 },
-    { name: 'face4', url: face4 },
-    { name: 'speed', url: speedPowerup },
-    { name: 'health', url: healthPowerup },
-    { name: 'shield', url: shieldPowerup },
-    { name: 'firerate', url: fireratePowerup },
-    { name: 'freeze', url: freezePowerup },
-    { name: 'sand', url: sand },
-    { name: 'ice', url: ice },
-    { name: 'playerIced', url: playerIced },
+  Promise.all([
+    AssetLoader.loadImages([
+      { name: 'red0life', url: blue },
+      { name: 'red1life', url: red1life },
+      { name: 'red2life', url: red2life },
+      { name: 'red', url: red },
+      { name: 'blue0life', url: red },
+      { name: 'blue1life', url: blue1life },
+      { name: 'blue2life', url: blue2life },
+      { name: 'blue', url: blue },
+      { name: 'face1', url: face1 },
+      { name: 'face2', url: face2 },
+      { name: 'face3', url: face3 },
+      { name: 'face4', url: face4 },
+      { name: 'speed', url: speedPowerup },
+      { name: 'health', url: healthPowerup },
+      { name: 'shield', url: shieldPowerup },
+      { name: 'firerate', url: fireratePowerup },
+      { name: 'freeze', url: freezePowerup },
+      { name: 'sand', url: sand },
+      { name: 'ice', url: ice },
+      { name: 'playerIced', url: playerIced },
+    ]),
+    AssetLoader.loadAudios([
+      { name: 'splash', url: splash },
+      { name: 'backgroundMusic', url: backgroundMusic },
+    ]),
   ]).then((assets) => {
-    view.assets = assets;
+    const [images, audios] = assets;
+    view.images = images;
+    view.audios = audios;
     // eslint-disable-next-line no-new
-    new Client(view, assets);
+    new Client(view, images, audios);
   });
 };
