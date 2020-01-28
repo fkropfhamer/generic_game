@@ -20,7 +20,7 @@ class Server {
     const fileServer = express();
     fileServer.use(express.static('public'));
     this.fileServer = fileServer.listen(port);
-    this.io = io(this.fileServer); 
+    this.io = io(this.fileServer);
   }
 
   setupSocket() {
