@@ -33,6 +33,7 @@ describe('client', () => {
       showPlayerColorInfo: jest.fn(),
       drawCircle: jest.fn(),
       drawRectangle: jest.fn(),
+      drawNestedRings: jest.fn(),
     };
 
     audios = { backgroundMusic: { play: jest.fn() }, splash: { play: jest.fn() } };
@@ -72,6 +73,16 @@ describe('client', () => {
     expect(view.drawImageAtAngle).toHaveBeenCalledTimes(2);
     expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, images.blue, 4, 8, 0, 0.5);
     expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, images.face1, 4, 8, 0, 0.5);
+    expect(view.drawRing).toHaveBeenCalledTimes(0);
+  });
+
+  test('client draw player is freezed', () => {
+    client.drawPlayer('blue', 3, 'face1', 4, 8, 0, 0, false, true);
+
+    expect(view.drawImageAtAngle).toHaveBeenCalledTimes(3);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(1, images.blue, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(2, images.face1, 4, 8, 0, 0.5);
+    expect(view.drawImageAtAngle).toHaveBeenNthCalledWith(3, images.playerIced, 4, 8, 0, 0.5);
     expect(view.drawRing).toHaveBeenCalledTimes(0);
   });
 
@@ -329,6 +340,46 @@ describe('client', () => {
     expect(client.setupKeyPressedEvents).toHaveBeenCalledTimes(1);
   });
 
+  test('client on start is not waiting', () => {
+    client.isWaiting = false;
+    client.draw = jest.fn();
+    client.setupKeyPressedEvents = jest.fn();
+    const mockData = {
+      x: 1,
+      y: 2,
+      angle: 3,
+      color: 4,
+      lives: 5,
+      face: 6,
+      players: 7,
+      timer: 8,
+      walls: 9,
+      isShielded: 10,
+      teamLives: 11,
+      powerUps: 12,
+    };
+
+    client.onStart(mockData);
+
+    expect(audios.backgroundMusic.play).toHaveBeenCalledTimes(1);
+    expect(client.isWaiting).toBe(false);
+    expect(client.x).toBe(1);
+    expect(client.y).toBe(2);
+    expect(client.angle).toBe(3);
+    expect(client.color).toBe(4);
+    expect(client.lives).toBe(5);
+    expect(client.face).toBe(6);
+    expect(client.otherPlayers).toBe(7);
+    expect(client.timer).toBe(8);
+    expect(client.walls).toBe(9);
+    expect(client.isShielded).toBe(10);
+    expect(client.teamLives).toBe(11);
+    expect(client.powerUps).toBe(12);
+    expect(client.bullets).toEqual([]);
+    expect(client.draw).toHaveBeenCalledTimes(1);
+    expect(client.setupKeyPressedEvents).toHaveBeenCalledTimes(1);
+  });
+
   test('client on update', () => {
     client.draw = jest.fn();
 
@@ -426,5 +477,27 @@ describe('client', () => {
     expect(client.socket.on.mock.calls[6][0]).toBe('lose');
     expect(client.socket.on.mock.calls[7][0]).toBe('splash sound');
     expect(client.socket.on.mock.calls[8][0]).toBe('death');
+  });
+
+  test('client drawPortals out of time range', () => {
+    client.timer = 1000;
+
+    client.drawPortals(1, 2, 3, 4, 5, 6, 7);
+
+    expect(view.drawCircle).toHaveBeenCalledTimes(0);
+    expect(view.drawNestedRings).toHaveBeenCalledTimes(0);
+  });
+
+  test('client drawPortals out of time range', () => {
+    client.timer = 7;
+
+    client.drawPortals(1, 2, 3, 4, 8, 5, 7);
+
+    expect(view.drawCircle).toHaveBeenCalledTimes(2);
+    expect(view.drawCircle).toHaveBeenNthCalledWith(1, 1, 2, 41.25, 'black');
+    expect(view.drawCircle).toHaveBeenNthCalledWith(2, 3, 4, 41.25, 'black');
+    expect(view.drawNestedRings).toHaveBeenCalledTimes(2);
+    expect(view.drawNestedRings).toHaveBeenNthCalledWith(1, 1, 2, 41.25, 3, 'grey', 2);
+    expect(view.drawNestedRings).toHaveBeenNthCalledWith(2, 3, 4, 41.25, 3, 'grey', 2);
   });
 });
