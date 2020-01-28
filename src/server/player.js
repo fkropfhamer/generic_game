@@ -75,7 +75,6 @@ export default class Player {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    const mappedPortals = Util.mapPortals(portals);
     this.socket.emit('start', {
       x: this.x,
       y: this.y,
@@ -90,7 +89,7 @@ export default class Player {
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
       gotFreezed: this.gotFreezed,
-      portals: mappedPortals,
+      portals,
     });
   }
 
@@ -104,7 +103,6 @@ export default class Player {
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedBullets = Bullet.mapBullets(bullets);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    const mappedPortals = Util.mapPortals(portals);
     this.socket.emit('update', {
       x: this.x,
       y: this.y,
@@ -120,7 +118,7 @@ export default class Player {
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
       gotFreezed: this.gotFreezed,
-      portals: mappedPortals,
+      portals,
     });
   }
 
