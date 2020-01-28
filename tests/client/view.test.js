@@ -228,6 +228,18 @@ describe('view', () => {
     expect(mockContext.fill).toHaveBeenCalledTimes(1);
   });
 
+  test('draw nested rings', () => {
+    view.drawCircle = jest.fn();
+    view.drawRing = jest.fn();
+
+    view.drawNestedRings(1, 2, 6, 3, 'yellow', 5);
+
+    expect(view.drawCircle).toHaveBeenCalledTimes(1);
+    expect(view.drawCircle).toHaveBeenCalledWith(1, 2, 6, 'black');
+    expect(view.drawRing).toHaveBeenCalledTimes(1);
+    expect(view.drawRing).toHaveBeenCalledWith(1, 2, -1, 6, 3, 'yellow');
+  });
+
   test('view show timer', () => {
     View.showTimer(30);
 
