@@ -9,8 +9,8 @@ export default class IceSand {
     this.type = type;
   }
 
-  static mapIceSand(iceSandField) {
-    return iceSandField.map((isf) => {
+  static mapIceSand(iceSandFields) {
+    return iceSandFields.map((isf) => {
       return {
         x: isf.x,
         y: isf.y,
@@ -22,16 +22,16 @@ export default class IceSand {
 
   manipulatePlayer(player) {
     let walkingOnEffect = 0;
-    if (this.type === iceSandTypes.ICE) {
-      walkingOnEffect = config.ICE_SPEED;
-    }
-    if (this.type === iceSandTypes.SAND) {
-      walkingOnEffect = config.SAND_SPEED;
+    switch (this.type) {
+      case iceSandTypes.ICE:
+        walkingOnEffect = config.ICE_SPEED;
+        break;
+      case iceSandTypes.SAND:
+        walkingOnEffect = config.SAND_SPEED;
+        break;
+      default:
+        throw Error('unknown type');
     }
     player.speed = config.PLAYER_SPEED * walkingOnEffect;
-  }
-
-  update(player) {
-    this.manipulatePlayer(player);
   }
 }

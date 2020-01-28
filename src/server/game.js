@@ -17,8 +17,6 @@ export default class Game {
     this.setupPowerups();
     this.setupIceSandFields();
     this.setupWalls();
-    this.onIce = false;
-    this.onSand = false;
     this.setupPortals();
   }
 
@@ -232,27 +230,29 @@ export default class Game {
   checkPlayerWalksOnIceOrSand(player) {
     this.iceSandFields.forEach((field) => {
       const collides = Util.collisionCircleCircle(field, player);
+      let onSand = false;
+      let onIce = false;
       if (collides) {
         if (field.type === iceSandTypes.ICE) {
-          this.onSand = false;
-          this.onIce = true;
-          field.update(player);
+          onSand = false;
+          onIce = true;
+          field.manipulatePlayer(player);
         }
         if (field.type === iceSandTypes.SAND) {
-          this.onSand = true;
-          this.onIce = false;
-          field.update(player);
+          onSand = true;
+          onIce = false;
+          field.manipulatePlayer(player);
         }
       } else {
         if (field.type === iceSandTypes.SAND) {
-          this.onSand = false;
+          onSand = false;
         }
         if (field.type === iceSandTypes.ICE) {
-          this.onIce = false;
+          onIce = false;
         }
-        if (player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+        if (player.changedSpeedPowerupActive && !onIce && !onSand) {
           player.speed = 2 * config.PLAYER_SPEED;
-        } else if (!player.changedSpeedPowerupActive && !this.onIce && !this.onSand) {
+        } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
           player.speed = config.PLAYER_SPEED;
         }
       }
