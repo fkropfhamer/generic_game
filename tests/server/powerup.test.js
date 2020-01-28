@@ -65,4 +65,40 @@ describe('powerup', () => {
 
     expect(mappedPowerUps).toEqual([mappedPowerUp, powerup2]);
   });
+
+  test('powerup type speed', () => {
+    jest.useFakeTimers();
+    const player = {};
+
+    powerup.type = powerUpTypes.SPEED;
+    powerup.update(player);
+
+    expect(player.speed).toBe(6);
+
+    jest.runAllTimers();
+    expect(player.speed).toBe(3);
+  });
+
+  test('powerup type bullet', () => {
+    jest.useFakeTimers();
+    const player = {};
+
+    powerup.type = powerUpTypes.FIRERATE;
+    powerup.update(player);
+
+    expect(player.fireRateActivated).toBe(true);
+
+    jest.runAllTimers();
+    expect(player.fireRateActivated).toBe(false);
+  });
+
+  test('powerup type freezeUp', () => {
+    const player = {};
+
+    powerup.type = powerUpTypes.FREEZE;
+    powerup.update(player);
+
+    expect(player.freezingOthers).toBe(true);
+    expect(player.isFreezed).toBe(false);
+  });
 });
