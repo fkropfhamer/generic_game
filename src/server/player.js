@@ -18,6 +18,8 @@ export default class Player {
     this.changedSpeedPowerupActive = false;
     this.freezingOthers = false;
     this.isFreezed = false;
+    this.onIce = false;
+    this.onSand = false;
   }
 
   onKeysPressed(data) {

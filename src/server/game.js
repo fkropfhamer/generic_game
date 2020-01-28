@@ -228,37 +228,43 @@ export default class Game {
   }
 
   checkPlayerWalksOnIceOrSand(player) {
-    let onSand = false;
-    let onIce = false;
     this.iceSandFields.forEach((field) => {
-      const collides = Util.collisionCircleCircle(field, player);
+      const collides = Util.collisionCircleCircle(player, field);
       if (collides) {
-        if (field.type === iceSandTypes.ICE) {
-          onSand = false;
-          onIce = true;
-          field.manipulatePlayer(player);
-        }
-        if (field.type === iceSandTypes.SAND) {
-          onSand = true;
-          onIce = false;
-          field.manipulatePlayer(player);
-        }
+        Game.checkFieldTypeForManipulation(player, field);
       } else {
-        if (field.type === iceSandTypes.SAND) {
-          onSand = false;
-        }
-        if (field.type === iceSandTypes.ICE) {
-          onIce = false;
-        }
-        Game.adjustSpeedBackToFormerSpeed(player, onIce, onSand);
+        Game.setParamteresForNotColliding(player, field);
+        Game.adjustSpeedBackToFormerSpeed(player);
       }
     });
   }
 
-  static adjustSpeedBackToFormerSpeed(player, onIce, onSand) {
-    if (player.changedSpeedPowerupActive && !onIce && !onSand) {
+  static checkFieldTypeForManipulation(player, field) {
+    if (field.type === iceSandTypes.ICE) {
+      player.onSand = false;
+      player.onIce = true;
+      field.manipulatePlayer(player);
+    }
+    if (field.type === iceSandTypes.SAND) {
+      player.onSand = true;
+      player.onIce = false;
+      field.manipulatePlayer(player);
+    }
+  }
+
+  static setParamteresForNotColliding(player, field) {
+    if (field.type === iceSandTypes.SAND) {
+      player.onSand = false;
+    }
+    if (field.type === iceSandTypes.ICE) {
+      player.onIce = false;
+    }
+  }
+
+  static adjustSpeedBackToFormerSpeed(player) {
+    if (player.changedSpeedPowerupActive && !player.onIce && !player.onSand) {
       player.speed = 2 * config.PLAYER_SPEED;
-    } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
+    } else if (!player.changedSpeedPowerupActive && !player.onIce && !player.onSand) {
       player.speed = config.PLAYER_SPEED;
     }
   }
