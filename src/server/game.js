@@ -250,13 +250,17 @@ export default class Game {
         if (field.type === iceSandTypes.ICE) {
           onIce = false;
         }
-        if (player.changedSpeedPowerupActive && !onIce && !onSand) {
-          player.speed = 2 * config.PLAYER_SPEED;
-        } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
-          player.speed = config.PLAYER_SPEED;
-        }
+        Game.adjustSpeedBackToFormerSpeed(player, onIce, onSand);
       }
     });
+  }
+
+  static adjustSpeedBackToFormerSpeed(player, onIce, onSand) {
+    if (player.changedSpeedPowerupActive && !onIce && !onSand) {
+      player.speed = 2 * config.PLAYER_SPEED;
+    } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
+      player.speed = config.PLAYER_SPEED;
+    }
   }
 
   checkSomethingHitsPortal(something) {
