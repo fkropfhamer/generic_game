@@ -3,6 +3,7 @@ import Util from './util';
 import config from './config';
 import PowerUp from './powerup';
 import IceSand from './iceSand';
+import { SocketEvent } from './enums';
 
 export default class Player {
   constructor(socket, server) {
@@ -60,11 +61,11 @@ export default class Player {
   }
 
   setupSocket() {
-    this.socket.on('keyspressed', this.onKeysPressed.bind(this));
-    this.socket.on('shoot', this.onShoot.bind(this));
-    this.socket.on('update angle', this.onUpdateAngle.bind(this));
-    this.socket.on('disconnect', this.onDisconnect.bind(this));
-    this.socket.on('ready', this.onReady.bind(this));
+    this.socket.on(SocketEvent.KEYSPRESSED, this.onKeysPressed.bind(this));
+    this.socket.on(SocketEvent.SHOOT, this.onShoot.bind(this));
+    this.socket.on(SocketEvent.UPDATE_ANGLE, this.onUpdateAngle.bind(this));
+    this.socket.on(SocketEvent.DISCONNECT, this.onDisconnect.bind(this));
+    this.socket.on(SocketEvent.READY, this.onReady.bind(this));
   }
 
   createBullet() {
@@ -77,7 +78,7 @@ export default class Player {
     const mappedPlayers = Util.mapPlayers(otherPlayers);
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    this.socket.emit('start', {
+    this.socket.emit(SocketEvent.START, {
       x: this.x,
       y: this.y,
       angle: this.angle,
@@ -97,7 +98,7 @@ export default class Player {
 
   notifyWaiting(numberOfPlayers) {
     this.isWaiting = true;
-    this.socket.emit('wait', { numberOfPlayers });
+    this.socket.emit(SocketEvent.WAIT, { numberOfPlayers });
   }
 
   notifyUpdate(players, bullets, timer, walls, powerUps, iceSandFields, teamLives, portals) {
@@ -105,7 +106,7 @@ export default class Player {
     const mappedPowerups = PowerUp.mapPowerups(powerUps);
     const mappedBullets = Bullet.mapBullets(bullets);
     const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    this.socket.emit('update', {
+    this.socket.emit(SocketEvent.UPDATE, {
       x: this.x,
       y: this.y,
       angle: this.angle,
@@ -125,23 +126,23 @@ export default class Player {
   }
 
   notifyTimeOver() {
-    this.socket.emit('time over');
+    this.socket.emit(SocketEvent.TIME_OVER);
   }
 
   notifyWin() {
-    this.socket.emit('win');
+    this.socket.emit(SocketEvent.WIN);
   }
 
   notifyLose() {
-    this.socket.emit('lose');
+    this.socket.emit(SocketEvent.LOSE);
   }
 
   notifySplashSound() {
-    this.socket.emit('splash sound');
+    this.socket.emit(SocketEvent.SPLASH_SOUND);
   }
 
   notifyDeath() {
-    this.socket.emit('death');
+    this.socket.emit(SocketEvent.DEATH);
   }
 
   update() {

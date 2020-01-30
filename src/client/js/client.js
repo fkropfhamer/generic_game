@@ -1,6 +1,7 @@
 import config from '../../server/config';
 import View from './view';
-import { Key } from '../../server/enums';
+// eslint-disable-next-line object-curly-newline
+import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -18,7 +19,7 @@ export default class Client {
     this.pressedDown = false;
     this.pressedLeft = false;
     this.pressedRight = false;
-    this.socket.emit('ready', { face, mode });
+    this.socket.emit(SocketEvent.READY, { face, mode });
   }
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
@@ -44,7 +45,7 @@ export default class Client {
 
   drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
     if (starttime > this.timer && endtime < this.timer) {
-      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, 'black');
+      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, Color.BLACK);
       this.view.drawNestedRings(
         x1,
         y1,
@@ -53,7 +54,7 @@ export default class Client {
         config.PORTAL_COLOR,
         timer % config.PORTAL_ANIMATION
       );
-      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, 'black');
+      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, Color.BLACK);
       this.view.drawNestedRings(
         x2,
         y2,
@@ -116,17 +117,17 @@ export default class Client {
   }
 
   setupKeyPressedEvents() {
-    window.addEventListener('keydown', this.keyPressed.bind(this));
-    window.addEventListener('keyup', this.keyUp.bind(this));
-    window.addEventListener('click', this.shoot.bind(this));
-    window.addEventListener('mousemove', this.mouseMove.bind(this));
+    window.addEventListener(EventListener.KEYDOWN, this.keyPressed.bind(this));
+    window.addEventListener(EventListener.KEYUP, this.keyUp.bind(this));
+    window.addEventListener(EventListener.CLICK, this.shoot.bind(this));
+    window.addEventListener(EventListener.MOUSEMOVE, this.mouseMove.bind(this));
   }
 
   mouseMove(e) {
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
 
-    this.socket.emit('update angle', { angle });
+    this.socket.emit(SocketEvent.UPDATE_ANGLE, { angle });
   }
 
   calculateAngle(x1, y1, x2, y2) {
@@ -141,7 +142,7 @@ export default class Client {
   shoot(e) {
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
-    this.socket.emit('shoot', { angle });
+    this.socket.emit(SocketEvent.SHOOT, { angle });
   }
 
   keyPressed(e) {
@@ -225,7 +226,7 @@ export default class Client {
     this.iceSandFields = data.iceSandFields;
     this.portals = data.portals;
     this.draw();
-    this.socket.emit('keyspressed', {
+    this.socket.emit(SocketEvent.KEYSPRESSED, {
       up: this.pressedUp,
       down: this.pressedDown,
       left: this.pressedLeft,
@@ -269,14 +270,14 @@ export default class Client {
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
-    this.socket.on('connect', this.onConnected.bind(this));
-    this.socket.on('start', this.onStart.bind(this));
-    this.socket.on('update', this.onUpdate.bind(this));
-    this.socket.on('wait', this.onWait.bind(this));
-    this.socket.on('time over', this.onTimeOver.bind(this));
-    this.socket.on('win', this.onWin.bind(this));
-    this.socket.on('lose', this.onLose.bind(this));
-    this.socket.on('splash sound', this.onSplashSound.bind(this));
-    this.socket.on('death', this.onDeath.bind(this));
+    this.socket.on(SocketEvent.CONNECT, this.onConnected.bind(this));
+    this.socket.on(SocketEvent.START, this.onStart.bind(this));
+    this.socket.on(SocketEvent.UPDATE, this.onUpdate.bind(this));
+    this.socket.on(SocketEvent.WAIT, this.onWait.bind(this));
+    this.socket.on(SocketEvent.TIME_OVER, this.onTimeOver.bind(this));
+    this.socket.on(SocketEvent.WIN, this.onWin.bind(this));
+    this.socket.on(SocketEvent.LOSE, this.onLose.bind(this));
+    this.socket.on(SocketEvent.SPLASH_SOUND, this.onSplashSound.bind(this));
+    this.socket.on(SocketEvent.DEATH, this.onDeath.bind(this));
   }
 }

@@ -3,7 +3,7 @@ import express from 'express';
 import Player from './player';
 import Game from './game';
 import config from './config';
-import { Mode } from './enums';
+import { Mode, SocketEvent } from './enums';
 
 class Server {
   constructor() {
@@ -24,7 +24,7 @@ class Server {
   }
 
   setupSocket() {
-    this.io.on('connection', (socket) => {
+    this.io.on(SocketEvent.CONNECTION, (socket) => {
       console.log('user connected');
       // eslint-disable-next-line no-new
       new Player(socket, this);
