@@ -228,45 +228,24 @@ export default class Game {
   }
 
   checkPlayerWalksOnIceOrSand(player) {
-    this.iceSandFields.forEach((field) => {
-      const collides = Util.collisionCircleCircle(player, field);
-      if (collides) {
-        Game.checkFieldTypeForManipulation(player, field);
-      } else {
-        Game.setParamteresForNotColliding(player, field);
-        Game.adjustSpeedBackToFormerSpeed(player);
+    let onSand = false;
+    let onIce = false;
+
+    for (let i = 0; i < this.iceSandFields.length; i++) {
+      const iceSandField = this.iceSandFields[i];
+      if (Util.collisionRectCircleWithoutAngle(iceSandField, player)) {
+        if (iceSandField.type === iceSandTypes.ICE) {
+          onIce = true;
+        }
+        if (iceSandField.type === iceSandTypes.SAND) {
+          onSand = true;
+        }
+        break;
       }
-    });
-  }
+    }
 
-  static checkFieldTypeForManipulation(player, field) {
-    if (field.type === iceSandTypes.ICE) {
-      player.onSand = false;
-      player.onIce = true;
-      field.manipulatePlayer(player);
-    }
-    if (field.type === iceSandTypes.SAND) {
-      player.onSand = true;
-      player.onIce = false;
-      field.manipulatePlayer(player);
-    }
-  }
-
-  static setParamteresForNotColliding(player, field) {
-    if (field.type === iceSandTypes.SAND) {
-      player.onSand = false;
-    }
-    if (field.type === iceSandTypes.ICE) {
-      player.onIce = false;
-    }
-  }
-
-  static adjustSpeedBackToFormerSpeed(player) {
-    if (player.changedSpeedPowerupActive && !player.onIce && !player.onSand) {
-      player.speed = 2 * config.PLAYER_SPEED;
-    } else if (!player.changedSpeedPowerupActive && !player.onIce && !player.onSand) {
-      player.speed = config.PLAYER_SPEED;
-    }
+    player.isOnIce = onIce;
+    player.isOnSand = onSand;
   }
 
   checkSomethingHitsPortal(something) {

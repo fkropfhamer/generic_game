@@ -19,8 +19,8 @@ export default class Player {
     this.changedSpeedPowerupActive = false;
     this.freezingOthers = false;
     this.isFreezed = false;
-    this.onIce = false;
-    this.onSand = false;
+    this.isOnIce = false;
+    this.isOnSand = false;
   }
 
   onKeysPressed(data) {
@@ -146,19 +146,29 @@ export default class Player {
   }
 
   update() {
+    let { speed } = this;
+
+    if (this.isOnIce) {
+      speed *= 3;
+    }
+
+    if (this.isOnSand) {
+      speed /= 3;
+    }
+
     if (this.shootingCount > 0) this.shootingCount -= 1;
 
     if (this.pressedUp) {
-      this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
+      this.y -= Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * speed;
     }
     if (this.pressedDown) {
-      this.y += Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * this.speed;
+      this.y += Util.halfIfAnotherKeyIsPressed(this.pressedLeft, this.pressedRight) * speed;
     }
     if (this.pressedLeft) {
-      this.x -= Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
+      this.x -= Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * speed;
     }
     if (this.pressedRight) {
-      this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * this.speed;
+      this.x += Util.halfIfAnotherKeyIsPressed(this.pressedUp, this.pressedDown) * speed;
     }
   }
 }

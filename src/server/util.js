@@ -109,6 +109,14 @@ export default class Util {
     return { x, y };
   }
 
+  static collisionRectCircleWithoutAngle(rect, circle) {
+    const corners = this.calculateCornerPoints(rect);
+    const isInConstraintY = circle.y >= corners.a.y && circle.y <= corners.d.y;
+    const isInConstraintX = circle.x >= corners.a.x && circle.x <= corners.b.x;
+
+    return isInConstraintX && isInConstraintY;
+  }
+
   static collisionRectCircle(rect, circle) {
     const corners = this.calculateCornerPoints(rect);
 

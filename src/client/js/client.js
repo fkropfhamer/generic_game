@@ -1,7 +1,7 @@
 import config from '../../server/config';
 import View from './view';
 // eslint-disable-next-line object-curly-newline
-import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
+import { Color, EventListener, Key, SocketEvent, iceSandTypes } from '../../server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -69,9 +69,11 @@ export default class Client {
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
-    this.iceSandFields.forEach((isf) =>
-      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
-    );
+    this.iceSandFields.forEach((isf) => {
+      const color = isf.type === iceSandTypes.ICE ? 'blue' : 'brown';
+      this.view.drawRectangle(isf.x, isf.y, isf.height, isf.width, 0, color, 'black');
+      // this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
+    });
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>

@@ -37,6 +37,8 @@ const config = Util.deepFreeze({
   ICE_SAND_FIELDS: [
     { x: 800, y: 270, type: iceSandTypes.ICE },
     { x: 800, y: 450, type: iceSandTypes.SAND },
+    { x: 400, y: 270, type: iceSandTypes.ICE },
+    { x: 400, y: 450, type: iceSandTypes.SAND },
   ],
   POWERUP_SHIELD_DISTANCE_TO_PLAYER: 5,
   POWERUP_SHIELD_LINEWIDTH: 6,
