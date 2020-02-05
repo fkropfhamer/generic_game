@@ -17,7 +17,6 @@ export default class Player {
     this.isShielded = false;
     this.fireRateActivated = false;
     this.changedSpeedPowerupActive = false;
-    this.freezingOthers = false;
     this.isFreezed = false;
     this.isOnIce = false;
     this.isOnSand = false;
@@ -147,6 +146,20 @@ export default class Player {
 
   update() {
     let { speed } = this;
+
+    if (this.fireRateActivated > 0) {
+      this.fireRateActivated -= 1;
+    }
+
+    if (this.changedSpeedPowerupActive > 0) {
+      this.changedSpeedPowerupActive -= 1;
+      speed *= 2;
+    }
+
+    if (this.isFreezed > 0) {
+      speed = 0;
+      this.isFreezed -= 1;
+    }
 
     if (this.isOnIce) {
       speed *= 3;
