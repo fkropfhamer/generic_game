@@ -50,18 +50,15 @@ export default class Game {
   }
 
   placeRandomPowerUp() {
-    setInterval(() => {
-      if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
-        do {
-          const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
-          if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
-            this.randomPowerUps.push(randomPowerUp);
-            console.log(randomPowerUp.type);
-            break;
-          }
-        } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
-      }
-    }, config.POWERUP_SPAWN_DELAY);
+    if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
+      do {
+        const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
+        if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
+          this.randomPowerUps.push(randomPowerUp);
+          break;
+        }
+      } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
+    }
   }
 
   setupPowerups() {
@@ -74,7 +71,6 @@ export default class Game {
         )
       );
     });
-    this.placeRandomPowerUp();
   }
 
   setupIceSandFields() {
@@ -173,11 +169,7 @@ export default class Game {
           player.hitAngle = hitAngle;
 
           if (player.isFreezed) {
-            this.players.forEach((p) => {
-              console.log('freezing deactivated');
-              p.isFreezed = false;
-              p.freezingOthers = false;
-            });
+            player.isFreezed = false;
           }
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
@@ -209,64 +201,32 @@ export default class Game {
   checkPlayerHitsPowerUp(player) {
     this.randomPowerUps.forEach((powerUp) => {
       if (Util.collisionCircleCircle(powerUp, player)) {
-        powerUp.update(player);
-        if (player.freezingOthers) {
-          this.players.forEach((freezedPlayer) => {
-            if (!Object.is(freezedPlayer, player)) {
-              freezedPlayer.isFreezed = true;
-              freezedPlayer.freezingOthers = false;
-              setTimeout(() => {
-                freezedPlayer.isFreezed = false;
-                player.freezingOthers = false;
-              }, config.POWERUP_DURATION);
-            }
-          });
-        }
+        const otherPlayers = this.getOtherPlayers(player);
+        powerUp.update(player, otherPlayers);
         this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
   }
 
   checkPlayerWalksOnIceOrSand(player) {
-    this.iceSandFields.forEach((field) => {
-      const collides = Util.collisionCircleCircle(player, field);
-      if (collides) {
-        Game.checkFieldTypeForManipulation(player, field);
-      } else {
-        Game.setParamteresForNotColliding(player, field);
-        Game.adjustSpeedBackToFormerSpeed(player);
+    let onSand = false;
+    let onIce = false;
+
+    for (let i = 0; i < this.iceSandFields.length; i++) {
+      const iceSandField = this.iceSandFields[i];
+      if (Util.collisionRectCircleWithoutAngle(iceSandField, player)) {
+        if (iceSandField.type === iceSandTypes.ICE) {
+          onIce = true;
+        }
+        if (iceSandField.type === iceSandTypes.SAND) {
+          onSand = true;
+        }
+        break;
       }
-    });
-  }
+    }
 
-  static checkFieldTypeForManipulation(player, field) {
-    if (field.type === iceSandTypes.ICE) {
-      player.onSand = false;
-      player.onIce = true;
-      field.manipulatePlayer(player);
-    }
-    if (field.type === iceSandTypes.SAND) {
-      player.onSand = true;
-      player.onIce = false;
-      field.manipulatePlayer(player);
-    }
-  }
-
-  static setParamteresForNotColliding(player, field) {
-    if (field.type === iceSandTypes.SAND) {
-      player.onSand = false;
-    }
-    if (field.type === iceSandTypes.ICE) {
-      player.onIce = false;
-    }
-  }
-
-  static adjustSpeedBackToFormerSpeed(player) {
-    if (player.changedSpeedPowerupActive && !player.onIce && !player.onSand) {
-      player.speed = 2 * config.PLAYER_SPEED;
-    } else if (!player.changedSpeedPowerupActive && !player.onIce && !player.onSand) {
-      player.speed = config.PLAYER_SPEED;
-    }
+    player.isOnIce = onIce;
+    player.isOnSand = onSand;
   }
 
   checkSomethingHitsPortal(something) {
@@ -385,6 +345,9 @@ export default class Game {
   loop() {
     if (this.count % 100 === 0) {
       this.timer -= 1;
+      if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
+        this.placeRandomPowerUp();
+      }
       console.log(this.timer);
       if (this.timer === 0) {
         this.timeIsOver();
@@ -404,9 +367,7 @@ export default class Game {
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      if (!player.isFreezed) {
-        player.update();
-      }
+      player.update();
       this.checkWallCollisionPlayer(player);
 
       this.checkBulletHitsPlayer(player);

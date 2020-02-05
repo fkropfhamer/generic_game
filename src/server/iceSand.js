@@ -5,8 +5,11 @@ export default class IceSand {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
+    this.width = 100;
+    this.height = 100;
     this.radius = config.ICESAND_RADIUS;
     this.type = type;
+    this.angle = 0;
   }
 
   static mapIceSand(iceSandFields) {
@@ -14,7 +17,8 @@ export default class IceSand {
       return {
         x: isf.x,
         y: isf.y,
-        radius: isf.radius,
+        width: isf.width,
+        height: isf.height,
         type: isf.type,
       };
     });

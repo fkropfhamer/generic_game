@@ -14,8 +14,8 @@ const config = Util.deepFreeze({
   ICESAND_RADIUS: 70,
   ICE_SPEED: 4,
   SAND_SPEED: 0.2,
-  POWERUP_DURATION: 7500,
-  POWERUP_SPAWN_DELAY: 5000,
+  POWERUP_DURATION: 750,
+  POWERUP_SPAWN_DELAY: 3,
   MAX_POWERUPS_ON_FIELD: 3,
   POWERUP_TYPES: [
     powerUpTypes.FIRERATE,
@@ -37,6 +37,8 @@ const config = Util.deepFreeze({
   ICE_SAND_FIELDS: [
     { x: 800, y: 270, type: iceSandTypes.ICE },
     { x: 800, y: 450, type: iceSandTypes.SAND },
+    { x: 400, y: 270, type: iceSandTypes.ICE },
+    { x: 400, y: 450, type: iceSandTypes.SAND },
   ],
   POWERUP_SHIELD_DISTANCE_TO_PLAYER: 5,
   POWERUP_SHIELD_LINEWIDTH: 6,
