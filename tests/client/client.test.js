@@ -150,7 +150,7 @@ describe('client', () => {
     expect(view.reset).toHaveBeenCalledTimes(1);
     expect(view.drawCircle).toHaveBeenCalledTimes(1);
     expect(view.drawCircle).toHaveBeenNthCalledWith(1, 1, 2, config.BULLET_RADIUS, 'blue');
-    expect(view.drawRectangle).toHaveBeenCalledTimes(1);
+    expect(view.drawRectangle).toHaveBeenCalledTimes(2);
     expect(view.drawRectangle).toHaveBeenCalledWith(1, 2, 4, 3, 5, 'green', 'black');
     expect(client.drawPlayer).toHaveBeenCalledTimes(2);
     expect(client.drawPlayer).toHaveBeenNthCalledWith(

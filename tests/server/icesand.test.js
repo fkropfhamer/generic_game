@@ -26,13 +26,15 @@ describe('icesand', () => {
       {
         x: 1,
         y: 2,
-        radius: 70,
+        width: 100,
+        height: 100,
         type: 'test',
       },
       {
         x: 3,
         y: 4,
-        radius: 70,
+        width: 100,
+        height: 100,
         type: 'test2',
       },
     ]);
