@@ -50,18 +50,15 @@ export default class Game {
   }
 
   placeRandomPowerUp() {
-    setInterval(() => {
-      if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
-        do {
-          const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
-          if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
-            this.randomPowerUps.push(randomPowerUp);
-            console.log(randomPowerUp.type);
-            break;
-          }
-        } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
-      }
-    }, config.POWERUP_SPAWN_DELAY);
+    if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
+      do {
+        const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
+        if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
+          this.randomPowerUps.push(randomPowerUp);
+          break;
+        }
+      } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
+    }
   }
 
   setupPowerups() {
@@ -74,7 +71,6 @@ export default class Game {
         )
       );
     });
-    this.placeRandomPowerUp();
   }
 
   setupIceSandFields() {
@@ -364,6 +360,9 @@ export default class Game {
   loop() {
     if (this.count % 100 === 0) {
       this.timer -= 1;
+      if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
+        this.placeRandomPowerUp();
+      }
       console.log(this.timer);
       if (this.timer === 0) {
         this.timeIsOver();
