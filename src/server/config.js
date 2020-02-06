@@ -17,6 +17,7 @@ const config = Util.deepFreeze({
   POWERUP_DURATION: 750,
   POWERUP_SPAWN_DELAY: 3,
   MAX_POWERUPS_ON_FIELD: 3,
+  INITIALIZE_WITH_ZERO: 0,
   POWERUP_TYPES: [
     powerUpTypes.FIRERATE,
     powerUpTypes.FREEZE,

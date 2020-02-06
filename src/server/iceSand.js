@@ -5,11 +5,11 @@ export default class IceSand {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
+    this.type = type;
     this.width = 100;
     this.height = 100;
-    this.radius = config.ICESAND_RADIUS;
-    this.type = type;
     this.angle = 0;
+    this.radius = config.ICESAND_RADIUS;
   }
 
   static mapIceSand(iceSandFields) {
@@ -25,7 +25,7 @@ export default class IceSand {
   }
 
   manipulatePlayer(player) {
-    let walkingOnEffect = 0;
+    let walkingOnEffect = config.INITIALIZE_WITH_ZERO;
     switch (this.type) {
       case iceSandTypes.ICE:
         walkingOnEffect = config.ICE_SPEED;
