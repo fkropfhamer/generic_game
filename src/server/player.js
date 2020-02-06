@@ -38,7 +38,7 @@ export default class Player {
       this.angle = data.angle;
       this.createBullet();
       if (this.fireRateActivated) {
-        this.shootingCount = config.SHOOTING_RATE / 4;
+        this.shootingCount = config.SHOOTING_RATE / config.POWERUP_FIRERATE_BOOSTER;
       } else {
         this.shootingCount = config.SHOOTING_RATE;
       }
@@ -153,7 +153,7 @@ export default class Player {
 
     if (this.changedSpeedPowerupActive > 0) {
       this.changedSpeedPowerupActive -= 1;
-      speed *= 2;
+      speed *= config.POWERUP_SPEED_BOOSTER;
     }
 
     if (this.isFreezed > 0) {
@@ -162,11 +162,11 @@ export default class Player {
     }
 
     if (this.isOnIce) {
-      speed *= 3;
+      speed *= config.ICE_SPEED;
     }
 
     if (this.isOnSand) {
-      speed /= 3;
+      speed *= config.SAND_SPEED;
     }
 
     if (this.shootingCount > 0) this.shootingCount -= 1;

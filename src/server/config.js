@@ -31,8 +31,11 @@ const config = Util.deepFreeze({
   POWERUP_RADIUS: 20,
   POWERUP_DURATION: 750,
   POWERUP_SPAWN_DELAY: 3,
+
   POWERUP_SHIELD_DISTANCE_TO_PLAYER: 5,
   POWERUP_SHIELD_LINEWIDTH: 6,
+  POWERUP_FIRERATE_BOOSTER: 4,
+  POWERUP_SPEED_BOOSTER: 2,
   POWERUP_TYPES: [
     powerUpTypes.FIRERATE,
     powerUpTypes.FREEZE,
@@ -66,8 +69,8 @@ const config = Util.deepFreeze({
   ],
 
   ICESAND_RADIUS: 70,
-  ICE_SPEED: 4,
-  SAND_SPEED: 0.2,
+  ICE_SPEED: 3,
+  SAND_SPEED: 1 / 3,
   ICE_SAND_FIELDS: [
     { x: 800, y: 270, type: iceSandTypes.ICE },
     { x: 800, y: 450, type: iceSandTypes.SAND },
@@ -98,6 +101,8 @@ const config = Util.deepFreeze({
   WALL_LINEWIDTH: 3,
   NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_WALLS: 12,
+  NUMBER_OF_HORIZONTAL_BARRIERS: 3,
+  NUMBER_OF_VERTICAL_BARRIERS: 3,
   constraintWalls: {
     x: 0,
     y: 10,

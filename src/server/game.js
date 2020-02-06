@@ -28,7 +28,7 @@ export default class Game {
       player.x = config.PLAYER_STARTING_POSITIONS[i].x;
       player.y = config.PLAYER_STARTING_POSITIONS[i].y;
       player.lives = config.PLAYER_LIVES;
-      player.color = i % config.TEAM_SIZE === 0 ? Color.BLUE : Color.RED;
+      player.color = i % 2 === 0 ? Color.BLUE : Color.RED;
       player.game = this;
     });
 
@@ -125,17 +125,19 @@ export default class Game {
   }
 
   setupBarrierWalls() {
-    for (let i = 1; i <= 3; i += 1) {
-      for (let j = 1; j <= 3; j += 1) {
+    const n = config.NUMBER_OF_HORIZONTAL_BARRIERS + 1;
+    const m = config.NUMBER_OF_VERTICAL_BARRIERS + 1;
+    for (let i = 1; i <= config.NUMBER_OF_HORIZONTAL_BARRIERS; i += 1) {
+      for (let j = 1; j <= config.NUMBER_OF_VERTICAL_BARRIERS; j += 1) {
         this.walls.push({
           ...config.barrierWalls,
-          x: (config.FIELD_WIDTH / 4) * i,
-          y: (config.FIELD_HEIGHT / 4) * j,
+          x: (config.FIELD_WIDTH / n) * i,
+          y: (config.FIELD_HEIGHT / m) * j,
         });
         this.walls.push({
           ...config.barrierWalls,
-          x: (config.FIELD_WIDTH / 4) * i,
-          y: (config.FIELD_HEIGHT / 4) * j,
+          x: (config.FIELD_WIDTH / n) * i,
+          y: (config.FIELD_HEIGHT / m) * j,
           angle: -config.barrierWalls.angle,
         });
       }
