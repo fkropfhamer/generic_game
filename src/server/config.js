@@ -88,12 +88,20 @@ const config = Util.deepFreeze({
   PORTAL_COLOR: 'grey',
   PORTALS: [
     {
-      x1: 300,
-      y1: 100,
-      x2: 900,
-      y2: 600,
-      starttime: 160,
-      endtime: 35,
+      x1: 160,
+      y1: 180,
+      x2: 1120,
+      y2: 540,
+      starttime: 140,
+      endtime: 100,
+    },
+    {
+      x1: 160,
+      y1: 540,
+      x2: 1120,
+      y2: 180,
+      starttime: 80,
+      endtime: 40,
     },
   ],
 
