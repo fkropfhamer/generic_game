@@ -6,8 +6,8 @@ export default class IceSand {
     this.x = x;
     this.y = y;
     this.type = type;
-    this.width = 100;
-    this.height = 100;
+    this.width = config.iceSand.width;
+    this.height = config.iceSand.height;
     this.angle = 0;
     this.radius = config.ICESAND_RADIUS;
   }

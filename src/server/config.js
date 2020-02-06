@@ -88,6 +88,11 @@ const config = Util.deepFreeze({
     },
   ],
 
+  iceSand: {
+    height: 100,
+    width: 100,
+  },
+
   constraintWalls: {
     x: 0,
     y: 10,
