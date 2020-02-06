@@ -102,21 +102,21 @@ export default class Game {
         ...config.constraintWalls,
         x: i,
         width: horizontalWidth,
-        y: config.FIELD_HEIGHT - 10,
+        y: config.FIELD_HEIGHT - config.constraintWalls.y,
       });
     }
     const veritcalWidth = config.FIELD_HEIGHT / config.NUMBER_OF_VERTICAL_WALLS;
     for (let i = veritcalWidth / 2; i < config.FIELD_HEIGHT; i += veritcalWidth) {
       this.walls.push({
         ...config.constraintWalls,
-        x: 10,
+        x: config.constraintWalls.y,
         y: i,
         width: veritcalWidth,
         angle: Math.PI / 2,
       });
       this.walls.push({
         ...config.constraintWalls,
-        x: config.FIELD_WIDTH - 10,
+        x: config.FIELD_WIDTH - config.constraintWalls.y,
         y: i,
         width: veritcalWidth,
         angle: Math.PI / 2,
@@ -163,10 +163,9 @@ export default class Game {
       if (bullet.color !== player.color) {
         if (Util.collisionOfCircleWithCircle(player, bullet)) {
           const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
-          const v2 = { x: 10, y: 0 };
 
-          const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x);
-          const hitAngle = -angle - player.angle;
+          const angle = Math.atan2(v1.y, v1.x);
+          const hitAngle = angle - player.angle;
 
           player.hitAngle = hitAngle;
 
@@ -246,12 +245,12 @@ export default class Game {
           radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
         };
         if (Util.collisionOfCircleWithCircle(portal1, something)) {
-          something.x = portal.x2 - (something.x - portal.x1) * config.PORTALS_OFFSET;
-          something.y = portal.y2 - (something.y - portal.y1) * config.PORTALS_OFFSET;
+          something.x = portal.x2 - (something.x - portal.x1) * config.PORTAL_OFFSET;
+          something.y = portal.y2 - (something.y - portal.y1) * config.PORTAL_OFFSET;
         }
         if (Util.collisionOfCircleWithCircle(portal2, something)) {
-          something.x = portal.x1 - (something.x - portal.x2) * config.PORTALS_OFFSET;
-          something.y = portal.y1 - (something.y - portal.y2) * config.PORTALS_OFFSET;
+          something.x = portal.x1 - (something.x - portal.x2) * config.PORTAL_OFFSET;
+          something.y = portal.y1 - (something.y - portal.y2) * config.PORTAL_OFFSET;
         }
       });
   }

@@ -68,7 +68,6 @@ const config = Util.deepFreeze({
     { x: 1130, y: 620 },
   ],
 
-  ICESAND_RADIUS: 70,
   ICE_SPEED: 3,
   SAND_SPEED: 1 / 3,
   ICE_SAND_FIELDS: [
@@ -77,7 +76,7 @@ const config = Util.deepFreeze({
     { x: 400, y: 270, type: iceSandTypes.ICE },
     { x: 400, y: 450, type: iceSandTypes.SAND },
   ],
-  iceSand: {
+  ICE_SAND_EXTENT: {
     height: 100,
     width: 100,
   },

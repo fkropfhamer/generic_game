@@ -6,10 +6,9 @@ export default class IceSand {
     this.x = x;
     this.y = y;
     this.type = type;
-    this.width = config.iceSand.width;
-    this.height = config.iceSand.height;
+    this.width = config.ICE_SAND_EXTENT.width;
+    this.height = config.ICE_SAND_EXTENT.height;
     this.angle = 0;
-    this.radius = config.ICESAND_RADIUS;
   }
 
   static mapIceSand(iceSandFields) {
