@@ -21,7 +21,7 @@ export default class PowerUp {
   }
 
   static addHealthUpdate(player) {
-    if (player.lives < 3) {
+    if (player.lives < config.PLAYER_LIVES) {
       player.lives += 1;
     }
   }
