@@ -343,7 +343,7 @@ export default class Game {
   }
 
   loop() {
-    if (this.count % 100 === 0) {
+    if (this.count % config.TIMER_RATE === 0) {
       this.timer -= 1;
       if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
         this.placeRandomPowerUp();

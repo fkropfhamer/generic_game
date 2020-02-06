@@ -62,7 +62,7 @@ export default class View {
     this.ctx.stroke();
   }
 
-  drawRectangle(x, y, height, width, angle, fillColor, strokeColor) {
+  drawRectangle(x, y, height, width, angle, fillColor, strokeColor, lineWidth) {
     const wSin = (Math.sin(angle) * width) / 2;
     const wCos = (Math.cos(angle) * width) / 2;
     const hSin = (Math.sin(angle) * height) / 2;
@@ -85,7 +85,7 @@ export default class View {
     this.ctx.lineTo(aX, aY);
     this.ctx.fillStyle = fillColor;
     this.ctx.strokeStyle = strokeColor;
-    this.ctx.lineWidth = 3;
+    this.ctx.lineWidth = lineWidth;
     this.ctx.fill();
     this.ctx.stroke();
   }

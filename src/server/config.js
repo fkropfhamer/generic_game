@@ -5,10 +5,12 @@ const config = Util.deepFreeze({
   INITIALIZE_WITH_ZERO: 0,
 
   GAME_DURATION: 180,
+  TIMER_RATE: 100,
   TEAM_SIZE: 2,
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,
 
+  PLAYER_SCALE: 0.5,
   PLAYER_SPEED: 3,
   PLAYER_RADIUS: 25,
   PLAYER_REPULSION: 10,
@@ -24,6 +26,7 @@ const config = Util.deepFreeze({
   BULLET_SPEED: 5,
   BULLET_RADIUS: 10,
 
+  POWERUP_SCALE: 0.4,
   MAX_POWERUPS_ON_FIELD: 3,
   POWERUP_RADIUS: 20,
   POWERUP_DURATION: 750,
@@ -46,6 +49,20 @@ const config = Util.deepFreeze({
     powerUpTypes.SPEED,
     powerUpTypes.FREEZE,
     powerUpTypes.FIRERATE,
+  ],
+  POWER_UPS_POSITION: [
+    { x: 150, y: 100 },
+    { x: 640, y: 100 },
+    { x: 1130, y: 100 },
+    { x: 150, y: 360 },
+    { x: 480, y: 450 },
+    { x: 800, y: 450 },
+    { x: 480, y: 270 },
+    { x: 800, y: 270 },
+    { x: 1130, y: 360 },
+    { x: 150, y: 620 },
+    { x: 640, y: 620 },
+    { x: 1130, y: 620 },
   ],
 
   ICESAND_RADIUS: 70,
@@ -78,23 +95,9 @@ const config = Util.deepFreeze({
     },
   ],
 
+  WALL_LINEWIDTH: 3,
   NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_WALLS: 12,
-  POWER_UPS_POSITION: [
-    { x: 150, y: 100 },
-    { x: 640, y: 100 },
-    { x: 1130, y: 100 },
-    { x: 150, y: 360 },
-    { x: 480, y: 450 },
-    { x: 800, y: 450 },
-    { x: 480, y: 270 },
-    { x: 800, y: 270 },
-    { x: 1130, y: 360 },
-    { x: 150, y: 620 },
-    { x: 640, y: 620 },
-    { x: 1130, y: 620 },
-  ],
-
   constraintWalls: {
     x: 0,
     y: 10,

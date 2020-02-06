@@ -23,11 +23,17 @@ export default class Client {
   }
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
-    this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
+    this.view.drawImageAtAngle(this.images[color], x, y, angle, config.PLAYER_SCALE);
     if (lives < config.PLAYER_LIVES) {
-      this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
+      this.view.drawImageAtAngle(
+        this.images[`${color}${lives}life`],
+        x,
+        y,
+        angle + hitAngle,
+        config.PLAYER_SCALE
+      );
     }
-    this.view.drawImageAtAngle(this.images[face], x, y, angle, 0.5);
+    this.view.drawImageAtAngle(this.images[face], x, y, angle, config.PLAYER_SCALE);
     if (isShielded) {
       this.view.drawRing(
         x,
@@ -39,7 +45,7 @@ export default class Client {
       );
     }
     if (isFreezed) {
-      this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, 0.5);
+      this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, config.PLAYER_SCALE);
     }
   }
 
@@ -71,13 +77,31 @@ export default class Client {
     View.showTimer(this.timer);
     this.iceSandFields.forEach((isf) => {
       const color = isf.type === iceSandTypes.ICE ? 'blue' : 'brown';
-      this.view.drawRectangle(isf.x, isf.y, isf.height, isf.width, 0, color, 'black');
+      this.view.drawRectangle(
+        isf.x,
+        isf.y,
+        isf.height,
+        isf.width,
+        0,
+        color,
+        'black',
+        config.WALL_LINEWIDTH
+      );
       // this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
     });
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
-      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
+      this.view.drawRectangle(
+        w.x,
+        w.y,
+        w.height,
+        w.width,
+        w.angle,
+        w.fillColor,
+        w.strokeColor,
+        config.WALL_LINEWIDTH
+      )
     );
 
     this.drawPlayer(
@@ -106,7 +130,9 @@ export default class Client {
       );
     });
 
-    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, 0.4));
+    this.powerUps.forEach((p) =>
+      this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
+    );
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {
