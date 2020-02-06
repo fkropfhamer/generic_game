@@ -38,7 +38,7 @@ export default class PowerUp {
     player.fireRateActivated = config.POWERUP_DURATION;
   }
 
-  static freezeUp(otherPlayers) {
+  static addfreezeUpUpdate(otherPlayers) {
     otherPlayers.forEach((player) => {
       player.isFreezed = config.POWERUP_DURATION;
     });
@@ -47,7 +47,7 @@ export default class PowerUp {
   update(player, otherPlayers) {
     switch (this.type) {
       case powerUpTypes.FREEZE:
-        PowerUp.freezeUp(otherPlayers);
+        PowerUp.addfreezeUpUpdate(otherPlayers);
         break;
       case powerUpTypes.ADDHEALTH:
         PowerUp.addHealthUpdate(player);
