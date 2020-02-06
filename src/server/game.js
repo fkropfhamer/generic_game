@@ -348,7 +348,6 @@ export default class Game {
       if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
         this.placeRandomPowerUp();
       }
-      console.log(this.timer);
       if (this.timer === 0) {
         this.timeIsOver();
       }
