@@ -28,7 +28,7 @@ export default class Game {
       player.x = config.PLAYER_STARTING_POSITIONS[i].x;
       player.y = config.PLAYER_STARTING_POSITIONS[i].y;
       player.lives = config.PLAYER_LIVES;
-      player.color = i % 2 === 0 ? Color.BLUE : Color.RED;
+      player.color = i % config.TEAM_SIZE === 0 ? Color.BLUE : Color.RED;
       player.game = this;
     });
 
@@ -80,7 +80,7 @@ export default class Game {
   }
 
   setupPortals() {
-    config.portals.forEach((portal) => {
+    config.PORTALS.forEach((portal) => {
       this.portals.push(portal);
     });
   }
@@ -159,7 +159,7 @@ export default class Game {
   checkBulletHitsPlayer(player) {
     this.bullets.forEach((bullet) => {
       if (bullet.color !== player.color) {
-        if (Util.collisionCircleCircle(player, bullet)) {
+        if (Util.collisionOfCircleWithCircle(player, bullet)) {
           const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
           const v2 = { x: 10, y: 0 };
 
@@ -200,7 +200,7 @@ export default class Game {
 
   checkPlayerHitsPowerUp(player) {
     this.randomPowerUps.forEach((powerUp) => {
-      if (Util.collisionCircleCircle(powerUp, player)) {
+      if (Util.collisionOfCircleWithCircle(powerUp, player)) {
         const otherPlayers = this.getOtherPlayers(player);
         powerUp.update(player, otherPlayers);
         this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
@@ -214,7 +214,7 @@ export default class Game {
 
     for (let i = 0; i < this.iceSandFields.length; i++) {
       const iceSandField = this.iceSandFields[i];
-      if (Util.collisionRectCircleWithoutAngle(iceSandField, player)) {
+      if (Util.collisionOfRectWithCircleWithoutAngle(iceSandField, player)) {
         if (iceSandField.type === iceSandTypes.ICE) {
           onIce = true;
         }
@@ -236,27 +236,27 @@ export default class Game {
         const portal1 = {
           x: portal.x1,
           y: portal.y1,
-          radius: config.PORTAL_RADIUS - 2 * something.radius,
+          radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
         };
         const portal2 = {
           x: portal.x2,
           y: portal.y2,
-          radius: config.PORTAL_RADIUS - 2 * something.radius,
+          radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
         };
-        if (Util.collisionCircleCircle(portal1, something)) {
-          something.x = portal.x2 - (something.x - portal.x1) * 1.1;
-          something.y = portal.y2 - (something.y - portal.y1) * 1.1;
+        if (Util.collisionOfCircleWithCircle(portal1, something)) {
+          something.x = portal.x2 - (something.x - portal.x1) * config.PORTALS_OFFSET;
+          something.y = portal.y2 - (something.y - portal.y1) * config.PORTALS_OFFSET;
         }
-        if (Util.collisionCircleCircle(portal2, something)) {
-          something.x = portal.x1 - (something.x - portal.x2) * 1.1;
-          something.y = portal.y1 - (something.y - portal.y2) * 1.1;
+        if (Util.collisionOfCircleWithCircle(portal2, something)) {
+          something.x = portal.x1 - (something.x - portal.x2) * config.PORTALS_OFFSET;
+          something.y = portal.y1 - (something.y - portal.y2) * config.PORTALS_OFFSET;
         }
       });
   }
 
   checkWallCollisionPlayer(player) {
     this.walls.forEach((wall) => {
-      const playerCollides = Util.collisionRectCircle(wall, player);
+      const playerCollides = Util.collisionOfRectWithCircle(wall, player);
       if (playerCollides) {
         const angle = playerCollides.angle + wall.angle;
         const dis = config.PLAYER_RADIUS - playerCollides.dis;
@@ -269,7 +269,7 @@ export default class Game {
 
   checkWallCollisionBullet(bullet) {
     this.walls.forEach((wall) => {
-      const bulletCollides = Util.collisionRectCircle(wall, bullet);
+      const bulletCollides = Util.collisionOfRectWithCircle(wall, bullet);
       if (bulletCollides) {
         this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         wall.fillColor = bullet.color;
@@ -321,7 +321,7 @@ export default class Game {
   checkPlayerCollisionPlayer(player1) {
     this.players.forEach((player2) => {
       if (!Object.is(player1, player2)) {
-        if (Util.collisionCircleCircle(player1, player2)) {
+        if (Util.collisionOfCircleWithCircle(player1, player2)) {
           let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
           alpha = alpha || 0;
           player1.x += Math.sign(player1.x - player2.x) * config.PLAYER_REPULSION * Math.cos(alpha);

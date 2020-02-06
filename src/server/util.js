@@ -1,3 +1,5 @@
+import config from './config';
+
 export default class Util {
   constructor() {
     throw Error('Util is an abstract class and and cant be initiated');
@@ -109,7 +111,7 @@ export default class Util {
     return { x, y };
   }
 
-  static collisionRectCircleWithoutAngle(rect, circle) {
+  static collisionOfRectWithCircleWithoutAngle(rect, circle) {
     const corners = this.calculateCornerPoints(rect);
     const isInConstraintY = circle.y >= corners.a.y && circle.y <= corners.d.y;
     const isInConstraintX = circle.x >= corners.a.x && circle.x <= corners.b.x;
@@ -117,7 +119,7 @@ export default class Util {
     return isInConstraintX && isInConstraintY;
   }
 
-  static collisionRectCircle(rect, circle) {
+  static collisionOfRectWithCircle(rect, circle) {
     const corners = this.calculateCornerPoints(rect);
 
     const rotatedA = this.rotatePointAroundPoint(corners.a, rect, rect.angle);
@@ -154,11 +156,15 @@ export default class Util {
     return false;
   }
 
-  static collisionCircleCircle(circle1, circle2) {
+  static collisionOfCircleWithCircle(circle1, circle2) {
     const distance = this.pointDistance(circle1, circle2);
     if (distance <= circle1.radius + circle2.radius) {
       return true;
     }
     return false;
+  }
+
+  static portalRadiusMinusDiameterOfCircle(radius) {
+    return config.PORTAL_RADIUS - 2 * radius;
   }
 }

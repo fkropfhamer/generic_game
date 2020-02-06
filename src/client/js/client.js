@@ -24,7 +24,7 @@ export default class Client {
 
   drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
     this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
-    if (lives < 3) {
+    if (lives < config.PLAYER_LIVES) {
       this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
     }
     this.view.drawImageAtAngle(this.images[face], x, y, angle, 0.5);
