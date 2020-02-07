@@ -115,7 +115,14 @@ export default class Client {
       this.isShielded,
       this.isFreezed
     );
-    this.drawPlayerIndicator();
+
+    this.view.drawPlayerIndicator(
+      this.x,
+      this.y,
+      this.angle,
+      1 - this.shootingCount / config.SHOOTING_RATE
+    );
+
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -138,10 +145,6 @@ export default class Client {
     this.portals.forEach((p) => {
       this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
     });
-  }
-
-  drawPlayerIndicator() {
-    this.view.drawPlayerIndicator(this.x, this.y);
   }
 
   setupKeyPressedEvents() {
@@ -222,6 +225,7 @@ export default class Client {
     this.walls = data.walls;
     this.isShielded = data.isShielded;
     this.isFreezed = data.isFreezed;
+    this.shootingCount = data.shootingCount;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
@@ -249,6 +253,7 @@ export default class Client {
     this.walls = data.walls;
     this.isShielded = data.isShielded;
     this.isFreezed = data.isFreezed;
+    this.shootingCount = data.shootingCount;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;

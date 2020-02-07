@@ -22,6 +22,10 @@ const config = Util.deepFreeze({
     { x: 1180, y: 100 },
   ],
 
+  BULLET_INDICATOR_RADIUS: 5,
+  BULLET_INDICATOR_DISTANCE: 2,
+  BULLET_INDICATOR_COLOR: 'yellow',
+
   SHOOTING_RATE: 100,
   BULLET_SPEED: 5,
   BULLET_RADIUS: 10,

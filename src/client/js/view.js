@@ -1,4 +1,5 @@
 import config from '../../server/config';
+import Util from '../../server/util';
 import { Mode } from '../../server/enums';
 import background from '../img/background.png';
 
@@ -39,15 +40,19 @@ export default class View {
     this.setupCanvas();
   }
 
-  drawCircle(x, y, radius, color) {
+  drawPartOfCircle(x, y, radius, color, endAngle) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
     const scaledRadius = Math.round(radius * this.scale);
 
     this.ctx.beginPath();
-    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, endAngle, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
+  }
+
+  drawCircle(x, y, radius, color) {
+    this.drawPartOfCircle(x, y, radius, color, 2 * Math.PI);
   }
 
   drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
@@ -125,16 +130,17 @@ export default class View {
     this.ctx.restore();
   }
 
-  drawPlayerIndicator(x, y) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
-    this.ctx.lineTo(Math.round((x - 10) * this.scale), Math.round((y - 35) * this.scale));
-    this.ctx.lineTo(Math.round((x + 10) * this.scale), Math.round((y - 35) * this.scale));
-    this.ctx.lineTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
-    this.ctx.closePath();
-
-    this.ctx.fillStyle = 'yellow';
-    this.ctx.fill();
+  drawPlayerIndicator(x, y, angle, state) {
+    const x_shifted =
+      x + config.PLAYER_RADIUS + config.BULLET_INDICATOR_DISTANCE + config.BULLET_INDICATOR_RADIUS;
+    const rotatedPoint = Util.rotatePointAroundPoint({ x: x_shifted, y: y }, { x: x, y: y }, angle);
+    this.drawPartOfCircle(
+      rotatedPoint.x,
+      rotatedPoint.y,
+      config.BULLET_INDICATOR_RADIUS,
+      config.BULLET_INDICATOR_COLOR,
+      state * 2 * Math.PI
+    );
   }
 
   static showTimer(timer) {
