@@ -92,6 +92,7 @@ export default class Player {
       iceSandFields: mappedIceSandFields,
       isFreezed: this.isFreezed,
       shootingCount: this.shootingCount,
+      fireRateActivated: this.fireRateActivated,
       portals,
     });
   }
@@ -122,6 +123,7 @@ export default class Player {
       iceSandFields: mappedIceSandFields,
       isFreezed: this.isFreezed,
       shootingCount: this.shootingCount,
+      fireRateActivated: this.fireRateActivated,
       portals,
     });
   }

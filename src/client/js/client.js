@@ -72,6 +72,24 @@ export default class Client {
     }
   }
 
+  drawPlayerIndicator() {
+    if (this.fireRateActivated) {
+      this.view.drawPlayerIndicator(
+        this.x,
+        this.y,
+        this.angle,
+        1 - (this.shootingCount / config.SHOOTING_RATE) * config.POWERUP_FIRERATE_BOOSTER
+      );
+    } else {
+      this.view.drawPlayerIndicator(
+        this.x,
+        this.y,
+        this.angle,
+        1 - this.shootingCount / config.SHOOTING_RATE
+      );
+    }
+  }
+
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
@@ -116,13 +134,7 @@ export default class Client {
       this.isFreezed
     );
 
-    this.view.drawPlayerIndicator(
-      this.x,
-      this.y,
-      this.angle,
-      1 - this.shootingCount / config.SHOOTING_RATE
-    );
-
+    this.drawPlayerIndicator();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -226,6 +238,7 @@ export default class Client {
     this.isShielded = data.isShielded;
     this.isFreezed = data.isFreezed;
     this.shootingCount = data.shootingCount;
+    this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
@@ -254,6 +267,7 @@ export default class Client {
     this.isShielded = data.isShielded;
     this.isFreezed = data.isFreezed;
     this.shootingCount = data.shootingCount;
+    this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
