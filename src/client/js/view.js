@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import config from '../../server/config';
 import Util from '../../server/util';
 import { Mode } from '../../server/enums';
@@ -55,16 +56,50 @@ export default class View {
     this.drawPartOfCircle(x, y, radius, color, 2 * Math.PI);
   }
 
-  drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
+  drawPartOfRing(x, y, radiusObject, distanceToObject, endAngle, lineWidth, color) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
     const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
-    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, endAngle, false);
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = color;
     this.ctx.stroke();
+  }
+
+  drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
+    this.drawPartOfRing(x, y, radiusObject, distanceToObject, 2 * Math.PI, lineWidth, color);
+  }
+
+  drawCross(x, y, radius, angle, color, lineWidth) {
+    const innerPoint = { x: x * this.scale, y: y * this.scale };
+    const point = { x: x * this.scale - radius, y: y * this.scale - radius };
+
+    const point1 = Util.rotatePointAroundPoint(point, innerPoint, angle + Math.PI / 4);
+    const point2 = Util.rotatePointAroundPoint(point, innerPoint, angle + (Math.PI / 4) * 3);
+    const point3 = Util.rotatePointAroundPoint(point, innerPoint, angle + (Math.PI / 4) * 5);
+    const point4 = Util.rotatePointAroundPoint(point, innerPoint, angle + (Math.PI / 4) * 7);
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(point1.x, point1.y);
+    this.ctx.lineTo(point3.x, point3.y);
+    this.ctx.moveTo(point2.x, point2.y);
+    this.ctx.lineTo(point4.x, point4.y);
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = lineWidth;
+    this.ctx.fill();
+    this.ctx.stroke();
+  }
+
+  drawCrossHair(x, y, radius, angle, color, lineWidth, state) {
+    const thirdOfRadius = radius / 3;
+    const distance = thirdOfRadius + lineWidth / 2;
+
+    this.drawCross(x, y, radius, angle, color, lineWidth);
+    this.drawCircle(x, y, thirdOfRadius, 'black');
+    this.drawPartOfRing(x, y, 0, distance, state, lineWidth, color);
+    this.drawPartOfRing(x, y, distance, distance, state, lineWidth, color);
   }
 
   drawRectangle(x, y, height, width, angle, fillColor, strokeColor, lineWidth) {
@@ -131,15 +166,19 @@ export default class View {
   }
 
   drawPlayerIndicator(x, y, angle, state) {
-    const x_shifted =
-      x + config.PLAYER_RADIUS + config.BULLET_INDICATOR_DISTANCE + config.BULLET_INDICATOR_RADIUS;
-    const rotatedPoint = Util.rotatePointAroundPoint({ x: x_shifted, y: y }, { x: x, y: y }, angle);
-    this.drawPartOfCircle(
+    // eslint-disable-next-line max-len
+    const xShifted = x + config.PLAYER_RADIUS + config.BULLET_INDICATOR_DISTANCE + config.BULLET_INDICATOR_RADIUS;
+    const point = { x, y };
+    const rotatedPoint = Util.rotatePointAroundPoint({ x: xShifted, y }, point, angle);
+
+    this.drawCrossHair(
       rotatedPoint.x,
       rotatedPoint.y,
       config.BULLET_INDICATOR_RADIUS,
+      angle,
       config.BULLET_INDICATOR_COLOR,
-      state * 2 * Math.PI
+      2,
+      (1 - state) * 2 * Math.PI
     );
   }
 

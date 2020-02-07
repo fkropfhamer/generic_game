@@ -50,7 +50,7 @@ export default class Client {
   }
 
   drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
-    if (starttime > this.timer && endtime < this.timer) {
+    if (starttime > timer && endtime < timer) {
       this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, Color.BLACK);
       this.view.drawNestedRings(
         x1,
@@ -73,20 +73,12 @@ export default class Client {
   }
 
   drawPlayerIndicator() {
+    const shootingRateFraction = this.shootingCount / config.SHOOTING_RATE;
+    const shootingRateFractionBoosted = shootingRateFraction * config.POWERUP_FIRERATE_BOOSTER;
     if (this.fireRateActivated) {
-      this.view.drawPlayerIndicator(
-        this.x,
-        this.y,
-        this.angle,
-        1 - (this.shootingCount / config.SHOOTING_RATE) * config.POWERUP_FIRERATE_BOOSTER
-      );
+      this.view.drawPlayerIndicator(this.x, this.y, this.angle, shootingRateFractionBoosted);
     } else {
-      this.view.drawPlayerIndicator(
-        this.x,
-        this.y,
-        this.angle,
-        1 - this.shootingCount / config.SHOOTING_RATE
-      );
+      this.view.drawPlayerIndicator(this.x, this.y, this.angle, shootingRateFraction);
     }
   }
 
@@ -133,8 +125,6 @@ export default class Client {
       this.isShielded,
       this.isFreezed
     );
-
-    this.drawPlayerIndicator();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -152,6 +142,7 @@ export default class Client {
     this.powerUps.forEach((p) =>
       this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
     );
+    this.drawPlayerIndicator();
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {

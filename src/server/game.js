@@ -237,12 +237,12 @@ export default class Game {
         const portal1 = {
           x: portal.x1,
           y: portal.y1,
-          radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
         };
         const portal2 = {
           x: portal.x2,
           y: portal.y2,
-          radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
         };
         if (Util.collisionOfCircleWithCircle(portal1, something)) {
           something.x = portal.x2 - (something.x - portal.x1) * config.PORTAL_OFFSET;
