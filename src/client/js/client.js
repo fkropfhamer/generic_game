@@ -9,6 +9,8 @@ export default class Client {
     this.view = view;
     this.images = images;
     this.audios = audios;
+    this.mouseX = 0;
+    this.mouseY = 0;
     this.view.showStartScreen(this.setup.bind(this));
   }
 
@@ -72,13 +74,13 @@ export default class Client {
     }
   }
 
-  drawPlayerIndicator() {
+  drawCrossHair() {
     const shootingRateFraction = this.shootingCount / config.SHOOTING_RATE;
     const shootingRateFractionBoosted = shootingRateFraction * config.POWERUP_FIRERATE_BOOSTER;
     if (this.fireRateActivated) {
-      this.view.drawPlayerIndicator(this.x, this.y, this.angle, shootingRateFractionBoosted);
+      this.view.drawCrossHair(this.mouseX, this.mouseY, shootingRateFractionBoosted);
     } else {
-      this.view.drawPlayerIndicator(this.x, this.y, this.angle, shootingRateFraction);
+      this.view.drawCrossHair(this.mouseX, this.mouseY, shootingRateFraction);
     }
   }
 
@@ -142,7 +144,8 @@ export default class Client {
     this.powerUps.forEach((p) =>
       this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
     );
-    this.drawPlayerIndicator();
+    // this.drawPlayerIndicator();
+    this.drawCrossHair();
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {
@@ -158,6 +161,8 @@ export default class Client {
   }
 
   mouseMove(e) {
+    this.mouseX = e.clientX - this.view.canvas.offsetLeft;
+    this.mouseY = e.clientY - this.view.canvas.offsetTop;
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
 
