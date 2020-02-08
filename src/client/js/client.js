@@ -157,6 +157,14 @@ export default class Client {
     });
   }
 
+  loop() {
+    this.draw();
+
+    if (!this.isEnded) {
+      window.requestAnimationFrame(this.loop.bind(this));
+    }
+  }
+
   setupKeyPressedEvents() {
     window.addEventListener(EventListener.KEYDOWN, this.keyPressed.bind(this));
     window.addEventListener(EventListener.KEYUP, this.keyUp.bind(this));
@@ -245,7 +253,7 @@ export default class Client {
     this.portals = data.portals;
     this.audios.backgroundMusic.loop = true;
     this.audios.backgroundMusic.play();
-    this.draw();
+    this.loop();
     this.setupKeyPressedEvents();
   }
 
@@ -272,7 +280,6 @@ export default class Client {
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
     this.portals = data.portals;
-    this.draw();
     this.socket.emit(SocketEvent.KEYSPRESSED, {
       up: this.pressedUp,
       down: this.pressedDown,

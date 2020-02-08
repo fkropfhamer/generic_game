@@ -6,6 +6,7 @@ import background from '../img/background.png';
 
 export default class View {
   constructor() {
+    this.preScaledImages = {};
     this.scale = 1;
     this.windowHeight = window.innerHeight;
     this.windowWidth = window.innerWidth;
@@ -36,15 +37,16 @@ export default class View {
   }
 
   resize() {
+    this.preScaledImages = {};
     this.windowHeight = window.innerHeight * 0.95;
     this.windowWidth = window.innerWidth;
     this.setupCanvas();
   }
 
   drawPartOfCircle(x, y, radius, color, endAngle) {
-    const scaledX = Math.round(x * this.scale);
-    const scaledY = Math.round(y * this.scale);
-    const scaledRadius = Math.round(radius * this.scale);
+    const scaledX = View.floor(x * this.scale);
+    const scaledY = View.floor(y * this.scale);
+    const scaledRadius = View.floor(radius * this.scale);
 
     this.ctx.beginPath();
     this.ctx.arc(scaledX, scaledY, scaledRadius, 0, endAngle, false);
@@ -57,9 +59,9 @@ export default class View {
   }
 
   drawPartOfRingWithoutScale(x, y, radiusObject, distanceToObject, endAngle, lineWidth, color) {
-    // const scaledX = Math.round(x * this.scale);
-    // const scaledY = Math.round(y * this.scale);
-    const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
+    // const scaledX = View.floor(x * this.scale);
+    // const scaledY = View.floor(y * this.scale);
+    const scaledRadius = View.floor((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
     this.ctx.arc(x, y, scaledRadius, 0, endAngle, false);
@@ -69,9 +71,9 @@ export default class View {
   }
 
   drawPartOfRing(x, y, radiusObject, distanceToObject, endAngle, lineWidth, color) {
-    const scaledX = Math.round(x * this.scale);
-    const scaledY = Math.round(y * this.scale);
-    const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
+    const scaledX = View.floor(x * this.scale);
+    const scaledY = View.floor(y * this.scale);
+    const scaledRadius = View.floor((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
     this.ctx.arc(scaledX, scaledY, scaledRadius, 0, endAngle, false);
@@ -123,14 +125,14 @@ export default class View {
     const hSin = (Math.sin(angle) * height) / 2;
     const hCos = (Math.cos(angle) * height) / 2;
 
-    const aX = Math.round((x - wCos + hSin) * this.scale);
-    const aY = Math.round((y - hCos - wSin) * this.scale);
-    const bX = Math.round((x + wCos + hSin) * this.scale);
-    const bY = Math.round((y - hCos + wSin) * this.scale);
-    const cX = Math.round((x + wCos - hSin) * this.scale);
-    const cY = Math.round((y + hCos + wSin) * this.scale);
-    const dX = Math.round((x - wCos - hSin) * this.scale);
-    const dY = Math.round((y + hCos - wSin) * this.scale);
+    const aX = View.floor((x - wCos + hSin) * this.scale);
+    const aY = View.floor((y - hCos - wSin) * this.scale);
+    const bX = View.floor((x + wCos + hSin) * this.scale);
+    const bY = View.floor((y - hCos + wSin) * this.scale);
+    const cX = View.floor((x + wCos - hSin) * this.scale);
+    const cY = View.floor((y + hCos + wSin) * this.scale);
+    const dX = View.floor((x - wCos - hSin) * this.scale);
+    const dY = View.floor((y + hCos - wSin) * this.scale);
 
     this.ctx.beginPath();
     this.ctx.moveTo(aX, aY);
@@ -146,7 +148,7 @@ export default class View {
   }
 
   drawNestedRings(x, y, outerRadius, lineWidth, color, state) {
-    const numberOfRings = Math.round(outerRadius / (2 * lineWidth));
+    const numberOfRings = View.floor(outerRadius / (2 * lineWidth));
 
     this.drawCircle(x, y, outerRadius, 'black');
     for (let i = 0; i < numberOfRings; i++) {
@@ -166,26 +168,37 @@ export default class View {
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
-    const imgWidth = Math.round(image.width * scale * this.scale);
-    const imgHeight = Math.round(image.height * scale * this.scale);
+    let scaledImage = this.preScaledImages[image.src];
+    const imgWidth = View.floor(image.width * scale * this.scale);
+    const imgHeight = View.floor(image.height * scale * this.scale);
+    if (!scaledImage) {
+      const offScreenCanvas = document.createElement('canvas');
+      offScreenCanvas.width = imgWidth;
+      offScreenCanvas.height = imgHeight;
+      const offScreenContext = offScreenCanvas.getContext('2d');
+      offScreenContext.drawImage(image, 0, 0, imgWidth, imgHeight);
+
+      this.preScaledImages[image.src] = offScreenCanvas;
+      scaledImage = offScreenCanvas;
+    }
 
     this.ctx.save();
-    this.ctx.translate(Math.round(x * this.scale), Math.round(y * this.scale));
+    this.ctx.translate(View.floor(x * this.scale), View.floor(y * this.scale));
     this.ctx.rotate(angle);
 
-    const roundedX = Math.round(-imgWidth / 2);
-    const roundedY = Math.round(-imgHeight / 2);
+    const roundedX = View.floor(-imgWidth / 2);
+    const roundedY = View.floor(-imgHeight / 2);
 
-    this.ctx.drawImage(image, roundedX, roundedY, imgWidth, imgHeight);
+    this.ctx.drawImage(scaledImage, roundedX, roundedY);
     this.ctx.restore();
   }
 
   drawPlayerIndicator(x, y) {
     this.ctx.beginPath();
-    this.ctx.moveTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
-    this.ctx.lineTo(Math.round((x - 10) * this.scale), Math.round((y - 35) * this.scale));
-    this.ctx.lineTo(Math.round((x + 10) * this.scale), Math.round((y - 35) * this.scale));
-    this.ctx.lineTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
+    this.ctx.moveTo(View.floor(x * this.scale), View.floor((y - 30) * this.scale));
+    this.ctx.lineTo(View.floor((x - 10) * this.scale), View.floor((y - 35) * this.scale));
+    this.ctx.lineTo(View.floor((x + 10) * this.scale), View.floor((y - 35) * this.scale));
+    this.ctx.lineTo(View.floor(x * this.scale), View.floor((y - 30) * this.scale));
     this.ctx.closePath();
 
     this.ctx.fillStyle = config.PLAYER_INDICATOR_COLOR;
@@ -194,7 +207,7 @@ export default class View {
 
 
   static showTimer(timer) {
-    const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
+    const timeLeftPercentage = View.floor((timer / config.GAME_DURATION) * 100);
     document.getElementById('timeprogress').style.width = `${timeLeftPercentage}%`;
   }
 
@@ -275,8 +288,8 @@ export default class View {
 
   static updateTeamLiveBar(teamLives) {
     const livesSum = teamLives.redLives + teamLives.blueLives;
-    const redLivePercentage = Math.round((teamLives.redLives / livesSum) * 100);
-    const blueLivePercentage = Math.round((teamLives.blueLives / livesSum) * 100);
+    const redLivePercentage = View.floor((teamLives.redLives / livesSum) * 100);
+    const blueLivePercentage = View.floor((teamLives.blueLives / livesSum) * 100);
 
     document.getElementById('redlivebar').style.width = `${redLivePercentage}%`;
     document.getElementById('bluelivebar').style.width = `${blueLivePercentage}%`;
@@ -284,5 +297,10 @@ export default class View {
 
   static hideStartScreen() {
     document.getElementById('startscreen').style.display = 'none';
+  }
+
+  static floor(x) {
+    // eslint-disable-next-line no-bitwise
+    return x | 0;
   }
 }
