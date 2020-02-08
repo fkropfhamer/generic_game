@@ -1,4 +1,4 @@
-import { powerUpTypes, iceSandTypes } from './enums';
+import { powerUpTypes, iceSandTypes, Color } from './enums';
 import Util from './util';
 
 const config = Util.deepFreeze({
@@ -24,7 +24,9 @@ const config = Util.deepFreeze({
 
   BULLET_INDICATOR_RADIUS: 10,
   BULLET_INDICATOR_DISTANCE: 20,
-  BULLET_INDICATOR_COLOR: 'yellow',
+  BULLET_INDICATOR_COLOR: Color.YELLOW,
+
+  PLAYER_INDICATOR_COLOR: Color.YELLOW,
 
   SHOOTING_RATE: 100,
   BULLET_SPEED: 5,
@@ -89,7 +91,7 @@ const config = Util.deepFreeze({
   PORTAL_RING_LINEWIDTH: 3,
   PORTAL_ANIMATION: 5,
   PORTAL_OFFSET: 1.1,
-  PORTAL_COLOR: 'grey',
+  PORTAL_COLOR: Color.GREY,
   PORTALS: [
     {
       x1: 160,
@@ -119,8 +121,8 @@ const config = Util.deepFreeze({
     y: 10,
     height: 20,
     angle: 0,
-    fillColor: 'white',
-    strokeColor: 'black',
+    fillColor: Color.WHITE,
+    strokeColor: Color.BLACK,
   },
 
   barrierWalls: {
@@ -129,8 +131,8 @@ const config = Util.deepFreeze({
     height: 20,
     width: 60,
     angle: Math.PI / 4,
-    fillColor: 'white',
-    strokeColor: 'white',
+    fillColor: Color.WHITE,
+    strokeColor: Color.WHITE,
   },
 });
 

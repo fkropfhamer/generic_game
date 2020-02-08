@@ -84,6 +84,10 @@ export default class Client {
     }
   }
 
+  drawPlayerIndicator() {
+    this.view.drawPlayerIndicator(this.x, this.y);
+  }
+
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
@@ -144,7 +148,7 @@ export default class Client {
     this.powerUps.forEach((p) =>
       this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
     );
-    // this.drawPlayerIndicator();
+    this.drawPlayerIndicator();
     this.drawCrossHair();
     View.updateTeamLiveBar(this.teamLives);
 

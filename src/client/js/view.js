@@ -180,9 +180,18 @@ export default class View {
     this.ctx.restore();
   }
 
-  /* drawPlayerIndicator(x, y, angle, state) {
-    console.log('test');
-  } */
+  drawPlayerIndicator(x, y) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
+    this.ctx.lineTo(Math.round((x - 10) * this.scale), Math.round((y - 35) * this.scale));
+    this.ctx.lineTo(Math.round((x + 10) * this.scale), Math.round((y - 35) * this.scale));
+    this.ctx.lineTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
+    this.ctx.closePath();
+
+    this.ctx.fillStyle = config.PLAYER_INDICATOR_COLOR;
+    this.ctx.fill();
+  }
+
 
   static showTimer(timer) {
     const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
