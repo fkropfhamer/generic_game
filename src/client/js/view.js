@@ -233,6 +233,9 @@ export default class View {
     this.images.face3.classList.add('img-thumbnail');
     this.images.face4.classList.add('img-thumbnail');
 
+    console.log("this", this.images.face4);
+    console.log("...", this.images.arrowbuttons);
+
     document.getElementById('choice1-label').appendChild(this.images.face1);
     document.getElementById('choice2-label').appendChild(this.images.face2);
     document.getElementById('choice3-label').appendChild(this.images.face3);
@@ -263,6 +266,38 @@ export default class View {
       const mode = teamgame ? Mode.TEAMS : Mode.NORMAL;
       callback(face, mode);
     };
+
+    const instructionButton = document.getElementById('instructionbutton');
+    instructionButton.onclick = () => {
+      View.showInstructionScreen(callback, this.images);
+    };
+  }
+
+  static showInstructionScreen(callback, images) {
+    this.hideDeathMessage();
+    this.hideStartScreen();
+    document.getElementById('instructionscreen').style.display = 'initial';
+
+    console.log("this.images", images);
+
+    document.getElementById('arrowbuttons-img').appendChild(images.arrowbuttons);
+    document.getElementById('mouseclick-img').appendChild(images.mouseclick);
+    // document.getElementById('portal-di').appendChild(images.portal);
+    document.getElementById('health-img').appendChild(images.health);
+    document.getElementById('firerate-img').appendChild(images.firerate);
+    document.getElementById('speed-img').appendChild(images.speed);
+    document.getElementById('shield-img').appendChild(images.shield);
+    document.getElementById('freeze-img').appendChild(images.freeze);
+
+    const backButton = document.getElementById('backbutton');
+    backButton.onclick = () => {
+      this.showStartScreen(callback);
+      this.hideInstructionScreen();
+    };
+  }
+
+  static hideInstructionScreen() {
+    document.getElementById('instructionscreen').style.display = 'none';
   }
 
   static showDeathMessage() {

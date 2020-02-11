@@ -24,8 +24,8 @@ import AssetLoader from './assetloader';
 import Client from './client';
 import splash from '../sound/flyswatter4.mp3';
 import backgroundMusic from '../sound/Tec.mp3';
-import arrowButtons from '../img/arrowButtons.png';
-import mouseClick from '../img/mouseClick.png';
+import arrowbuttons from '../img/arrowButtons.png';
+import mouseclick from '../img/mouseClick.png';
 
 window.onload = () => {
   const view = new View();
@@ -51,8 +51,8 @@ window.onload = () => {
       { name: 'sand', url: sand },
       { name: 'ice', url: ice },
       { name: 'playerIced', url: playerIced },
-      { name: 'arrowbuttons', url: arrowButtons },
-      { name: 'mouseclick', url: mouseClick },
+      { name: 'arrowbuttons', url: arrowbuttons },
+      { name: 'mouseclick', url: mouseclick },
     ]),
     AssetLoader.loadAudios([
       { name: 'splash', url: splash },
