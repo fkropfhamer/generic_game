@@ -227,14 +227,12 @@ export default class View {
 
   showStartScreen(callback) {
     document.getElementById('startscreen').style.display = 'initial';
+    View.hideInstructionScreen();
 
     this.images.face1.classList.add('img-thumbnail');
     this.images.face2.classList.add('img-thumbnail');
     this.images.face3.classList.add('img-thumbnail');
     this.images.face4.classList.add('img-thumbnail');
-
-    console.log("this", this.images.face4);
-    console.log("...", this.images.arrowbuttons);
 
     document.getElementById('choice1-label').appendChild(this.images.face1);
     document.getElementById('choice2-label').appendChild(this.images.face2);
@@ -291,8 +289,8 @@ export default class View {
 
     const backButton = document.getElementById('backbutton');
     backButton.onclick = () => {
-      this.showStartScreen(callback);
-      this.hideInstructionScreen();
+      let view = new View();
+      view.showStartScreen(callback);
     };
   }
 
