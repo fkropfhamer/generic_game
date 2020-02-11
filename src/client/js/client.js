@@ -91,20 +91,11 @@ export default class Client {
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
+
     this.iceSandFields.forEach((isf) => {
-      const color = isf.type === iceSandTypes.ICE ? 'blue' : 'brown';
-      this.view.drawRectangle(
-        isf.x,
-        isf.y,
-        isf.height,
-        isf.width,
-        0,
-        color,
-        'black',
-        config.WALL_LINEWIDTH
-      );
-      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1);
     });
+
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
