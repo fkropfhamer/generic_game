@@ -26,6 +26,7 @@ import splash from '../sound/flyswatter4.mp3';
 import backgroundMusic from '../sound/Tec.mp3';
 import arrowbuttons from '../img/arrowButtons.png';
 import mouseclick from '../img/mouseClick.png';
+import portalinstruction from '../img/portal-instruction.png';
 
 window.onload = () => {
   const view = new View();
@@ -53,6 +54,7 @@ window.onload = () => {
       { name: 'playerIced', url: playerIced },
       { name: 'arrowbuttons', url: arrowbuttons },
       { name: 'mouseclick', url: mouseclick },
+      { name: 'portalinstruction', url: portalinstruction },
     ]),
     AssetLoader.loadAudios([
       { name: 'splash', url: splash },

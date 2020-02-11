@@ -282,7 +282,7 @@ export default class View {
 
     document.getElementById('arrowbuttons-img').appendChild(images.arrowbuttons);
     document.getElementById('mouseclick-img').appendChild(images.mouseclick);
-    // document.getElementById('portal-di').appendChild(images.portal);
+    document.getElementById('portal-img').appendChild(images.portalinstruction);
     document.getElementById('health-img').appendChild(images.health);
     document.getElementById('firerate-img').appendChild(images.firerate);
     document.getElementById('speed-img').appendChild(images.speed);
