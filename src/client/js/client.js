@@ -103,7 +103,7 @@ export default class Client {
         'black',
         config.WALL_LINEWIDTH
       );
-      // this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
     });
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
