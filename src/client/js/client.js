@@ -24,7 +24,7 @@ export default class Client {
     this.socket.emit(SocketEvent.READY, { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFrozen) {
     this.view.drawImageAtAngle(this.images[color], x, y, angle, config.PLAYER_SCALE);
     if (lives < config.PLAYER_LIVES) {
       this.view.drawImageAtAngle(
@@ -46,7 +46,7 @@ export default class Client {
         color
       );
     }
-    if (isFreezed) {
+    if (isFrozen) {
       this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, config.PLAYER_SCALE);
     }
   }
@@ -91,20 +91,11 @@ export default class Client {
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
+
     this.iceSandFields.forEach((isf) => {
-      const color = isf.type === iceSandTypes.ICE ? 'blue' : 'brown';
-      this.view.drawRectangle(
-        isf.x,
-        isf.y,
-        isf.height,
-        isf.width,
-        0,
-        color,
-        'black',
-        config.WALL_LINEWIDTH
-      );
-      // this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1);
     });
+
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
@@ -129,7 +120,7 @@ export default class Client {
       this.angle,
       this.hitAngle,
       this.isShielded,
-      this.isFreezed
+      this.isFrozen
     );
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
@@ -141,7 +132,7 @@ export default class Client {
         player.angle,
         player.hitAngle,
         player.isShielded,
-        player.isFreezed
+        player.isFrozen
       );
     });
 
@@ -236,7 +227,7 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.isFreezed = data.isFreezed;
+    this.isFrozen = data.isFrozen;
     this.shootingCount = data.shootingCount;
     this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
@@ -265,7 +256,7 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.isFreezed = data.isFreezed;
+    this.isFrozen = data.isFrozen;
     this.shootingCount = data.shootingCount;
     this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;

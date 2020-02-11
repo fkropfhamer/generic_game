@@ -11,7 +11,7 @@ const config = Util.deepFreeze({
   FIELD_HEIGHT: 720,
 
   PLAYER_SCALE: 0.5,
-  PLAYER_SPEED: 3,
+  PLAYER_SPEED: 2,
   PLAYER_RADIUS: 25,
   PLAYER_REPULSION: 10,
   PLAYER_LIVES: 3,
@@ -36,7 +36,7 @@ const config = Util.deepFreeze({
   MAX_POWERUPS_ON_FIELD: 3,
   POWERUP_RADIUS: 20,
   POWERUP_DURATION: 750,
-  POWERUP_SPAWN_DELAY: 3,
+  POWERUP_SPAWN_DELAY: 5,
 
   POWERUP_SHIELD_DISTANCE_TO_PLAYER: 5,
   POWERUP_SHIELD_LINEWIDTH: 6,
@@ -59,7 +59,7 @@ const config = Util.deepFreeze({
     powerUpTypes.FREEZE,
     powerUpTypes.FIRERATE,
   ],
-  POWER_UPS_POSITION: [
+  POWERUP_POSITIONS: [
     { x: 150, y: 100 },
     { x: 640, y: 100 },
     { x: 1130, y: 100 },
@@ -74,17 +74,17 @@ const config = Util.deepFreeze({
     { x: 1130, y: 620 },
   ],
 
-  ICE_SPEED: 3,
-  SAND_SPEED: 1 / 3,
+  ICE_SPEED: 2,
+  SAND_SPEED: 1 / 2,
   ICE_SAND_FIELDS: [
     { x: 800, y: 270, type: iceSandTypes.ICE },
     { x: 800, y: 450, type: iceSandTypes.SAND },
-    { x: 400, y: 270, type: iceSandTypes.ICE },
-    { x: 400, y: 450, type: iceSandTypes.SAND },
+    { x: 480, y: 270, type: iceSandTypes.SAND },
+    { x: 480, y: 450, type: iceSandTypes.ICE },
   ],
   ICE_SAND_EXTENT: {
-    height: 100,
-    width: 100,
+    height: 180,
+    width: 320,
   },
 
   PORTAL_RADIUS: 41.25, // 1.5*PLAYER_RADIUS

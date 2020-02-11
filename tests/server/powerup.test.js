@@ -85,14 +85,14 @@ describe('powerup', () => {
   });
 
   test('powerup type freezeUp', () => {
-    const player = { isFreezed: false };
+    const player = { isFrozen: false };
     const players = [{}, {}];
 
     powerup.type = powerUpTypes.FREEZE;
     powerup.update(player, players);
 
-    expect(players[0].isFreezed).toBe(750);
-    expect(players[1].isFreezed).toBe(750);
-    expect(player.isFreezed).toBe(false);
+    expect(players[0].isFrozen).toBe(750);
+    expect(players[1].isFrozen).toBe(750);
+    expect(player.isFrozen).toBe(false);
   });
 });
