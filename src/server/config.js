@@ -59,7 +59,7 @@ const config = Util.deepFreeze({
     powerUpTypes.FREEZE,
     powerUpTypes.FIRERATE,
   ],
-  POWER_UPS_POSITION: [
+  POWERUP_POSITIONS: [
     { x: 150, y: 100 },
     { x: 640, y: 100 },
     { x: 1130, y: 100 },
