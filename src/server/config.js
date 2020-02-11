@@ -11,7 +11,7 @@ const config = Util.deepFreeze({
   FIELD_HEIGHT: 720,
 
   PLAYER_SCALE: 0.5,
-  PLAYER_SPEED: 3,
+  PLAYER_SPEED: 2,
   PLAYER_RADIUS: 25,
   PLAYER_REPULSION: 10,
   PLAYER_LIVES: 3,
@@ -74,8 +74,8 @@ const config = Util.deepFreeze({
     { x: 1130, y: 620 },
   ],
 
-  ICE_SPEED: 3,
-  SAND_SPEED: 1 / 3,
+  ICE_SPEED: 2,
+  SAND_SPEED: 1 / 2,
   ICE_SAND_FIELDS: [
     { x: 800, y: 270, type: iceSandTypes.ICE },
     { x: 800, y: 450, type: iceSandTypes.SAND },
