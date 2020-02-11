@@ -79,12 +79,12 @@ const config = Util.deepFreeze({
   ICE_SAND_FIELDS: [
     { x: 800, y: 270, type: iceSandTypes.ICE },
     { x: 800, y: 450, type: iceSandTypes.SAND },
-    { x: 400, y: 270, type: iceSandTypes.ICE },
-    { x: 400, y: 450, type: iceSandTypes.SAND },
+    { x: 480, y: 270, type: iceSandTypes.SAND },
+    { x: 480, y: 450, type: iceSandTypes.ICE },
   ],
   ICE_SAND_EXTENT: {
-    height: 100,
-    width: 100,
+    height: 180,
+    width: 320,
   },
 
   PORTAL_RADIUS: 41.25, // 1.5*PLAYER_RADIUS
