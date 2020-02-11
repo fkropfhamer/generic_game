@@ -40,7 +40,7 @@ export default class PowerUp {
 
   static addfreezeUpUpdate(otherPlayers) {
     otherPlayers.forEach((player) => {
-      player.isFreezed = config.POWERUP_DURATION;
+      player.isFrozen = config.POWERUP_DURATION;
     });
   }
 

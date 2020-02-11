@@ -169,8 +169,8 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
-          if (player.isFreezed) {
-            player.isFreezed = false;
+          if (player.isFrozen) {
+            player.isFrozen = false;
           }
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));

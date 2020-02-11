@@ -76,7 +76,7 @@ describe('client', () => {
     expect(view.drawRing).toHaveBeenCalledTimes(0);
   });
 
-  test('client draw player is freezed', () => {
+  test('client draw player is Frozen', () => {
     client.drawPlayer('blue', 3, 'face1', 4, 8, 0, 0, false, true);
 
     expect(view.drawImageAtAngle).toHaveBeenCalledTimes(3);
