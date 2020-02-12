@@ -69,13 +69,13 @@ export default class Game {
     }
   }
 
-  setupIceSandFields() {
+  placeIceSandFields() {
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
     });
     setTimeout(() => {
       this.iceSandFields.splice(0, 4);
-    }, 5000);
+    }, config.ICE_SAND_DURATION);
   }
 
   setupPortals() {
@@ -348,8 +348,8 @@ export default class Game {
       if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
         this.placeRandomPowerUp();
       }
-      if (this.timer % 10 === 0) {
-        this.setupIceSandFields();
+      if (this.timer % config.ICE_SAND_SPAWN_DELAY === 0) {
+        this.placeIceSandFields();
       }
       console.log(this.timer);
       if (this.timer === 0) {

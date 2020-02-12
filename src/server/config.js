@@ -86,6 +86,8 @@ const config = Util.deepFreeze({
     height: 180,
     width: 320,
   },
+  ICE_SAND_SPAWN_DELAY: 20,
+  ICE_SAND_DURATION: 10000,
 
   PORTAL_RADIUS: 41.25, // 1.5*PLAYER_RADIUS
   PORTAL_RING_LINEWIDTH: 3,
