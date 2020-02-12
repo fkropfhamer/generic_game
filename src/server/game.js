@@ -15,7 +15,6 @@ export default class Game {
     this.iceSandFields = [];
     this.portals = [];
     this.setupPowerups();
-    this.setupIceSandFields();
     this.setupWalls();
     this.setupPortals();
   }
@@ -74,6 +73,9 @@ export default class Game {
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
     });
+    setTimeout(() => {
+      this.iceSandFields.splice(0, 4);
+    }, 5000);
   }
 
   setupPortals() {
@@ -345,6 +347,9 @@ export default class Game {
       this.timer -= 1;
       if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
         this.placeRandomPowerUp();
+      }
+      if (this.timer % 10 === 0) {
+        this.setupIceSandFields();
       }
       console.log(this.timer);
       if (this.timer === 0) {
