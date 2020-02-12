@@ -267,16 +267,14 @@ export default class View {
 
     const instructionButton = document.getElementById('instructionbutton');
     instructionButton.onclick = () => {
-      View.showInstructionScreen(callback, this.images);
+      this.showInstructionScreen(callback, this.images);
     };
   }
 
-  static showInstructionScreen(callback, images) {
-    this.hideDeathMessage();
-    this.hideStartScreen();
+  showInstructionScreen(callback, images) {
+    View.hideDeathMessage();
+    View.hideStartScreen();
     document.getElementById('instructionscreen').style.display = 'initial';
-
-    console.log("this.images", images);
 
     document.getElementById('arrowbuttons-img').appendChild(images.arrowbuttons);
     document.getElementById('mouseclick-img').appendChild(images.mouseclick);
@@ -289,8 +287,7 @@ export default class View {
 
     const backButton = document.getElementById('backbutton');
     backButton.onclick = () => {
-      let view = new View();
-      view.showStartScreen(callback);
+      this.showStartScreen(callback);
     };
   }
 
