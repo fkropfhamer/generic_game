@@ -140,12 +140,13 @@ export default class Client {
       this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
     );
     this.drawPlayerIndicator();
-    this.drawCrossHair();
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {
       this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
     });
+
+    this.drawCrossHair();
   }
 
   setupKeyPressedEvents() {
