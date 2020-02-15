@@ -1,5 +1,4 @@
 import config from './config';
-import { iceSandTypes } from './enums';
 
 export default class IceSand {
   constructor(x, y, type) {
@@ -21,20 +20,5 @@ export default class IceSand {
         type: isf.type,
       };
     });
-  }
-
-  manipulatePlayer(player) {
-    let walkingOnEffect = config.INITIALIZE_WITH_ZERO;
-    switch (this.type) {
-      case iceSandTypes.ICE:
-        walkingOnEffect = config.ICE_SPEED;
-        break;
-      case iceSandTypes.SAND:
-        walkingOnEffect = config.SAND_SPEED;
-        break;
-      default:
-        throw Error('unknown type');
-    }
-    player.speed = config.PLAYER_SPEED * walkingOnEffect;
   }
 }

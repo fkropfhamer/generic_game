@@ -34,6 +34,11 @@ describe('client', () => {
       drawCircle: jest.fn(),
       drawRectangle: jest.fn(),
       drawNestedRings: jest.fn(),
+      drawCrossHair: jest.fn(),
+      canvas: {
+        offsetLeft: 3,
+        offsetTop: 4,
+      },
     };
 
     audios = { backgroundMusic: { play: jest.fn() }, splash: { play: jest.fn() } };
@@ -150,8 +155,8 @@ describe('client', () => {
     expect(view.reset).toHaveBeenCalledTimes(1);
     expect(view.drawCircle).toHaveBeenCalledTimes(1);
     expect(view.drawCircle).toHaveBeenNthCalledWith(1, 1, 2, config.BULLET_RADIUS, 'blue');
-    expect(view.drawRectangle).toHaveBeenCalledTimes(2);
-    expect(view.drawRectangle).toHaveBeenCalledWith(1, 2, 4, 3, 5, 'green', 'black');
+    expect(view.drawRectangle).toHaveBeenCalledTimes(1);
+    expect(view.drawRectangle).toHaveBeenCalledWith(1, 2, 4, 3, 5, 'green', 'black', 3);
     expect(client.drawPlayer).toHaveBeenCalledTimes(2);
     expect(client.drawPlayer).toHaveBeenNthCalledWith(
       1,
@@ -178,6 +183,8 @@ describe('client', () => {
       false,
       undefined
     );
+    expect(view.drawCrossHair).toHaveBeenCalledTimes(1);
+    expect(view.drawCrossHair).toHaveBeenCalledWith(0, 0, NaN);
   });
 
   test('client draw player indicator', () => {
@@ -206,6 +213,9 @@ describe('client', () => {
     client.calculateAngle = jest.fn(() => 1);
 
     client.mouseMove({ clientX: 2, clientY: 3 });
+
+    expect(client.mouseX).toBe(-1);
+    expect(client.mouseY).toBe(-1);
 
     expect(client.calculateAngle).toHaveBeenCalledTimes(1);
     expect(client.calculateAngle).toHaveBeenCalledWith(2, 3, 4, 5);
@@ -410,7 +420,7 @@ describe('client', () => {
     expect(client.teamLives).toBe(11);
     expect(client.powerUps).toBe(12);
     expect(client.bullets).toEqual(13);
-    expect(client.draw).toHaveBeenCalledTimes(1);
+    expect(client.draw).toHaveBeenCalledTimes(0);
     expect(socket.emit).toHaveBeenCalledTimes(1);
     expect(socket.emit).toHaveBeenCalledWith('keyspressed', {
       up: undefined,

@@ -144,16 +144,16 @@ describe('view', () => {
     view.ctx = mockContext;
     view.scale = 0.5;
 
-    view.drawRectangle(2, 4, 6, 8, 0, 'red', 'green');
+    view.drawRectangle(2, 4, 6, 8, 0, 'red', 'green', 3);
 
     expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
     expect(mockContext.moveTo).toHaveBeenCalledTimes(1);
-    expect(mockContext.moveTo).toHaveBeenCalledWith(-1, 1);
+    expect(mockContext.moveTo).toHaveBeenCalledWith(-1, 0);
     expect(mockContext.lineTo).toHaveBeenCalledTimes(4);
-    expect(mockContext.lineTo).toHaveBeenNthCalledWith(1, 3, 1);
-    expect(mockContext.lineTo).toHaveBeenNthCalledWith(2, 3, 4);
-    expect(mockContext.lineTo).toHaveBeenNthCalledWith(3, -1, 4);
-    expect(mockContext.lineTo).toHaveBeenNthCalledWith(4, -1, 1);
+    expect(mockContext.lineTo).toHaveBeenNthCalledWith(1, 3, 0);
+    expect(mockContext.lineTo).toHaveBeenNthCalledWith(2, 3, 3);
+    expect(mockContext.lineTo).toHaveBeenNthCalledWith(3, -1, 3);
+    expect(mockContext.lineTo).toHaveBeenNthCalledWith(4, -1, 0);
     expect(mockContext.fillStyle).toBe('red');
     expect(mockContext.strokeStyle).toBe('green');
     expect(mockContext.lineWidth).toBe(3);
@@ -174,7 +174,7 @@ describe('view', () => {
     expect(mockContext.clearRect).toHaveBeenCalledWith(0, 0, 1024, 576);
   });
 
-  test('view draw image at angle', () => {
+  test('view draw image at angle prescaled', () => {
     const mockContext = {
       save: jest.fn(),
       translate: jest.fn(),
@@ -183,12 +183,20 @@ describe('view', () => {
       restore: jest.fn(),
     };
 
+    const prescaledImage = {};
+
+    const mockPreScaledImages = {
+      img: prescaledImage,
+    };
+
     const mockImage = {
+      src: 'img',
       width: 2,
       height: 3,
     };
 
     view.ctx = mockContext;
+    view.preScaledImages = mockPreScaledImages;
     view.scale = 1;
 
     view.drawImageAtAngle(mockImage, 2, 4, 5);
@@ -199,7 +207,7 @@ describe('view', () => {
     expect(mockContext.rotate).toHaveBeenCalledTimes(1);
     expect(mockContext.rotate).toHaveBeenCalledWith(5);
     expect(mockContext.drawImage).toHaveBeenCalledTimes(1);
-    expect(mockContext.drawImage).toHaveBeenCalledWith(mockImage, -1, -1, 2, 3);
+    expect(mockContext.drawImage).toHaveBeenCalledWith(prescaledImage, -1, -1);
     expect(mockContext.restore).toHaveBeenCalledTimes(1);
   });
 
@@ -243,7 +251,7 @@ describe('view', () => {
   test('view show timer', () => {
     View.showTimer(30);
 
-    expect(elements.timeprogress.style.width).toBe('17%');
+    expect(elements.timeprogress.style.width).toBe('16%');
   });
 
   test('view show waiting player === 1', () => {
