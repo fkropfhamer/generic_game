@@ -14,6 +14,10 @@ export const iceSandTypes = Object.freeze({
 export const Color = Object.freeze({
   BLUE: 'blue',
   RED: 'red',
+  BLACK: 'black',
+  WHITE: 'white',
+  YELLOW: 'yellow',
+  GREY: 'grey',
 });
 
 export const Mode = Object.freeze({
@@ -30,4 +34,29 @@ export const Key = Object.freeze({
   KEY_W: 'KeyW',
   KEY_D: 'KeyD',
   KEY_A: 'KeyA',
+});
+
+export const SocketEvent = Object.freeze({
+  CONNECTION: 'connection',
+  KEYSPRESSED: 'keyspressed',
+  SHOOT: 'shoot',
+  UPDATE_ANGLE: 'update angle',
+  DISCONNECT: 'disconnect',
+  READY: 'ready',
+  START: 'start',
+  WAIT: 'wait',
+  UPDATE: 'update',
+  TIME_OVER: 'time over',
+  WIN: 'win',
+  LOSE: 'lose',
+  SPLASH_SOUND: 'splash sound',
+  DEATH: 'death',
+  CONNECT: 'connect',
+});
+
+export const EventListener = Object.freeze({
+  KEYDOWN: 'keydown',
+  KEYUP: 'keyup',
+  CLICK: 'click',
+  MOUSEMOVE: 'mousemove',
 });

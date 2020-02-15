@@ -67,38 +67,32 @@ describe('powerup', () => {
   });
 
   test('powerup type speed', () => {
-    jest.useFakeTimers();
     const player = {};
 
     powerup.type = powerUpTypes.SPEED;
     powerup.update(player);
 
-    expect(player.speed).toBe(6);
-
-    jest.runAllTimers();
-    expect(player.speed).toBe(3);
+    expect(player.changedSpeedPowerupActive).toBe(750);
   });
 
   test('powerup type bullet', () => {
-    jest.useFakeTimers();
     const player = {};
 
     powerup.type = powerUpTypes.FIRERATE;
     powerup.update(player);
 
-    expect(player.fireRateActivated).toBe(true);
-
-    jest.runAllTimers();
-    expect(player.fireRateActivated).toBe(false);
+    expect(player.fireRateActivated).toBe(750);
   });
 
   test('powerup type freezeUp', () => {
-    const player = {};
+    const player = { isFrozen: false };
+    const players = [{}, {}];
 
     powerup.type = powerUpTypes.FREEZE;
-    powerup.update(player);
+    powerup.update(player, players);
 
-    expect(player.freezingOthers).toBe(true);
-    expect(player.isFreezed).toBe(false);
+    expect(players[0].isFrozen).toBe(750);
+    expect(players[1].isFrozen).toBe(750);
+    expect(player.isFrozen).toBe(false);
   });
 });

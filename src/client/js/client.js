@@ -1,6 +1,7 @@
 import config from '../../server/config';
 import View from './view';
-import { Key } from '../../server/enums';
+// eslint-disable-next-line object-curly-newline
+import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -8,6 +9,8 @@ export default class Client {
     this.view = view;
     this.images = images;
     this.audios = audios;
+    this.mouseX = 0;
+    this.mouseY = 0;
     this.view.showStartScreen(this.setup.bind(this));
   }
 
@@ -18,15 +21,21 @@ export default class Client {
     this.pressedDown = false;
     this.pressedLeft = false;
     this.pressedRight = false;
-    this.socket.emit('ready', { face, mode });
+    this.socket.emit(SocketEvent.READY, { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
-    this.view.drawImageAtAngle(this.images[color], x, y, angle, 0.5);
-    if (lives < 3) {
-      this.view.drawImageAtAngle(this.images[`${color}${lives}life`], x, y, angle + hitAngle, 0.5);
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFrozen) {
+    this.view.drawImageAtAngle(this.images[color], x, y, angle, config.PLAYER_SCALE);
+    if (lives < config.PLAYER_LIVES) {
+      this.view.drawImageAtAngle(
+        this.images[`${color}${lives}life`],
+        x,
+        y,
+        angle + hitAngle,
+        config.PLAYER_SCALE
+      );
     }
-    this.view.drawImageAtAngle(this.images[face], x, y, angle, 0.5);
+    this.view.drawImageAtAngle(this.images[face], x, y, angle, config.PLAYER_SCALE);
     if (isShielded) {
       this.view.drawRing(
         x,
@@ -37,14 +46,14 @@ export default class Client {
         color
       );
     }
-    if (isFreezed) {
-      this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, 0.5);
+    if (isFrozen) {
+      this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, config.PLAYER_SCALE);
     }
   }
 
   drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
-    if (starttime > this.timer && endtime < this.timer) {
-      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, 'black');
+    if (starttime > timer && endtime < timer) {
+      this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, Color.BLACK);
       this.view.drawNestedRings(
         x1,
         y1,
@@ -53,7 +62,7 @@ export default class Client {
         config.PORTAL_COLOR,
         timer % config.PORTAL_ANIMATION
       );
-      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, 'black');
+      this.view.drawCircle(x2, y2, config.PORTAL_RADIUS, Color.BLACK);
       this.view.drawNestedRings(
         x2,
         y2,
@@ -65,16 +74,41 @@ export default class Client {
     }
   }
 
+  drawCrossHair() {
+    const shootingRateFraction = this.shootingCount / config.SHOOTING_RATE;
+    const shootingRateFractionBoosted = shootingRateFraction * config.POWERUP_FIRERATE_BOOSTER;
+    if (this.fireRateActivated) {
+      this.view.drawCrossHair(this.mouseX, this.mouseY, shootingRateFractionBoosted);
+    } else {
+      this.view.drawCrossHair(this.mouseX, this.mouseY, shootingRateFraction);
+    }
+  }
+
+  drawPlayerIndicator() {
+    this.view.drawPlayerIndicator(this.x, this.y);
+  }
+
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
-    this.iceSandFields.forEach((isf) =>
-      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
-    );
+
+    this.iceSandFields.forEach((isf) => {
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1);
+    });
+
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
-      this.view.drawRectangle(w.x, w.y, w.height, w.width, w.angle, w.fillColor, w.strokeColor)
+      this.view.drawRectangle(
+        w.x,
+        w.y,
+        w.height,
+        w.width,
+        w.angle,
+        w.fillColor,
+        w.strokeColor,
+        config.WALL_LINEWIDTH
+      )
     );
 
     this.drawPlayer(
@@ -86,9 +120,8 @@ export default class Client {
       this.angle,
       this.hitAngle,
       this.isShielded,
-      this.isFreezed
+      this.isFrozen
     );
-    this.drawPlayerIndicator();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -99,34 +132,45 @@ export default class Client {
         player.angle,
         player.hitAngle,
         player.isShielded,
-        player.isFreezed
+        player.isFrozen
       );
     });
 
-    this.powerUps.forEach((p) => this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, 0.4));
+    this.powerUps.forEach((p) =>
+      this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
+    );
+    this.drawPlayerIndicator();
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {
       this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
     });
+
+    this.drawCrossHair();
   }
 
-  drawPlayerIndicator() {
-    this.view.drawPlayerIndicator(this.x, this.y);
+  loop() {
+    this.draw();
+
+    if (!this.isEnded) {
+      window.requestAnimationFrame(this.loop.bind(this));
+    }
   }
 
   setupKeyPressedEvents() {
-    window.addEventListener('keydown', this.keyPressed.bind(this));
-    window.addEventListener('keyup', this.keyUp.bind(this));
-    window.addEventListener('click', this.shoot.bind(this));
-    window.addEventListener('mousemove', this.mouseMove.bind(this));
+    window.addEventListener(EventListener.KEYDOWN, this.keyPressed.bind(this));
+    window.addEventListener(EventListener.KEYUP, this.keyUp.bind(this));
+    window.addEventListener(EventListener.CLICK, this.shoot.bind(this));
+    window.addEventListener(EventListener.MOUSEMOVE, this.mouseMove.bind(this));
   }
 
   mouseMove(e) {
+    this.mouseX = e.clientX - this.view.canvas.offsetLeft;
+    this.mouseY = e.clientY - this.view.canvas.offsetTop;
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
 
-    this.socket.emit('update angle', { angle });
+    this.socket.emit(SocketEvent.UPDATE_ANGLE, { angle });
   }
 
   calculateAngle(x1, y1, x2, y2) {
@@ -141,7 +185,7 @@ export default class Client {
   shoot(e) {
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
-    this.socket.emit('shoot', { angle });
+    this.socket.emit(SocketEvent.SHOOT, { angle });
   }
 
   keyPressed(e) {
@@ -192,14 +236,16 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.isFreezed = data.isFreezed;
+    this.isFrozen = data.isFrozen;
+    this.shootingCount = data.shootingCount;
+    this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
     this.portals = data.portals;
     this.audios.backgroundMusic.loop = true;
     this.audios.backgroundMusic.play();
-    this.draw();
+    this.loop();
     this.setupKeyPressedEvents();
   }
 
@@ -219,13 +265,14 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.isFreezed = data.isFreezed;
+    this.isFrozen = data.isFrozen;
+    this.shootingCount = data.shootingCount;
+    this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
     this.portals = data.portals;
-    this.draw();
-    this.socket.emit('keyspressed', {
+    this.socket.emit(SocketEvent.KEYSPRESSED, {
       up: this.pressedUp,
       down: this.pressedDown,
       left: this.pressedLeft,
@@ -269,14 +316,14 @@ export default class Client {
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
-    this.socket.on('connect', this.onConnected.bind(this));
-    this.socket.on('start', this.onStart.bind(this));
-    this.socket.on('update', this.onUpdate.bind(this));
-    this.socket.on('wait', this.onWait.bind(this));
-    this.socket.on('time over', this.onTimeOver.bind(this));
-    this.socket.on('win', this.onWin.bind(this));
-    this.socket.on('lose', this.onLose.bind(this));
-    this.socket.on('splash sound', this.onSplashSound.bind(this));
-    this.socket.on('death', this.onDeath.bind(this));
+    this.socket.on(SocketEvent.CONNECT, this.onConnected.bind(this));
+    this.socket.on(SocketEvent.START, this.onStart.bind(this));
+    this.socket.on(SocketEvent.UPDATE, this.onUpdate.bind(this));
+    this.socket.on(SocketEvent.WAIT, this.onWait.bind(this));
+    this.socket.on(SocketEvent.TIME_OVER, this.onTimeOver.bind(this));
+    this.socket.on(SocketEvent.WIN, this.onWin.bind(this));
+    this.socket.on(SocketEvent.LOSE, this.onLose.bind(this));
+    this.socket.on(SocketEvent.SPLASH_SOUND, this.onSplashSound.bind(this));
+    this.socket.on(SocketEvent.DEATH, this.onDeath.bind(this));
   }
 }

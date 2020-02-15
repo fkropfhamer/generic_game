@@ -32,7 +32,7 @@ export default class Util {
         face: player.face,
         hitAngle: player.hitAngle,
         isShielded: player.isShielded,
-        isFreezed: player.isFreezed,
+        isFrozen: player.isFrozen,
       };
     });
   }
@@ -109,7 +109,15 @@ export default class Util {
     return { x, y };
   }
 
-  static collisionRectCircle(rect, circle) {
+  static collisionOfRectWithCircleWithoutAngle(rect, circle) {
+    const corners = this.calculateCornerPoints(rect);
+    const isInConstraintY = circle.y >= corners.a.y && circle.y <= corners.d.y;
+    const isInConstraintX = circle.x >= corners.a.x && circle.x <= corners.b.x;
+
+    return isInConstraintX && isInConstraintY;
+  }
+
+  static collisionOfRectWithCircle(rect, circle) {
     const corners = this.calculateCornerPoints(rect);
 
     const rotatedA = this.rotatePointAroundPoint(corners.a, rect, rect.angle);
@@ -146,11 +154,15 @@ export default class Util {
     return false;
   }
 
-  static collisionCircleCircle(circle1, circle2) {
+  static collisionOfCircleWithCircle(circle1, circle2) {
     const distance = this.pointDistance(circle1, circle2);
     if (distance <= circle1.radius + circle2.radius) {
       return true;
     }
     return false;
+  }
+
+  static radiusMinusDiameterOfCircle(radius1, radius2) {
+    return radius1 - 2 * radius2;
   }
 }

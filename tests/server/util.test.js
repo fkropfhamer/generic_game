@@ -108,11 +108,11 @@ describe('Util test', () => {
 
     const circle = { x: config.PLAYER_RADIUS + 15, y: config.PLAYER_RADIUS + 15 };
 
-    expect(Util.collisionRectCircle(rect, circle)).toBe(false);
+    expect(Util.collisionOfRectWithCircle(rect, circle)).toBe(false);
 
     const circle2 = { x: config.PLAYER_RADIUS + 14, y: config.PLAYER_RADIUS + 14 };
 
-    expect(Util.collisionRectCircle(rect, circle2)).toBe(false);
+    expect(Util.collisionOfRectWithCircle(rect, circle2)).toBe(false);
   });
 
   test('collision rect circle top', () => {
@@ -126,7 +126,7 @@ describe('Util test', () => {
 
     const circle = { x: 10, y: 20, radius: 6 };
 
-    const result = Util.collisionRectCircle(rect, circle);
+    const result = Util.collisionOfRectWithCircle(rect, circle);
 
     expect(result).toEqual({ angle: Math.PI / 2, dis: 5 });
   });
@@ -142,7 +142,7 @@ describe('Util test', () => {
 
     const circle = { x: 10, y: 0, radius: 6 };
 
-    const result = Util.collisionRectCircle(rect, circle);
+    const result = Util.collisionOfRectWithCircle(rect, circle);
 
     expect(result).toEqual({ angle: Math.PI * 1.5, dis: 5 });
   });
@@ -158,7 +158,7 @@ describe('Util test', () => {
 
     const circle = { x: 0, y: 10, radius: 6 };
 
-    const result = Util.collisionRectCircle(rect, circle);
+    const result = Util.collisionOfRectWithCircle(rect, circle);
 
     expect(result).toEqual({ angle: Math.PI, dis: 5 });
   });
@@ -174,7 +174,7 @@ describe('Util test', () => {
 
     const circle = { x: 20, y: 10, radius: 6 };
 
-    const result = Util.collisionRectCircle(rect, circle);
+    const result = Util.collisionOfRectWithCircle(rect, circle);
 
     expect(result).toEqual({ angle: 0, dis: 5 });
   });
@@ -183,9 +183,9 @@ describe('Util test', () => {
     const circle1 = { x: 10, y: 10, radius: 2 };
     const circle2 = { x: 20, y: 20, radius: 5 };
 
-    expect(Util.collisionCircleCircle(circle1, circle1)).toBe(true);
-    expect(Util.collisionCircleCircle(circle2, circle2)).toBe(true);
-    expect(Util.collisionCircleCircle(circle1, circle2)).toBe(false);
+    expect(Util.collisionOfCircleWithCircle(circle1, circle1)).toBe(true);
+    expect(Util.collisionOfCircleWithCircle(circle2, circle2)).toBe(true);
+    expect(Util.collisionOfCircleWithCircle(circle1, circle2)).toBe(false);
   });
 
   test('deepfreeze', () => {
@@ -206,6 +206,9 @@ describe('Util test', () => {
 
     const circle = { x: 1, y: 1, radius: 2 };
 
-    expect(Util.collisionRectCircle(rect, circle)).toEqual({ angle: Math.PI * 1.5, dis: 0.5 });
+    expect(Util.collisionOfRectWithCircle(rect, circle)).toEqual({
+      angle: Math.PI * 1.5,
+      dis: 0.5,
+    });
   });
 });

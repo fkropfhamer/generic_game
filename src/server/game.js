@@ -15,7 +15,6 @@ export default class Game {
     this.iceSandFields = [];
     this.portals = [];
     this.setupPowerups();
-    this.setupIceSandFields();
     this.setupWalls();
     this.setupPortals();
   }
@@ -49,23 +48,8 @@ export default class Game {
     this.interval = setInterval(this.loop.bind(this), 10);
   }
 
-  placeRandomPowerUp() {
-    setInterval(() => {
-      if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
-        do {
-          const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
-          if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
-            this.randomPowerUps.push(randomPowerUp);
-            console.log(randomPowerUp.type);
-            break;
-          }
-        } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
-      }
-    }, config.POWERUP_SPAWN_DELAY);
-  }
-
   setupPowerups() {
-    config.POWER_UPS_POSITION.forEach((powerUp) => {
+    config.POWERUP_POSITIONS.forEach((powerUp) => {
       this.powerUps.push(
         new PowerUp(
           powerUp.x,
@@ -74,17 +58,30 @@ export default class Game {
         )
       );
     });
-    this.placeRandomPowerUp();
   }
 
-  setupIceSandFields() {
+  placeRandomPowerUp() {
+    if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
+      const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
+      if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
+        this.randomPowerUps.push(randomPowerUp);
+      }
+    }
+  }
+
+  placeIceSandFields() {
+    const iceSandSpawnProbability = config.ICE_SAND_SPAWN_PROBABILTIY;
+    this.iceSandFields = [];
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
-      this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+      const randomNumber = Math.random();
+      if (randomNumber <= iceSandSpawnProbability) {
+        this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+      }
     });
   }
 
   setupPortals() {
-    config.portals.forEach((portal) => {
+    config.PORTALS.forEach((portal) => {
       this.portals.push(portal);
     });
   }
@@ -106,21 +103,21 @@ export default class Game {
         ...config.constraintWalls,
         x: i,
         width: horizontalWidth,
-        y: config.FIELD_HEIGHT - 10,
+        y: config.FIELD_HEIGHT - config.constraintWalls.y,
       });
     }
     const veritcalWidth = config.FIELD_HEIGHT / config.NUMBER_OF_VERTICAL_WALLS;
     for (let i = veritcalWidth / 2; i < config.FIELD_HEIGHT; i += veritcalWidth) {
       this.walls.push({
         ...config.constraintWalls,
-        x: 10,
+        x: config.constraintWalls.y,
         y: i,
         width: veritcalWidth,
         angle: Math.PI / 2,
       });
       this.walls.push({
         ...config.constraintWalls,
-        x: config.FIELD_WIDTH - 10,
+        x: config.FIELD_WIDTH - config.constraintWalls.y,
         y: i,
         width: veritcalWidth,
         angle: Math.PI / 2,
@@ -129,17 +126,19 @@ export default class Game {
   }
 
   setupBarrierWalls() {
-    for (let i = 1; i <= 3; i += 1) {
-      for (let j = 1; j <= 3; j += 1) {
+    const n = config.NUMBER_OF_HORIZONTAL_BARRIERS + 1;
+    const m = config.NUMBER_OF_VERTICAL_BARRIERS + 1;
+    for (let i = 1; i <= config.NUMBER_OF_HORIZONTAL_BARRIERS; i += 1) {
+      for (let j = 1; j <= config.NUMBER_OF_VERTICAL_BARRIERS; j += 1) {
         this.walls.push({
           ...config.barrierWalls,
-          x: (config.FIELD_WIDTH / 4) * i,
-          y: (config.FIELD_HEIGHT / 4) * j,
+          x: (config.FIELD_WIDTH / n) * i,
+          y: (config.FIELD_HEIGHT / m) * j,
         });
         this.walls.push({
           ...config.barrierWalls,
-          x: (config.FIELD_WIDTH / 4) * i,
-          y: (config.FIELD_HEIGHT / 4) * j,
+          x: (config.FIELD_WIDTH / n) * i,
+          y: (config.FIELD_HEIGHT / m) * j,
           angle: -config.barrierWalls.angle,
         });
       }
@@ -163,21 +162,16 @@ export default class Game {
   checkBulletHitsPlayer(player) {
     this.bullets.forEach((bullet) => {
       if (bullet.color !== player.color) {
-        if (Util.collisionCircleCircle(player, bullet)) {
+        if (Util.collisionOfCircleWithCircle(player, bullet)) {
           const v1 = { x: bullet.x - player.x, y: bullet.y - player.y };
-          const v2 = { x: 10, y: 0 };
 
-          const angle = Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x);
-          const hitAngle = -angle - player.angle;
+          const angle = Math.atan2(v1.y, v1.x);
+          const hitAngle = angle - player.angle;
 
           player.hitAngle = hitAngle;
 
-          if (player.isFreezed) {
-            this.players.forEach((p) => {
-              console.log('freezing deactivated');
-              p.isFreezed = false;
-              p.freezingOthers = false;
-            });
+          if (player.isFrozen) {
+            player.isFrozen = false;
           }
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
@@ -208,20 +202,9 @@ export default class Game {
 
   checkPlayerHitsPowerUp(player) {
     this.randomPowerUps.forEach((powerUp) => {
-      if (Util.collisionCircleCircle(powerUp, player)) {
-        powerUp.update(player);
-        if (player.freezingOthers) {
-          this.players.forEach((freezedPlayer) => {
-            if (!Object.is(freezedPlayer, player)) {
-              freezedPlayer.isFreezed = true;
-              freezedPlayer.freezingOthers = false;
-              setTimeout(() => {
-                freezedPlayer.isFreezed = false;
-                player.freezingOthers = false;
-              }, config.POWERUP_DURATION);
-            }
-          });
-        }
+      if (Util.collisionOfCircleWithCircle(powerUp, player)) {
+        const otherPlayers = this.getOtherPlayers(player);
+        powerUp.update(player, otherPlayers);
         this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
@@ -230,33 +213,22 @@ export default class Game {
   checkPlayerWalksOnIceOrSand(player) {
     let onSand = false;
     let onIce = false;
-    this.iceSandFields.forEach((field) => {
-      const collides = Util.collisionCircleCircle(field, player);
-      if (collides) {
-        if (field.type === iceSandTypes.ICE) {
-          onSand = false;
+
+    for (let i = 0; i < this.iceSandFields.length; i++) {
+      const iceSandField = this.iceSandFields[i];
+      if (Util.collisionOfRectWithCircleWithoutAngle(iceSandField, player)) {
+        if (iceSandField.type === iceSandTypes.ICE) {
           onIce = true;
-          field.manipulatePlayer(player);
         }
-        if (field.type === iceSandTypes.SAND) {
+        if (iceSandField.type === iceSandTypes.SAND) {
           onSand = true;
-          onIce = false;
-          field.manipulatePlayer(player);
         }
-      } else {
-        if (field.type === iceSandTypes.SAND) {
-          onSand = false;
-        }
-        if (field.type === iceSandTypes.ICE) {
-          onIce = false;
-        }
-        if (player.changedSpeedPowerupActive && !onIce && !onSand) {
-          player.speed = 2 * config.PLAYER_SPEED;
-        } else if (!player.changedSpeedPowerupActive && !onIce && !onSand) {
-          player.speed = config.PLAYER_SPEED;
-        }
+        break;
       }
-    });
+    }
+
+    player.isOnIce = onIce;
+    player.isOnSand = onSand;
   }
 
   checkSomethingHitsPortal(something) {
@@ -266,27 +238,27 @@ export default class Game {
         const portal1 = {
           x: portal.x1,
           y: portal.y1,
-          radius: config.PORTAL_RADIUS - 2 * something.radius,
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
         };
         const portal2 = {
           x: portal.x2,
           y: portal.y2,
-          radius: config.PORTAL_RADIUS - 2 * something.radius,
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
         };
-        if (Util.collisionCircleCircle(portal1, something)) {
-          something.x = portal.x2 - (something.x - portal.x1) * 1.1;
-          something.y = portal.y2 - (something.y - portal.y1) * 1.1;
+        if (Util.collisionOfCircleWithCircle(portal1, something)) {
+          something.x = portal.x2 - (something.x - portal.x1) * config.PORTAL_OFFSET;
+          something.y = portal.y2 - (something.y - portal.y1) * config.PORTAL_OFFSET;
         }
-        if (Util.collisionCircleCircle(portal2, something)) {
-          something.x = portal.x1 - (something.x - portal.x2) * 1.1;
-          something.y = portal.y1 - (something.y - portal.y2) * 1.1;
+        if (Util.collisionOfCircleWithCircle(portal2, something)) {
+          something.x = portal.x1 - (something.x - portal.x2) * config.PORTAL_OFFSET;
+          something.y = portal.y1 - (something.y - portal.y2) * config.PORTAL_OFFSET;
         }
       });
   }
 
   checkWallCollisionPlayer(player) {
     this.walls.forEach((wall) => {
-      const playerCollides = Util.collisionRectCircle(wall, player);
+      const playerCollides = Util.collisionOfRectWithCircle(wall, player);
       if (playerCollides) {
         const angle = playerCollides.angle + wall.angle;
         const dis = config.PLAYER_RADIUS - playerCollides.dis;
@@ -299,7 +271,7 @@ export default class Game {
 
   checkWallCollisionBullet(bullet) {
     this.walls.forEach((wall) => {
-      const bulletCollides = Util.collisionRectCircle(wall, bullet);
+      const bulletCollides = Util.collisionOfRectWithCircle(wall, bullet);
       if (bulletCollides) {
         this.bullets = this.bullets.filter((b) => !Object.is(b, bullet));
         wall.fillColor = bullet.color;
@@ -351,7 +323,7 @@ export default class Game {
   checkPlayerCollisionPlayer(player1) {
     this.players.forEach((player2) => {
       if (!Object.is(player1, player2)) {
-        if (Util.collisionCircleCircle(player1, player2)) {
+        if (Util.collisionOfCircleWithCircle(player1, player2)) {
           let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
           alpha = alpha || 0;
           player1.x += Math.sign(player1.x - player2.x) * config.PLAYER_REPULSION * Math.cos(alpha);
@@ -373,9 +345,15 @@ export default class Game {
   }
 
   loop() {
-    if (this.count % 100 === 0) {
+    if (this.count % config.TIMER_RATE === 0) {
       this.timer -= 1;
-      console.log(this.timer);
+      if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
+        this.placeRandomPowerUp();
+      }
+      if (this.timer % config.ICE_SAND_SPAWN_DELAY === 0) {
+        this.placeIceSandFields();
+      }
+
       if (this.timer === 0) {
         this.timeIsOver();
       }
@@ -394,9 +372,7 @@ export default class Game {
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
-      if (!player.isFreezed) {
-        player.update();
-      }
+      player.update();
       this.checkWallCollisionPlayer(player);
 
       this.checkBulletHitsPlayer(player);

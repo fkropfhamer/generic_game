@@ -21,7 +21,7 @@ export default class PowerUp {
   }
 
   static addHealthUpdate(player) {
-    if (player.lives < 3) {
+    if (player.lives < config.PLAYER_LIVES) {
       player.lives += 1;
     }
   }
@@ -31,30 +31,23 @@ export default class PowerUp {
   }
 
   static addSpeedUpdate(player) {
-    player.speed = 2 * config.PLAYER_SPEED;
-    player.changedSpeedPowerupActive = true;
-    setTimeout(() => {
-      player.speed = config.PLAYER_SPEED;
-      player.changedSpeedPowerupActive = false;
-    }, config.POWERUP_DURATION);
+    player.changedSpeedPowerupActive = config.POWERUP_DURATION;
   }
 
   static addBulletUpdate(player) {
-    player.fireRateActivated = true;
-    setTimeout(() => {
-      player.fireRateActivated = false;
-    }, config.POWERUP_DURATION);
+    player.fireRateActivated = config.POWERUP_DURATION;
   }
 
-  static freezeUp(player) {
-    player.freezingOthers = true;
-    player.isFreezed = false;
+  static addfreezeUpUpdate(otherPlayers) {
+    otherPlayers.forEach((player) => {
+      player.isFrozen = config.POWERUP_DURATION;
+    });
   }
 
-  update(player) {
+  update(player, otherPlayers) {
     switch (this.type) {
       case powerUpTypes.FREEZE:
-        PowerUp.freezeUp(player);
+        PowerUp.addfreezeUpUpdate(otherPlayers);
         break;
       case powerUpTypes.ADDHEALTH:
         PowerUp.addHealthUpdate(player);

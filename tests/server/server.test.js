@@ -37,6 +37,17 @@ describe('server', () => {
     expect(server.waitingPlayers).toEqual([]);
   });
 
+  test('server start', () => {
+    server.listen = jest.fn();
+    server.setupSocket = jest.fn();
+
+    server.start(8080);
+
+    expect(server.listen).toHaveBeenCalledTimes(1);
+    expect(server.listen).toHaveBeenCalledWith(8080);
+    expect(server.setupSocket).toHaveBeenCalledTimes(1);
+  });
+
   test('server listen', () => {
     const port = 80;
 
@@ -59,7 +70,7 @@ describe('server', () => {
       }),
     };
 
-    server.setup();
+    server.setupSocket();
 
     onConnectionMock.connection(socket);
     expect(Player).toHaveBeenCalledTimes(1);

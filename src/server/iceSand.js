@@ -1,12 +1,13 @@
 import config from './config';
-import { iceSandTypes } from './enums';
 
 export default class IceSand {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
-    this.radius = config.ICESAND_RADIUS;
     this.type = type;
+    this.width = config.ICE_SAND_EXTENT.width;
+    this.height = config.ICE_SAND_EXTENT.height;
+    this.angle = 0;
   }
 
   static mapIceSand(iceSandFields) {
@@ -14,24 +15,10 @@ export default class IceSand {
       return {
         x: isf.x,
         y: isf.y,
-        radius: isf.radius,
+        width: isf.width,
+        height: isf.height,
         type: isf.type,
       };
     });
-  }
-
-  manipulatePlayer(player) {
-    let walkingOnEffect = 0;
-    switch (this.type) {
-      case iceSandTypes.ICE:
-        walkingOnEffect = config.ICE_SPEED;
-        break;
-      case iceSandTypes.SAND:
-        walkingOnEffect = config.SAND_SPEED;
-        break;
-      default:
-        throw Error('unknown type');
-    }
-    player.speed = config.PLAYER_SPEED * walkingOnEffect;
   }
 }
