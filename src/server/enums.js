@@ -15,6 +15,9 @@ export const Color = Object.freeze({
   BLUE: 'blue',
   RED: 'red',
   BLACK: 'black',
+  WHITE: 'white',
+  YELLOW: 'yellow',
+  GREY: 'grey',
 });
 
 export const Mode = Object.freeze({

@@ -1,7 +1,7 @@
 import config from '../../server/config';
 import View from './view';
 // eslint-disable-next-line object-curly-newline
-import { Color, EventListener, Key, SocketEvent, iceSandTypes } from '../../server/enums';
+import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -9,6 +9,8 @@ export default class Client {
     this.view = view;
     this.images = images;
     this.audios = audios;
+    this.mouseX = 0;
+    this.mouseY = 0;
     this.view.showStartScreen(this.setup.bind(this));
   }
 
@@ -22,7 +24,7 @@ export default class Client {
     this.socket.emit(SocketEvent.READY, { face, mode });
   }
 
-  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFreezed) {
+  drawPlayer(color, lives, face, x, y, angle, hitAngle, isShielded, isFrozen) {
     this.view.drawImageAtAngle(this.images[color], x, y, angle, config.PLAYER_SCALE);
     if (lives < config.PLAYER_LIVES) {
       this.view.drawImageAtAngle(
@@ -44,13 +46,13 @@ export default class Client {
         color
       );
     }
-    if (isFreezed) {
+    if (isFrozen) {
       this.view.drawImageAtAngle(this.images.playerIced, x, y, 0, config.PLAYER_SCALE);
     }
   }
 
   drawPortals(x1, y1, x2, y2, starttime, endtime, timer) {
-    if (starttime > this.timer && endtime < this.timer) {
+    if (starttime > timer && endtime < timer) {
       this.view.drawCircle(x1, y1, config.PORTAL_RADIUS, Color.BLACK);
       this.view.drawNestedRings(
         x1,
@@ -72,23 +74,28 @@ export default class Client {
     }
   }
 
+  drawCrossHair() {
+    const shootingRateFraction = this.shootingCount / config.SHOOTING_RATE;
+    const shootingRateFractionBoosted = shootingRateFraction * config.POWERUP_FIRERATE_BOOSTER;
+    if (this.fireRateActivated) {
+      this.view.drawCrossHair(this.mouseX, this.mouseY, shootingRateFractionBoosted);
+    } else {
+      this.view.drawCrossHair(this.mouseX, this.mouseY, shootingRateFraction);
+    }
+  }
+
+  drawPlayerIndicator() {
+    this.view.drawPlayerIndicator(this.x, this.y);
+  }
+
   draw() {
     this.view.reset();
     View.showTimer(this.timer);
+
     this.iceSandFields.forEach((isf) => {
-      const color = isf.type === iceSandTypes.ICE ? 'blue' : 'brown';
-      this.view.drawRectangle(
-        isf.x,
-        isf.y,
-        isf.height,
-        isf.width,
-        0,
-        color,
-        'black',
-        config.WALL_LINEWIDTH
-      );
-      // this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1)
+      this.view.drawImageAtAngle(this.images[isf.type], isf.x, isf.y, 0, 1);
     });
+
     this.bullets.forEach((b) => this.view.drawCircle(b.x, b.y, config.BULLET_RADIUS, b.color));
 
     this.walls.forEach((w) =>
@@ -113,9 +120,8 @@ export default class Client {
       this.angle,
       this.hitAngle,
       this.isShielded,
-      this.isFreezed
+      this.isFrozen
     );
-    this.drawPlayerIndicator();
     this.otherPlayers.forEach((player) => {
       this.drawPlayer(
         player.color,
@@ -126,22 +132,21 @@ export default class Client {
         player.angle,
         player.hitAngle,
         player.isShielded,
-        player.isFreezed
+        player.isFrozen
       );
     });
 
     this.powerUps.forEach((p) =>
       this.view.drawImageAtAngle(this.images[p.type], p.x, p.y, 0, config.POWERUP_SCALE)
     );
+    this.drawPlayerIndicator();
     View.updateTeamLiveBar(this.teamLives);
 
     this.portals.forEach((p) => {
       this.drawPortals(p.x1, p.y1, p.x2, p.y2, p.starttime, p.endtime, this.timer);
     });
-  }
 
-  drawPlayerIndicator() {
-    this.view.drawPlayerIndicator(this.x, this.y);
+    this.drawCrossHair();
   }
 
   setupKeyPressedEvents() {
@@ -152,6 +157,8 @@ export default class Client {
   }
 
   mouseMove(e) {
+    this.mouseX = e.clientX - this.view.canvas.offsetLeft;
+    this.mouseY = e.clientY - this.view.canvas.offsetTop;
     const angle = this.calculateAngle(e.clientX, e.clientY, this.x, this.y);
     this.angle = angle;
 
@@ -221,7 +228,9 @@ export default class Client {
     this.bullets = [];
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.isFreezed = data.isFreezed;
+    this.isFrozen = data.isFrozen;
+    this.shootingCount = data.shootingCount;
+    this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;
@@ -248,7 +257,9 @@ export default class Client {
     this.hitAngle = data.hitAngle;
     this.walls = data.walls;
     this.isShielded = data.isShielded;
-    this.isFreezed = data.isFreezed;
+    this.isFrozen = data.isFrozen;
+    this.shootingCount = data.shootingCount;
+    this.fireRateActivated = data.fireRateActivated;
     this.teamLives = data.teamLives;
     this.powerUps = data.powerUps;
     this.iceSandFields = data.iceSandFields;

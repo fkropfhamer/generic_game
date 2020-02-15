@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import config from '../../server/config';
+import Util from '../../server/util';
 import { Mode } from '../../server/enums';
 import background from '../img/background.png';
 
@@ -39,27 +41,80 @@ export default class View {
     this.setupCanvas();
   }
 
-  drawCircle(x, y, radius, color) {
+  drawPartOfCircle(x, y, radius, color, endAngle) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
     const scaledRadius = Math.round(radius * this.scale);
 
     this.ctx.beginPath();
-    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, endAngle, false);
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
 
-  drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
+  drawCircle(x, y, radius, color) {
+    this.drawPartOfCircle(x, y, radius, color, 2 * Math.PI);
+  }
+
+  drawPartOfRingWithoutScale(x, y, radiusObject, distanceToObject, endAngle, lineWidth, color) {
+    // const scaledX = Math.round(x * this.scale);
+    // const scaledY = Math.round(y * this.scale);
+    const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
+
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, scaledRadius, 0, endAngle, false);
+    this.ctx.lineWidth = lineWidth;
+    this.ctx.strokeStyle = color;
+    this.ctx.stroke();
+  }
+
+  drawPartOfRing(x, y, radiusObject, distanceToObject, endAngle, lineWidth, color) {
     const scaledX = Math.round(x * this.scale);
     const scaledY = Math.round(y * this.scale);
     const scaledRadius = Math.round((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
-    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, 2 * Math.PI, false);
+    this.ctx.arc(scaledX, scaledY, scaledRadius, 0, endAngle, false);
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = color;
     this.ctx.stroke();
+  }
+
+  drawRing(x, y, radiusObject, distanceToObject, lineWidth, color) {
+    this.drawPartOfRing(x, y, radiusObject, distanceToObject, 2 * Math.PI, lineWidth, color);
+  }
+
+  drawCross(x, y, radius, color, lineWidth) {
+    const innerPoint = { x, y };
+    const point = { x: x - (radius * this.scale), y: y - (radius * this.scale) };
+
+    const point1 = Util.rotatePointAroundPoint(point, innerPoint, Math.PI / 4);
+    const point2 = Util.rotatePointAroundPoint(point, innerPoint, (Math.PI / 4) * 3);
+    const point3 = Util.rotatePointAroundPoint(point, innerPoint, (Math.PI / 4) * 5);
+    const point4 = Util.rotatePointAroundPoint(point, innerPoint, (Math.PI / 4) * 7);
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(point1.x, point1.y);
+    this.ctx.lineTo(point3.x, point3.y);
+    this.ctx.moveTo(point2.x, point2.y);
+    this.ctx.lineTo(point4.x, point4.y);
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = lineWidth;
+    this.ctx.fill();
+    this.ctx.stroke();
+  }
+
+  drawCrossHair(x, y, shootingRateFraction) {
+    const state = (1 - shootingRateFraction) * 2 * Math.PI;
+    const radius = config.BULLET_INDICATOR_RADIUS;
+    const color = config.BULLET_INDICATOR_COLOR;
+    const thirdOfRadius = radius / 3;
+    const distance = thirdOfRadius + 1;
+
+    this.drawCross(x, y, radius, color, 2);
+    // this.drawCircle(x, y, thirdOfRadius, 'black');
+    this.drawPartOfRingWithoutScale(x, y, 0, distance, state, 2, color);
+    this.drawPartOfRingWithoutScale(x, y, distance, distance, state, 2, color);
   }
 
   drawRectangle(x, y, height, width, angle, fillColor, strokeColor, lineWidth) {
@@ -133,9 +188,10 @@ export default class View {
     this.ctx.lineTo(Math.round(x * this.scale), Math.round((y - 30) * this.scale));
     this.ctx.closePath();
 
-    this.ctx.fillStyle = 'yellow';
+    this.ctx.fillStyle = config.PLAYER_INDICATOR_COLOR;
     this.ctx.fill();
   }
+
 
   static showTimer(timer) {
     const timeLeftPercentage = Math.round((timer / config.GAME_DURATION) * 100);
@@ -171,6 +227,7 @@ export default class View {
 
   showStartScreen(callback) {
     document.getElementById('startscreen').style.display = 'initial';
+    View.hideInstructionScreen();
 
     this.images.face1.classList.add('img-thumbnail');
     this.images.face2.classList.add('img-thumbnail');
@@ -207,6 +264,35 @@ export default class View {
       const mode = teamgame ? Mode.TEAMS : Mode.NORMAL;
       callback(face, mode);
     };
+
+    const instructionButton = document.getElementById('instructionbutton');
+    instructionButton.onclick = () => {
+      this.showInstructionScreen(callback, this.images);
+    };
+  }
+
+  showInstructionScreen(callback, images) {
+    View.hideDeathMessage();
+    View.hideStartScreen();
+    document.getElementById('instructionscreen').style.display = 'initial';
+
+    document.getElementById('arrowbuttons-img').appendChild(images.arrowbuttons);
+    document.getElementById('mouseclick-img').appendChild(images.mouseclick);
+    document.getElementById('portal-img').appendChild(images.portalinstruction);
+    document.getElementById('health-img').appendChild(images.health);
+    document.getElementById('firerate-img').appendChild(images.firerate);
+    document.getElementById('speed-img').appendChild(images.speed);
+    document.getElementById('shield-img').appendChild(images.shield);
+    document.getElementById('freeze-img').appendChild(images.freeze);
+
+    const backButton = document.getElementById('backbutton');
+    backButton.onclick = () => {
+      this.showStartScreen(callback);
+    };
+  }
+
+  static hideInstructionScreen() {
+    document.getElementById('instructionscreen').style.display = 'none';
   }
 
   static showDeathMessage() {

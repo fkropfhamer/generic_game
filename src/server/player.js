@@ -17,7 +17,7 @@ export default class Player {
     this.isShielded = false;
     this.fireRateActivated = false;
     this.changedSpeedPowerupActive = false;
-    this.isFreezed = false;
+    this.isFrozen = false;
     this.isOnIce = false;
     this.isOnSand = false;
   }
@@ -90,7 +90,9 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
-      isFreezed: this.isFreezed,
+      isFrozen: this.isFrozen,
+      shootingCount: this.shootingCount,
+      fireRateActivated: this.fireRateActivated,
       portals,
     });
   }
@@ -119,7 +121,9 @@ export default class Player {
       teamLives,
       powerUps: mappedPowerups,
       iceSandFields: mappedIceSandFields,
-      isFreezed: this.isFreezed,
+      isFrozen: this.isFrozen,
+      shootingCount: this.shootingCount,
+      fireRateActivated: this.fireRateActivated,
       portals,
     });
   }
@@ -156,9 +160,9 @@ export default class Player {
       speed *= config.POWERUP_SPEED_BOOSTER;
     }
 
-    if (this.isFreezed > 0) {
+    if (this.isFrozen > 0) {
       speed = 0;
-      this.isFreezed -= 1;
+      this.isFrozen -= 1;
     }
 
     if (this.isOnIce) {

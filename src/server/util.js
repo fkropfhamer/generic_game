@@ -1,5 +1,3 @@
-import config from './config';
-
 export default class Util {
   constructor() {
     throw Error('Util is an abstract class and and cant be initiated');
@@ -34,7 +32,7 @@ export default class Util {
         face: player.face,
         hitAngle: player.hitAngle,
         isShielded: player.isShielded,
-        isFreezed: player.isFreezed,
+        isFrozen: player.isFrozen,
       };
     });
   }
@@ -164,7 +162,7 @@ export default class Util {
     return false;
   }
 
-  static portalRadiusMinusDiameterOfCircle(radius) {
-    return config.PORTAL_RADIUS - 2 * radius;
+  static radiusMinusDiameterOfCircle(radius1, radius2) {
+    return radius1 - 2 * radius2;
   }
 }

@@ -15,7 +15,6 @@ export default class Game {
     this.iceSandFields = [];
     this.portals = [];
     this.setupPowerups();
-    this.setupIceSandFields();
     this.setupWalls();
     this.setupPortals();
   }
@@ -49,20 +48,8 @@ export default class Game {
     this.interval = setInterval(this.loop.bind(this), 10);
   }
 
-  placeRandomPowerUp() {
-    if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
-      do {
-        const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
-        if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
-          this.randomPowerUps.push(randomPowerUp);
-          break;
-        }
-      } while (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD);
-    }
-  }
-
   setupPowerups() {
-    config.POWER_UPS_POSITION.forEach((powerUp) => {
+    config.POWERUP_POSITIONS.forEach((powerUp) => {
       this.powerUps.push(
         new PowerUp(
           powerUp.x,
@@ -73,9 +60,23 @@ export default class Game {
     });
   }
 
-  setupIceSandFields() {
+  placeRandomPowerUp() {
+    if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
+      const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
+      if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
+        this.randomPowerUps.push(randomPowerUp);
+      }
+    }
+  }
+
+  placeIceSandFields() {
+    const iceSandSpawnProbability = config.ICE_SAND_SPAWN_PROBABILTIY;
+    this.iceSandFields = [];
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
-      this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+      const randomNumber = Math.random();
+      if (randomNumber <= iceSandSpawnProbability) {
+        this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+      }
     });
   }
 
@@ -169,8 +170,8 @@ export default class Game {
 
           player.hitAngle = hitAngle;
 
-          if (player.isFreezed) {
-            player.isFreezed = false;
+          if (player.isFrozen) {
+            player.isFrozen = false;
           }
 
           this.bullets = this.bullets.filter((b) => !Object.is(bullet, b));
@@ -237,12 +238,12 @@ export default class Game {
         const portal1 = {
           x: portal.x1,
           y: portal.y1,
-          radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
         };
         const portal2 = {
           x: portal.x2,
           y: portal.y2,
-          radius: Util.portalRadiusMinusDiameterOfCircle(something.radius),
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
         };
         if (Util.collisionOfCircleWithCircle(portal1, something)) {
           something.x = portal.x2 - (something.x - portal.x1) * config.PORTAL_OFFSET;
@@ -348,6 +349,9 @@ export default class Game {
       this.timer -= 1;
       if (this.timer % config.POWERUP_SPAWN_DELAY === 0) {
         this.placeRandomPowerUp();
+      }
+      if (this.timer % config.ICE_SAND_SPAWN_DELAY === 0) {
+        this.placeIceSandFields();
       }
       console.log(this.timer);
       if (this.timer === 0) {
