@@ -70,12 +70,14 @@ export default class Game {
   }
 
   placeIceSandFields() {
+    const iceSandSpawnProbability = config.ICE_SAND_SPAWN_PROBABILTIY;
+    this.iceSandFields = [];
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
-      this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+      const randomNumber = Math.random();
+      if (randomNumber <= iceSandSpawnProbability) {
+        this.iceSandFields.push(new IceSand(iceSandField.x, iceSandField.y, iceSandField.type));
+      }
     });
-    setTimeout(() => {
-      this.iceSandFields.splice(0, 4);
-    }, config.ICE_SAND_DURATION);
   }
 
   setupPortals() {

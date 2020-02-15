@@ -1,7 +1,7 @@
 import config from '../../server/config';
 import View from './view';
 // eslint-disable-next-line object-curly-newline
-import { Color, EventListener, Key, SocketEvent, iceSandTypes } from '../../server/enums';
+import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
