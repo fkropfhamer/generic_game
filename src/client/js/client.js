@@ -219,8 +219,8 @@ export default class Client {
   }
 
   onStart() {
-    console.log('game starting!');
     View.hideStartingScreen();
+    this.view.hideCursor();
     this.audios.backgroundMusic.loop = true;
     this.audios.backgroundMusic.play();
     this.loop();
@@ -259,31 +259,31 @@ export default class Client {
   }
 
   onWait(data) {
-    console.log('you have to wait!');
     View.showWaitingScreen(data.numberOfPlayers);
     this.isWaiting = true;
   }
 
   onTimeOver() {
     View.showTimeOverScreen();
+    this.view.showCursor();
     this.isEnded = true;
   }
 
   onWin() {
-    console.log('win');
     View.showWinScreen();
+    this.view.showCursor();
     this.isEnded = true;
   }
 
   onLose() {
-    console.log('lose');
     View.showLoseScreen();
+    this.view.showCursor();
     this.isEnded = true;
   }
 
   onDeath() {
-    console.log('death');
     View.showDeathMessage();
+    this.view.showCursor();
     this.isDead = true;
   }
 

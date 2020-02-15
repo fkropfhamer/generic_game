@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import config from '../../server/config';
 import Util from '../../server/util';
 import { Mode } from '../../server/enums';
@@ -88,7 +87,7 @@ export default class View {
 
   drawCross(x, y, radius, color, lineWidth) {
     const innerPoint = { x, y };
-    const point = { x: x - (radius * this.scale), y: y - (radius * this.scale) };
+    const point = { x: x - radius * this.scale, y: y - radius * this.scale };
 
     const point1 = Util.rotatePointAroundPoint(point, innerPoint, Math.PI / 4);
     const point2 = Util.rotatePointAroundPoint(point, innerPoint, (Math.PI / 4) * 3);
@@ -167,6 +166,14 @@ export default class View {
     this.ctx.clearRect(0, 0, Math.ceil(this.width), Math.ceil(this.height));
   }
 
+  hideCursor() {
+    this.canvas.style.cursor = 'none';
+  }
+
+  showCursor() {
+    this.canvas.style.cursor = 'initial';
+  }
+
   drawImageAtAngle(image, x, y, angle, scale = 1) {
     let scaledImage = this.preScaledImages[image.src];
     const imgWidth = View.floor(image.width * scale * this.scale);
@@ -204,7 +211,6 @@ export default class View {
     this.ctx.fillStyle = config.PLAYER_INDICATOR_COLOR;
     this.ctx.fill();
   }
-
 
   static showTimer(timer) {
     const timeLeftPercentage = View.floor((timer / config.GAME_DURATION) * 100);
