@@ -228,7 +228,6 @@ export default class Client {
   }
 
   onConnected() {
-    console.log('connected');
     this.isConnected = true;
   }
 
