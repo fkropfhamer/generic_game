@@ -353,7 +353,7 @@ export default class Game {
       if (this.timer % config.ICE_SAND_SPAWN_DELAY === 0) {
         this.placeIceSandFields();
       }
-      console.log(this.timer);
+
       if (this.timer === 0) {
         this.timeIsOver();
       }
