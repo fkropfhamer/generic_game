@@ -393,11 +393,11 @@ export default class Game {
       this.checkWallCollisionBullet(bullet);
       this.checkSomethingHitsPortal(bullet);
     });
+
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
       player.update();
       this.checkWallCollisionPlayer(player);
-
       this.checkBulletHitsPlayer(player);
       this.checkPlayerHitsPowerUp(player);
       this.checkPlayerWalksOnIceOrSand(player);
