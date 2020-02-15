@@ -22,6 +22,7 @@ export default class Game {
   start() {
     this.timer = config.GAME_DURATION;
     this.count = 0;
+    this.startCounter = 3;
 
     this.players.forEach((player, i) => {
       player.x = config.PLAYER_STARTING_POSITIONS[i].x;
@@ -32,20 +33,28 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(
-        this.getOtherPlayers(player),
-        this.timer,
-        this.walls,
-        this.randomPowerUps,
-        this.iceSandFields,
-        this.calculateTeamLives(),
-        this.portals
-      );
       player.game = this;
       player.isWaiting = false;
     });
 
-    this.interval = setInterval(this.loop.bind(this), 10);
+    this.notifyPlayersUpdate();
+
+    setTimeout(this.starting.bind(this), 1000);
+  }
+
+  starting() {
+    if (this.startCounter > 0) {
+      this.players.forEach((player) => {
+        player.notifyStarting(this.startCounter);
+      });
+      this.startCounter -= 1;
+      setTimeout(this.starting.bind(this), 1000);
+    } else {
+      this.players.forEach((player) => {
+        player.notifyStart();
+      });
+      this.interval = setInterval(this.loop.bind(this), 10);
+    }
   }
 
   setupPowerups() {
@@ -360,8 +369,23 @@ export default class Game {
     }
 
     this.update();
-
+    this.notifyPlayersUpdate();
     this.count += 1;
+  }
+
+  notifyPlayersUpdate() {
+    this.players.concat(this.deadPlayers).forEach((player) => {
+      player.notifyUpdate(
+        this.getOtherPlayers(player),
+        this.bullets,
+        this.timer,
+        this.walls,
+        this.randomPowerUps,
+        this.iceSandFields,
+        this.calculateTeamLives(),
+        this.portals
+      );
+    });
   }
 
   update() {
@@ -379,19 +403,6 @@ export default class Game {
       this.checkPlayerHitsPowerUp(player);
       this.checkPlayerWalksOnIceOrSand(player);
       this.checkSomethingHitsPortal(player);
-    });
-
-    this.players.concat(this.deadPlayers).forEach((player) => {
-      player.notifyUpdate(
-        this.getOtherPlayers(player),
-        this.bullets,
-        this.timer,
-        this.walls,
-        this.randomPowerUps,
-        this.iceSandFields,
-        this.calculateTeamLives(),
-        this.portals
-      );
     });
   }
 }

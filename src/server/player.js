@@ -72,29 +72,9 @@ export default class Player {
     this.game.addBullet(bullet);
   }
 
-  notifyStart(otherPlayers, timer, walls, powerUps, iceSandFields, teamLives, portals) {
+  notifyStart() {
     this.isWaiting = false;
-    const mappedPlayers = Util.mapPlayers(otherPlayers);
-    const mappedPowerups = PowerUp.mapPowerups(powerUps);
-    const mappedIceSandFields = IceSand.mapIceSand(iceSandFields);
-    this.socket.emit(SocketEvent.START, {
-      x: this.x,
-      y: this.y,
-      angle: this.angle,
-      color: this.color,
-      lives: this.lives,
-      face: this.face,
-      players: mappedPlayers,
-      timer,
-      walls,
-      teamLives,
-      powerUps: mappedPowerups,
-      iceSandFields: mappedIceSandFields,
-      isFrozen: this.isFrozen,
-      shootingCount: this.shootingCount,
-      fireRateActivated: this.fireRateActivated,
-      portals,
-    });
+    this.socket.emit(SocketEvent.START);
   }
 
   notifyWaiting(numberOfPlayers) {
@@ -146,6 +126,10 @@ export default class Player {
 
   notifyDeath() {
     this.socket.emit(SocketEvent.DEATH);
+  }
+
+  notifyStarting(startCounter) {
+    this.socket.emit(SocketEvent.STARTING, { face: this.face, color: this.color, startCounter });
   }
 
   update() {

@@ -11,7 +11,7 @@ const config = Util.deepFreeze({
   FIELD_HEIGHT: 720,
 
   PLAYER_SCALE: 0.5,
-  PLAYER_SPEED: 2,
+  PLAYER_SPEED: 3,
   PLAYER_RADIUS: 25,
   PLAYER_REPULSION: 10,
   PLAYER_LIVES: 3,
@@ -29,7 +29,7 @@ const config = Util.deepFreeze({
   PLAYER_INDICATOR_COLOR: Color.YELLOW,
 
   SHOOTING_RATE: 100,
-  BULLET_SPEED: 5,
+  BULLET_SPEED: 7,
   BULLET_RADIUS: 10,
 
   POWERUP_SCALE: 0.4,

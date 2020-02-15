@@ -304,6 +304,17 @@ export default class View {
     };
   }
 
+  static showStartingScreen(startCounter, color) {
+    const startingScreen = document.getElementById('startingscreen');
+    const startingScreenMesssage = document.getElementById('startingscreenmessage');
+    startingScreenMesssage.innerHTML = `Game is starting in ${startCounter}! Your color is ${color}`;
+    startingScreen.style.display = 'initial';
+  }
+
+  static hideStartingScreen() {
+    document.getElementById('startingscreen').style.display = 'none';
+  }
+
   static hideInstructionScreen() {
     document.getElementById('instructionscreen').style.display = 'none';
   }

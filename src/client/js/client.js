@@ -218,31 +218,9 @@ export default class Client {
     }
   }
 
-  onStart(data) {
+  onStart() {
     console.log('game starting!');
-    if (this.isWaiting) {
-      View.hideWaitingScreen();
-      this.isWaiting = false;
-    }
-
-    this.x = data.x;
-    this.y = data.y;
-    this.angle = data.angle;
-    this.color = data.color;
-    this.lives = data.lives;
-    this.face = data.face;
-    this.otherPlayers = data.players;
-    this.timer = data.timer;
-    this.bullets = [];
-    this.walls = data.walls;
-    this.isShielded = data.isShielded;
-    this.isFrozen = data.isFrozen;
-    this.shootingCount = data.shootingCount;
-    this.fireRateActivated = data.fireRateActivated;
-    this.teamLives = data.teamLives;
-    this.powerUps = data.powerUps;
-    this.iceSandFields = data.iceSandFields;
-    this.portals = data.portals;
+    View.hideStartingScreen();
     this.audios.backgroundMusic.loop = true;
     this.audios.backgroundMusic.play();
     this.loop();
@@ -313,6 +291,17 @@ export default class Client {
     this.audios.splash.play();
   }
 
+  onStarting(data) {
+    this.face = data.face;
+    this.color = data.color;
+    if (this.isWaiting) {
+      View.hideWaitingScreen();
+      this.isWaiting = false;
+    }
+    View.showStartingScreen(data.startCounter, this.color);
+    this.draw();
+  }
+
   setupSocket() {
     // eslint-disable-next-line no-undef
     this.socket = io();
@@ -325,5 +314,6 @@ export default class Client {
     this.socket.on(SocketEvent.LOSE, this.onLose.bind(this));
     this.socket.on(SocketEvent.SPLASH_SOUND, this.onSplashSound.bind(this));
     this.socket.on(SocketEvent.DEATH, this.onDeath.bind(this));
+    this.socket.on(SocketEvent.STARTING, this.onStarting.bind(this));
   }
 }
