@@ -411,6 +411,31 @@ describe('client', () => {
     expect(audios.splash.play).toHaveBeenCalledTimes(1);
   });
 
+  test('client on starting', () => {
+    const data = { face: 'face123', color: 'color123' };
+
+    client.draw = jest.fn();
+    client.isWaiting = false;
+    client.onStarting(data);
+
+    expect(client.face).toBe(data.face);
+    expect(client.color).toBe(data.color);
+    expect(client.draw).toHaveBeenCalledTimes(1);
+  });
+
+  test('client on starting is waiting', () => {
+    const data = { face: 'face123', color: 'color123' };
+
+    client.draw = jest.fn();
+    client.isWaiting = true;
+    client.onStarting(data);
+
+    expect(client.face).toBe(data.face);
+    expect(client.color).toBe(data.color);
+    expect(client.draw).toHaveBeenCalledTimes(1);
+    expect(client.isWaiting).toBe(false);
+  });
+
   test('client setup socket', () => {
     client.setupSocket();
 
@@ -449,5 +474,39 @@ describe('client', () => {
     expect(view.drawNestedRings).toHaveBeenCalledTimes(2);
     expect(view.drawNestedRings).toHaveBeenNthCalledWith(1, 1, 2, 41.25, 3, 'grey', 2);
     expect(view.drawNestedRings).toHaveBeenNthCalledWith(2, 3, 4, 41.25, 3, 'grey', 2);
+  });
+
+  test('client loop', () => {
+    client.draw = jest.fn();
+
+    client.loop();
+
+    expect(client.draw).toHaveBeenCalledTimes(1);
+  });
+
+  test('client loop ended', () => {
+    client.draw = jest.fn();
+    client.isEnded = true;
+
+    client.loop();
+
+    expect(client.draw).toHaveBeenCalledTimes(1);
+  });
+
+  test('client draw cross hair', () => {
+    client.shootingCount = 1000;
+    client.drawCrossHair();
+
+    expect(client.view.drawCrossHair).toHaveBeenCalledTimes(1);
+    expect(client.view.drawCrossHair).toHaveBeenCalledWith(0, 0, 10);
+  });
+
+  test('client draw cross hair firerateactivated', () => {
+    client.shootingCount = 1000;
+    client.fireRateActivated = true;
+    client.drawCrossHair();
+
+    expect(client.view.drawCrossHair).toHaveBeenCalledTimes(1);
+    expect(client.view.drawCrossHair).toHaveBeenCalledWith(0, 0, 40);
   });
 });
