@@ -208,6 +208,19 @@ describe('player test', () => {
     expect(socket.emit).toHaveBeenCalledWith('splash sound');
   });
 
+  test('player notify starting', () => {
+    const face = 'face123';
+    const color = 'color123';
+    const startCounter = 3;
+
+    player.face = face;
+    player.color = color;
+
+    player.notifyStarting(startCounter);
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('starting', { face, color, startCounter });
+  });
+
   test('player update no button in bound', () => {
     player.x = 100;
     player.y = 200;
@@ -285,5 +298,63 @@ describe('player test', () => {
     player.update();
 
     expect(player.shootingCount).toBe(99);
+  });
+
+  test('player update player is frozen', () => {
+    player.x = 100;
+    player.y = 200;
+    player.isFrozen = 300;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(100);
+    expect(player.y).toBe(200);
+    expect(player.isFrozen).toBe(299);
+  });
+
+  test('player update player is on ice', () => {
+    player.x = 100;
+    player.y = 200;
+    player.isOnIce = true;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(106);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update player is on sand', () => {
+    player.x = 100;
+    player.y = 200;
+    player.isOnSand = true;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(101.5);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update player speed powerup is active', () => {
+    player.x = 100;
+    player.y = 200;
+    player.changedSpeedPowerupActive = 300;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(106);
+    expect(player.y).toBe(200);
+    expect(player.changedSpeedPowerupActive).toBe(299);
+  });
+
+  test('player update player speed powerup is active', () => {
+    player.x = 100;
+    player.y = 200;
+    player.fireRateActivated = 300;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(103);
+    expect(player.y).toBe(200);
+    expect(player.fireRateActivated).toBe(299);
   });
 });
