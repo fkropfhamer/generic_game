@@ -257,8 +257,7 @@ export default class Game {
         if (Util.collisionOfCircleWithCircle(portal1, something)) {
           something.x = portal.x2 - (something.x - portal.x1) * config.PORTAL_OFFSET;
           something.y = portal.y2 - (something.y - portal.y1) * config.PORTAL_OFFSET;
-        }
-        if (Util.collisionOfCircleWithCircle(portal2, something)) {
+        } else if (Util.collisionOfCircleWithCircle(portal2, something)) {
           something.x = portal.x1 - (something.x - portal.x2) * config.PORTAL_OFFSET;
           something.y = portal.y1 - (something.y - portal.y2) * config.PORTAL_OFFSET;
         }
