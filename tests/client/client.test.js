@@ -39,6 +39,8 @@ describe('client', () => {
         offsetLeft: 3,
         offsetTop: 4,
       },
+      hideCursor: jest.fn(),
+      showCursor: jest.fn(),
     };
 
     audios = { backgroundMusic: { play: jest.fn() }, splash: { play: jest.fn() } };
@@ -310,84 +312,17 @@ describe('client', () => {
     expect(client.pressedLeft).toBe(false);
   });
 
-  test('client on start is waiting', () => {
-    client.isWaiting = true;
-    client.draw = jest.fn();
+  test('client on start', () => {
     client.setupKeyPressedEvents = jest.fn();
-    const mockData = {
-      x: 1,
-      y: 2,
-      angle: 3,
-      color: 4,
-      lives: 5,
-      face: 6,
-      players: 7,
-      timer: 8,
-      walls: 9,
-      isShielded: 10,
-      teamLives: 11,
-      powerUps: 12,
-    };
+    client.loop = jest.fn();
 
-    client.onStart(mockData);
+    client.onStart();
 
-    expect(audios.backgroundMusic.play).toHaveBeenCalledTimes(1);
-    expect(client.isWaiting).toBe(false);
-    expect(client.x).toBe(1);
-    expect(client.y).toBe(2);
-    expect(client.angle).toBe(3);
-    expect(client.color).toBe(4);
-    expect(client.lives).toBe(5);
-    expect(client.face).toBe(6);
-    expect(client.otherPlayers).toBe(7);
-    expect(client.timer).toBe(8);
-    expect(client.walls).toBe(9);
-    expect(client.isShielded).toBe(10);
-    expect(client.teamLives).toBe(11);
-    expect(client.powerUps).toBe(12);
-    expect(client.bullets).toEqual([]);
-    expect(client.draw).toHaveBeenCalledTimes(1);
-    expect(client.setupKeyPressedEvents).toHaveBeenCalledTimes(1);
-  });
-
-  test('client on start is not waiting', () => {
-    client.isWaiting = false;
-    client.draw = jest.fn();
-    client.setupKeyPressedEvents = jest.fn();
-    const mockData = {
-      x: 1,
-      y: 2,
-      angle: 3,
-      color: 4,
-      lives: 5,
-      face: 6,
-      players: 7,
-      timer: 8,
-      walls: 9,
-      isShielded: 10,
-      teamLives: 11,
-      powerUps: 12,
-    };
-
-    client.onStart(mockData);
-
-    expect(audios.backgroundMusic.play).toHaveBeenCalledTimes(1);
-    expect(client.isWaiting).toBe(false);
-    expect(client.x).toBe(1);
-    expect(client.y).toBe(2);
-    expect(client.angle).toBe(3);
-    expect(client.color).toBe(4);
-    expect(client.lives).toBe(5);
-    expect(client.face).toBe(6);
-    expect(client.otherPlayers).toBe(7);
-    expect(client.timer).toBe(8);
-    expect(client.walls).toBe(9);
-    expect(client.isShielded).toBe(10);
-    expect(client.teamLives).toBe(11);
-    expect(client.powerUps).toBe(12);
-    expect(client.bullets).toEqual([]);
-    expect(client.draw).toHaveBeenCalledTimes(1);
-    expect(client.setupKeyPressedEvents).toHaveBeenCalledTimes(1);
+    expect(view.hideCursor).toHaveBeenCalled();
+    expect(audios.backgroundMusic.loop).toBe(true);
+    expect(audios.backgroundMusic.play).toHaveBeenCalled();
+    expect(client.loop).toHaveBeenCalled();
+    expect(client.setupKeyPressedEvents).toHaveBeenCalled();
   });
 
   test('client on update', () => {
@@ -445,24 +380,28 @@ describe('client', () => {
   test('client on time over', () => {
     client.onTimeOver();
 
+    expect(view.showCursor).toHaveBeenCalled();
     expect(client.isEnded).toBe(true);
   });
 
   test('client on win', () => {
     client.onWin();
 
+    expect(view.showCursor).toHaveBeenCalled();
     expect(client.isEnded).toBe(true);
   });
 
   test('client on lose', () => {
     client.onLose();
 
+    expect(view.showCursor).toHaveBeenCalled();
     expect(client.isEnded).toBe(true);
   });
 
   test('client on death', () => {
     client.onDeath();
 
+    expect(view.showCursor).toHaveBeenCalled();
     expect(client.isDead).toBe(true);
   });
 
@@ -477,7 +416,7 @@ describe('client', () => {
 
     expect(global.io).toHaveBeenCalledTimes(1);
 
-    expect(client.socket.on).toHaveBeenCalledTimes(9);
+    expect(client.socket.on).toHaveBeenCalledTimes(10);
     expect(client.socket.on.mock.calls[0][0]).toBe('connect');
     expect(client.socket.on.mock.calls[1][0]).toBe('start');
     expect(client.socket.on.mock.calls[2][0]).toBe('update');
@@ -487,6 +426,7 @@ describe('client', () => {
     expect(client.socket.on.mock.calls[6][0]).toBe('lose');
     expect(client.socket.on.mock.calls[7][0]).toBe('splash sound');
     expect(client.socket.on.mock.calls[8][0]).toBe('death');
+    expect(client.socket.on.mock.calls[9][0]).toBe('starting');
   });
 
   test('client drawPortals out of time range', () => {

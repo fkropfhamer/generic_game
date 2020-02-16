@@ -1,6 +1,8 @@
 import Game from '../../src/server/game';
 import config from '../../src/server/config';
 
+jest.useFakeTimers();
+
 describe('game test', () => {
   let player1;
   let player2;
@@ -40,6 +42,8 @@ describe('game test', () => {
   });
 
   test('test game start', () => {
+    game.notifyPlayersUpdate = jest.fn();
+    game.starting = jest.fn();
     game.start();
 
     expect(game.timer).toBe(180);
@@ -53,16 +57,15 @@ describe('game test', () => {
     expect(game.players[1].y).toBe(config.PLAYER_STARTING_POSITIONS[1].y);
     expect(game.players[1].color).toBe('red');
 
-    expect(game.players[0].notifyStart.mock.calls.length).toBe(1);
-    expect(game.players[1].notifyStart.mock.calls.length).toBe(1);
-
-    expect(game.players[0].notifyStart.mock.calls[0][0]).toEqual([player2]);
-    expect(game.players[0].notifyStart.mock.calls[0][1]).toBe(180);
-    expect(game.players[1].notifyStart.mock.calls[0][0]).toEqual([player1]);
-    expect(game.players[1].notifyStart.mock.calls[0][1]).toBe(180);
-
     expect(game.players[0].game).toBe(game);
     expect(game.players[1].game).toBe(game);
+
+    expect(game.notifyPlayersUpdate).toHaveBeenCalledTimes(1);
+    expect(setTimeout).toHaveBeenCalledTimes(1);
+    expect(game.starting).toHaveBeenCalledTimes(0);
+
+    jest.runAllTimers();
+    expect(game.starting).toHaveBeenCalledTimes(1);
   });
 
   test('game add bullet', () => {
@@ -148,11 +151,8 @@ describe('game test', () => {
     game.bullets = [];
     game.update();
 
-    expect(player1.update.mock.calls.length).toBe(1);
-    expect(player2.update.mock.calls.length).toBe(1);
-
-    expect(player1.notifyUpdate.mock.calls.length).toBe(1);
-    expect(player2.notifyUpdate.mock.calls.length).toBe(1);
+    expect(player1.update).toHaveBeenCalledTimes(1);
+    expect(player2.update).toHaveBeenCalledTimes(1);
   });
 
   test('game update bullets', () => {
