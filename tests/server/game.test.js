@@ -685,4 +685,14 @@ describe('game test', () => {
 
     expect(game.iceSandFields.length).toBe(4);
   });
+
+  test('game place ice sand fields random is bad  :[', () => {
+    const mockMath = Object.create(global.Math);
+    mockMath.random = () => 0.9;
+    global.Math = mockMath;
+
+    game.placeIceSandFields();
+
+    expect(game.iceSandFields.length).toBe(0);
+  });
 });
