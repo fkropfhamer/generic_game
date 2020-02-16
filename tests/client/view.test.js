@@ -407,4 +407,13 @@ describe('view', () => {
     expect(callback).toHaveBeenCalledTimes(2);
     expect(callback).toHaveBeenNthCalledWith(2, 'face4', 'teams');
   });
+
+  test('view show starting screen', () => {
+    View.showStartingScreen(1, 'color123');
+
+    expect(elements.startingscreen.style.display).toBe('initial');
+    expect(elements.startingscreenmessage.innerHTML).toBe(
+      'Game is starting in 1! Your color is color123'
+    );
+  });
 });
