@@ -87,8 +87,8 @@ export default class Game {
   }
 
   setupWalls() {
-    this.setupBarrierWalls();
     this.setupConstraintWalls();
+    this.setupBarrierWalls();
   }
 
   setupConstraintWalls() {
