@@ -231,27 +231,27 @@ export default class Game {
     player.isOnSand = onSand;
   }
 
-  checkSomethingHitsPortal(something) {
+  checkObjectHitsPortal(object) {
     this.portals
       .filter((p) => p.starttime >= this.timer && p.endtime <= this.timer)
       .forEach((portal) => {
         const portal1 = {
           x: portal.x1,
           y: portal.y1,
-          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, object.radius),
         };
         const portal2 = {
           x: portal.x2,
           y: portal.y2,
-          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, something.radius),
+          radius: Util.radiusMinusDiameterOfCircle(config.PORTAL_RADIUS, object.radius),
         };
-        if (Util.collisionOfCircleWithCircle(portal1, something)) {
-          something.x = portal.x2 - (something.x - portal.x1) * config.PORTAL_OFFSET;
-          something.y = portal.y2 - (something.y - portal.y1) * config.PORTAL_OFFSET;
+        if (Util.collisionOfCircleWithCircle(portal1, object)) {
+          object.x = portal.x2 - (object.x - portal.x1) * config.PORTAL_OFFSET;
+          object.y = portal.y2 - (object.y - portal.y1) * config.PORTAL_OFFSET;
         }
-        if (Util.collisionOfCircleWithCircle(portal2, something)) {
-          something.x = portal.x1 - (something.x - portal.x2) * config.PORTAL_OFFSET;
-          something.y = portal.y1 - (something.y - portal.y2) * config.PORTAL_OFFSET;
+        if (Util.collisionOfCircleWithCircle(portal2, object)) {
+          object.x = portal.x1 - (object.x - portal.x2) * config.PORTAL_OFFSET;
+          object.y = portal.y1 - (object.y - portal.y2) * config.PORTAL_OFFSET;
         }
       });
   }
@@ -368,7 +368,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update();
       this.checkWallCollisionBullet(bullet);
-      this.checkSomethingHitsPortal(bullet);
+      this.checkObjectHitsPortal(bullet);
     });
     this.players.forEach((player) => {
       this.checkPlayerCollisionPlayer(player);
@@ -378,7 +378,7 @@ export default class Game {
       this.checkBulletHitsPlayer(player);
       this.checkPlayerHitsPowerUp(player);
       this.checkPlayerWalksOnIceOrSand(player);
-      this.checkSomethingHitsPortal(player);
+      this.checkObjectHitsPortal(player);
     });
 
     this.players.concat(this.deadPlayers).forEach((player) => {
