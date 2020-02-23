@@ -3,12 +3,14 @@ import Util from './util';
 
 const config = Util.deepFreeze({
   INITIALIZE_WITH_ZERO: 0,
+  INTERVAL_DELAY: 10,
 
   GAME_DURATION: 180,
   TIMER_RATE: 100,
   TEAM_SIZE: 2,
   FIELD_WIDTH: 1280, // 16:9
   FIELD_HEIGHT: 720,
+  OUT_OF_FIELD: -500,
 
   PLAYER_SCALE: 0.5,
   PLAYER_SPEED: 2,

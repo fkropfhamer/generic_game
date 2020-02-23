@@ -45,7 +45,7 @@ export default class Game {
       player.isWaiting = false;
     });
 
-    this.interval = setInterval(this.loop.bind(this), 10);
+    this.interval = setInterval(this.loop.bind(this), config.INTERVAL_DELAY);
   }
 
   setupPowerups() {
@@ -282,8 +282,8 @@ export default class Game {
 
   playerDied(player) {
     this.deadPlayers.push(player);
-    player.x = -500;
-    player.y = -500;
+    player.x = config.OUT_OF_FIELD;
+    player.y = config.OUT_OF_FIELD;
     const remainingPlayers = this.players.filter((p) => !Object.is(player, p));
     const teamBlue = remainingPlayers.filter((p) => p.color === Color.BLUE);
     const teamRed = remainingPlayers.filter((p) => p.color === Color.RED);
