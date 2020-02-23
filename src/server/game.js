@@ -324,8 +324,7 @@ export default class Game {
     this.players.forEach((player2) => {
       if (!Object.is(player1, player2)) {
         if (Util.collisionOfCircleWithCircle(player1, player2)) {
-          let alpha = Math.atan((player2.y - player1.y) / (player2.x - player1.x));
-          alpha = alpha || 0;
+          const alpha = Math.abs(Math.atan((player2.y - player1.y) / (player2.x - player1.x)));
           player1.x += Math.sign(player1.x - player2.x) * config.PLAYER_REPULSION * Math.cos(alpha);
           player1.y += Math.sign(player1.y - player2.y) * config.PLAYER_REPULSION * Math.sin(alpha);
         }
