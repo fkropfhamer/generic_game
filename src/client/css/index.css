@@ -15,7 +15,6 @@ html, body {
 canvas {
     margin: 0 auto;
     display: block;
-    cursor: none;
 }  
 
 .screen {

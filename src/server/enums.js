@@ -52,6 +52,7 @@ export const SocketEvent = Object.freeze({
   SPLASH_SOUND: 'splash sound',
   DEATH: 'death',
   CONNECT: 'connect',
+  STARTING: 'starting',
 });
 
 export const EventListener = Object.freeze({

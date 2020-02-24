@@ -12,10 +12,12 @@ describe('Util test', () => {
   test('halve if two keys are pressed', () => {
     expect(Util.halfIfAnotherKeyIsPressed(true, true)).toBe(0.7);
   });
+
   test('halve if another key is pressed', () => {
     expect(Util.halfIfAnotherKeyIsPressed(false, true)).toBe(0.7);
     expect(Util.halfIfAnotherKeyIsPressed(true, false)).toBe(0.7);
   });
+
   test('full if no other key is pressed', () => {
     expect(Util.halfIfAnotherKeyIsPressed(false, false)).toBe(1);
   });
@@ -195,7 +197,7 @@ describe('Util test', () => {
     expect(Object.isFrozen(frozenTestObject.object1)).toBe(true);
   });
 
-  test('collisin rect circle', () => {
+  test('collision rect circle', () => {
     const rect = {
       x: 1,
       y: 1,
@@ -210,5 +212,37 @@ describe('Util test', () => {
       angle: Math.PI * 1.5,
       dis: 0.5,
     });
+  });
+
+  test('collision rect with circle without angle collision === true', () => {
+    const rect = {
+      x: 1,
+      y: 2,
+      width: 100,
+      height: 100,
+    };
+
+    const cirle = { x: 1, y: 2 };
+
+    expect(Util.collisionOfRectWithCircleWithoutAngle(rect, cirle)).toBe(true);
+  });
+
+  test('collision rect with circle without angle collision === false', () => {
+    const rect = {
+      x: 1,
+      y: 2,
+      width: 5,
+      height: 5,
+    };
+
+    const cirle = { x: 10, y: 20 };
+
+    expect(Util.collisionOfRectWithCircleWithoutAngle(rect, cirle)).toBe(false);
+  });
+
+  test('radius minus diameter of Circle', () => {
+    expect(Util.radiusMinusDiameterOfCircle(10, 20)).toBe(-30);
+    expect(Util.radiusMinusDiameterOfCircle(-1, -15)).toBe(29);
+    expect(Util.radiusMinusDiameterOfCircle(0, 0)).toBe(0);
   });
 });

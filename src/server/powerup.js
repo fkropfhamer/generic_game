@@ -20,25 +20,25 @@ export default class PowerUp {
     });
   }
 
-  static addHealthUpdate(player) {
+  static addLife(player) {
     if (player.lives < config.PLAYER_LIVES) {
       player.lives += 1;
     }
   }
 
-  static addShieldUpdate(player) {
+  static addShield(player) {
     player.isShielded = true;
   }
 
-  static addSpeedUpdate(player) {
+  static increaseSpeed(player) {
     player.changedSpeedPowerupActive = config.POWERUP_DURATION;
   }
 
-  static addBulletUpdate(player) {
+  static increaseFirerate(player) {
     player.fireRateActivated = config.POWERUP_DURATION;
   }
 
-  static addfreezeUpUpdate(otherPlayers) {
+  static freezeOpponent(otherPlayers) {
     otherPlayers.forEach((player) => {
       player.isFrozen = config.POWERUP_DURATION;
     });
@@ -46,20 +46,20 @@ export default class PowerUp {
 
   update(player, otherPlayers) {
     switch (this.type) {
-      case powerUpTypes.FREEZE:
-        PowerUp.addfreezeUpUpdate(otherPlayers);
-        break;
       case powerUpTypes.ADDHEALTH:
-        PowerUp.addHealthUpdate(player);
+        PowerUp.addLife(player);
         break;
       case powerUpTypes.SHIELD:
-        PowerUp.addShieldUpdate(player);
+        PowerUp.addShield(player);
         break;
       case powerUpTypes.SPEED:
-        PowerUp.addSpeedUpdate(player);
+        PowerUp.increaseSpeed(player);
         break;
       case powerUpTypes.FIRERATE:
-        PowerUp.addBulletUpdate(player);
+        PowerUp.increaseFirerate(player);
+        break;
+      case powerUpTypes.FREEZE:
+        PowerUp.freezeOpponent(otherPlayers);
         break;
       default:
         throw Error(`${this.type} type does not exist`);
