@@ -487,7 +487,7 @@ describe('game test', () => {
     game.portals = [portal];
     game.timer = 3;
 
-    game.checkSomethingHitsPortal(player);
+    game.checkObjectHitsPortal(player);
 
     expect(player.x).toBe(1000);
     expect(player.y).toBe(2000);
@@ -508,7 +508,7 @@ describe('game test', () => {
     game.portals = [portal];
     game.timer = 1000;
 
-    game.checkSomethingHitsPortal(player);
+    game.checkObjectHitsPortal(player);
 
     expect(player.x).toBe(1);
     expect(player.y).toBe(2);
@@ -529,7 +529,7 @@ describe('game test', () => {
     game.portals = [portal];
     game.timer = 6;
 
-    game.checkSomethingHitsPortal(player);
+    game.checkObjectHitsPortal(player);
 
     expect(player.x).toBe(97.8);
     expect(player.y).toBe(497.8);
@@ -550,7 +550,7 @@ describe('game test', () => {
     game.portals = [portal];
     game.timer = 6;
 
-    game.checkSomethingHitsPortal(player);
+    game.checkObjectHitsPortal(player);
 
     expect(player.x).toBe(3.2);
     expect(player.y).toBe(4.2);
