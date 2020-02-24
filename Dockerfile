@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . /app
 
+ENV NODE_ENV=production
+
 RUN npm i
 RUN npm run lint
 RUN npm run test
