@@ -22,6 +22,7 @@ export default class Game {
   start() {
     this.timer = config.GAME_DURATION;
     this.count = 0;
+    this.startCounter = 3;
 
     this.players.forEach((player, i) => {
       player.x = config.PLAYER_STARTING_POSITIONS[i].x;
@@ -32,20 +33,28 @@ export default class Game {
     });
 
     this.players.forEach((player) => {
-      player.notifyStart(
-        this.getOtherPlayers(player),
-        this.timer,
-        this.walls,
-        this.randomPowerUps,
-        this.iceSandFields,
-        this.calculateTeamLives(),
-        this.portals
-      );
       player.game = this;
       player.isWaiting = false;
     });
 
-    this.interval = setInterval(this.loop.bind(this), config.INTERVAL_DELAY);
+    this.notifyPlayersUpdate();
+
+    setTimeout(this.starting.bind(this), 1000);
+  }
+
+  starting() {
+    if (this.startCounter > 0) {
+      this.players.forEach((player) => {
+        player.notifyStarting(this.startCounter);
+      });
+      this.startCounter -= 1;
+      setTimeout(this.starting.bind(this), 1000);
+    } else {
+      this.players.forEach((player) => {
+        player.notifyStart();
+      });
+      this.interval = setInterval(this.loop.bind(this), config.INTERVAL_DELAY);
+    }
   }
 
   setupPowerups() {
@@ -248,8 +257,7 @@ export default class Game {
         if (Util.collisionOfCircleWithCircle(portal1, object)) {
           object.x = portal.x2 - (object.x - portal.x1) * config.PORTAL_OFFSET;
           object.y = portal.y2 - (object.y - portal.y1) * config.PORTAL_OFFSET;
-        }
-        if (Util.collisionOfCircleWithCircle(portal2, object)) {
+        } else if (Util.collisionOfCircleWithCircle(portal2, object)) {
           object.x = portal.x1 - (object.x - portal.x2) * config.PORTAL_OFFSET;
           object.y = portal.y1 - (object.y - portal.y2) * config.PORTAL_OFFSET;
         }
@@ -339,7 +347,6 @@ export default class Game {
 
   end() {
     this.ended = true;
-    console.log('game ended');
     clearInterval(this.interval);
   }
 
@@ -359,27 +366,11 @@ export default class Game {
     }
 
     this.update();
-
+    this.notifyPlayersUpdate();
     this.count += 1;
   }
 
-  update() {
-    this.bullets.forEach((bullet) => {
-      bullet.update();
-      this.checkWallCollisionBullet(bullet);
-      this.checkObjectHitsPortal(bullet);
-    });
-    this.players.forEach((player) => {
-      this.checkPlayerCollisionPlayer(player);
-      player.update();
-      this.checkWallCollisionPlayer(player);
-
-      this.checkBulletHitsPlayer(player);
-      this.checkPlayerHitsPowerUp(player);
-      this.checkPlayerWalksOnIceOrSand(player);
-      this.checkObjectHitsPortal(player);
-    });
-
+  notifyPlayersUpdate() {
     this.players.concat(this.deadPlayers).forEach((player) => {
       player.notifyUpdate(
         this.getOtherPlayers(player),
@@ -391,6 +382,24 @@ export default class Game {
         this.calculateTeamLives(),
         this.portals
       );
+    });
+  }
+
+  update() {
+    this.bullets.forEach((bullet) => {
+      bullet.update();
+      this.checkWallCollisionBullet(bullet);
+      this.checkObjectHitsPortal(bullet);
+    });
+
+    this.players.forEach((player) => {
+      this.checkPlayerCollisionPlayer(player);
+      player.update();
+      this.checkWallCollisionPlayer(player);
+      this.checkBulletHitsPlayer(player);
+      this.checkPlayerHitsPowerUp(player);
+      this.checkPlayerWalksOnIceOrSand(player);
+      this.checkObjectHitsPortal(player);
     });
   }
 }

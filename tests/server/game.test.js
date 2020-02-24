@@ -17,6 +17,7 @@ describe('game test', () => {
       notifyLose: jest.fn(),
       update: jest.fn(),
       notifySplashSound: jest.fn(),
+      notifyStarting: jest.fn(),
     };
     player2 = {
       color: 'red',
@@ -28,6 +29,7 @@ describe('game test', () => {
       notifyLose: jest.fn(),
       update: jest.fn(),
       notifySplashSound: jest.fn(),
+      notifyStarting: jest.fn(),
     };
 
     game = new Game([player1, player2]);
@@ -40,6 +42,10 @@ describe('game test', () => {
   });
 
   test('test game start', () => {
+    jest.useFakeTimers();
+
+    game.notifyPlayersUpdate = jest.fn();
+    game.starting = jest.fn();
     game.start();
 
     expect(game.timer).toBe(180);
@@ -53,16 +59,15 @@ describe('game test', () => {
     expect(game.players[1].y).toBe(config.PLAYER_STARTING_POSITIONS[1].y);
     expect(game.players[1].color).toBe('red');
 
-    expect(game.players[0].notifyStart.mock.calls.length).toBe(1);
-    expect(game.players[1].notifyStart.mock.calls.length).toBe(1);
-
-    expect(game.players[0].notifyStart.mock.calls[0][0]).toEqual([player2]);
-    expect(game.players[0].notifyStart.mock.calls[0][1]).toBe(180);
-    expect(game.players[1].notifyStart.mock.calls[0][0]).toEqual([player1]);
-    expect(game.players[1].notifyStart.mock.calls[0][1]).toBe(180);
-
     expect(game.players[0].game).toBe(game);
     expect(game.players[1].game).toBe(game);
+
+    expect(game.notifyPlayersUpdate).toHaveBeenCalledTimes(1);
+    expect(setTimeout).toHaveBeenCalledTimes(1);
+    expect(game.starting).toHaveBeenCalledTimes(0);
+
+    jest.runAllTimers();
+    expect(game.starting).toHaveBeenCalledTimes(1);
   });
 
   test('game add bullet', () => {
@@ -148,11 +153,8 @@ describe('game test', () => {
     game.bullets = [];
     game.update();
 
-    expect(player1.update.mock.calls.length).toBe(1);
-    expect(player2.update.mock.calls.length).toBe(1);
-
-    expect(player1.notifyUpdate.mock.calls.length).toBe(1);
-    expect(player2.notifyUpdate.mock.calls.length).toBe(1);
+    expect(player1.update).toHaveBeenCalledTimes(1);
+    expect(player2.update).toHaveBeenCalledTimes(1);
   });
 
   test('game update bullets', () => {
@@ -297,7 +299,7 @@ describe('game test', () => {
     expect(player.y).toBe(10);
   });
 
-  test('game checkplayerhitspowerup', () => {
+  test('game player hits powerup', () => {
     const powerUp = {
       x: 0,
       y: 0,
@@ -316,6 +318,27 @@ describe('game test', () => {
 
     expect(game.randomPowerUps).toEqual([]);
     expect(powerUp.update).toHaveBeenCalledTimes(1);
+  });
+
+  test('game player not hits powerup', () => {
+    const powerUp = {
+      x: 0,
+      y: 0,
+      radius: 1,
+      update: jest.fn(),
+    };
+
+    const player = {
+      x: 100,
+      y: 100,
+      radius: 1,
+    };
+
+    game.randomPowerUps = [powerUp];
+    game.checkPlayerHitsPowerUp(player);
+
+    expect(game.randomPowerUps).toEqual([powerUp]);
+    expect(powerUp.update).toHaveBeenCalledTimes(0);
   });
 
   test('game checkbulletshitsplayer', () => {
@@ -372,6 +395,32 @@ describe('game test', () => {
     expect(game.bullets).toEqual([]);
   });
 
+  test('game checkbulletshitsplayer player is frozen', () => {
+    const bullet = {
+      x: 0,
+      y: 0,
+      radius: 2,
+      color: '',
+    };
+
+    const player = {
+      x: 1,
+      y: 0,
+      radius: 1,
+      lives: 3,
+      color: 'test',
+      isFrozen: true,
+    };
+
+    game.bullets = [bullet];
+
+    game.checkBulletHitsPlayer(player);
+
+    expect(player.lives).toBe(2);
+    expect(player.isFrozen).toBe(false);
+    expect(game.bullets).toEqual([]);
+  });
+
   test('game checkbullethitsplayer player died', () => {
     const bullet = {
       x: 0,
@@ -421,5 +470,229 @@ describe('game test', () => {
 
     expect(player.lives).toBe(1);
     expect(game.bullets).toEqual([bullet]);
+  });
+
+  test('game something not hits portal', () => {
+    const portal = {
+      x1: 1,
+      y1: 2,
+      x2: 3,
+      y2: 4,
+      starttime: 8,
+      endtime: 1,
+    };
+
+    const player = { x: 1000, y: 2000 };
+
+    game.portals = [portal];
+    game.timer = 3;
+
+    game.checkObjectHitsPortal(player);
+
+    expect(player.x).toBe(1000);
+    expect(player.y).toBe(2000);
+  });
+
+  test('game something hits portal out of time', () => {
+    const portal = {
+      x1: 1,
+      y1: 2,
+      x2: 3,
+      y2: 4,
+      starttime: 5,
+      endtime: 6,
+    };
+
+    const player = { x: 1, y: 2 };
+
+    game.portals = [portal];
+    game.timer = 1000;
+
+    game.checkObjectHitsPortal(player);
+
+    expect(player.x).toBe(1);
+    expect(player.y).toBe(2);
+  });
+
+  test('game something hits portal1 and gets teleported', () => {
+    const portal = {
+      x1: 1,
+      y1: 2,
+      x2: 100,
+      y2: 500,
+      starttime: 8,
+      endtime: 5,
+    };
+
+    const player = { x: 3, y: 4, radius: 5 };
+
+    game.portals = [portal];
+    game.timer = 6;
+
+    game.checkObjectHitsPortal(player);
+
+    expect(player.x).toBe(97.8);
+    expect(player.y).toBe(497.8);
+  });
+
+  test('game something hits portal2 and gets teleported', () => {
+    const portal = {
+      x1: 1,
+      y1: 2,
+      x2: 100,
+      y2: 500,
+      starttime: 8,
+      endtime: 5,
+    };
+
+    const player = { x: 98, y: 498, radius: 5 };
+
+    game.portals = [portal];
+    game.timer = 6;
+
+    game.checkObjectHitsPortal(player);
+
+    expect(player.x).toBe(3.2);
+    expect(player.y).toBe(4.2);
+  });
+
+  test('game player walks on ice', () => {
+    const iceField = {
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+      type: 'ice',
+    };
+
+    const player = { x: 0, y: 0 };
+
+    game.iceSandFields = [iceField];
+    game.checkPlayerWalksOnIceOrSand(player);
+
+    expect(player.isOnIce).toBe(true);
+    expect(player.isOnSand).toBe(false);
+  });
+
+  test('game player walks on sand', () => {
+    const sandField = {
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+      type: 'sand',
+    };
+
+    const player = { x: 0, y: 0 };
+
+    game.iceSandFields = [sandField];
+    game.checkPlayerWalksOnIceOrSand(player);
+
+    expect(player.isOnIce).toBe(false);
+    expect(player.isOnSand).toBe(true);
+  });
+
+  test('game player walks not on ice and sand', () => {
+    const sandField = {
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+      type: 'sand',
+    };
+    const iceField = {
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+      type: 'ice',
+    };
+
+    const player = { x: 1000, y: 1000 };
+
+    game.iceSandFields = [iceField, sandField];
+    game.checkPlayerWalksOnIceOrSand(player);
+
+    expect(player.isOnIce).toBe(false);
+    expect(player.isOnSand).toBe(false);
+  });
+
+  test('game starting counter > 0', () => {
+    jest.useFakeTimers();
+    game.startCounter = 10;
+
+    game.starting();
+
+    expect(player1.notifyStarting).toHaveBeenCalledTimes(1);
+    expect(player1.notifyStarting).toHaveBeenCalledWith(10);
+    expect(player2.notifyStarting).toHaveBeenCalledTimes(1);
+    expect(player2.notifyStarting).toHaveBeenCalledWith(10);
+    expect(game.startCounter).toBe(9);
+    expect(setTimeout).toHaveBeenCalledTimes(1);
+  });
+
+  test('game starting counter = 0', () => {
+    jest.useFakeTimers();
+    game.startCounter = 0;
+
+    game.starting();
+
+    expect(player1.notifyStart).toHaveBeenCalledTimes(1);
+    expect(player2.notifyStart).toHaveBeenCalledTimes(1);
+    expect(game.startCounter).toBe(0);
+    expect(setInterval).toHaveBeenCalledTimes(1);
+  });
+
+  test('game place random powerup', () => {
+    const powerUp = {};
+
+    game.randomPowerUps = [];
+    game.powerUps = [powerUp];
+
+    game.placeRandomPowerUp();
+
+    expect(game.randomPowerUps).toEqual([powerUp]);
+  });
+
+  test('game place random powerup more than max power up are placed', () => {
+    const powerUp = {};
+    const randomPowerUps = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+    game.randomPowerUps = randomPowerUps;
+    game.powerUps = [powerUp];
+
+    game.placeRandomPowerUp();
+
+    expect(game.randomPowerUps).toEqual(randomPowerUps);
+  });
+
+  test('game place random powerup is allready placed', () => {
+    const powerUp = {};
+    const randomPowerUps = [powerUp];
+    game.randomPowerUps = randomPowerUps;
+    game.powerUps = [powerUp];
+
+    game.placeRandomPowerUp();
+
+    expect(game.randomPowerUps).toEqual(randomPowerUps);
+  });
+
+  test('game place ice sand fields', () => {
+    const mockMath = Object.create(global.Math);
+    mockMath.random = () => 0.1;
+    global.Math = mockMath;
+
+    game.placeIceSandFields();
+
+    expect(game.iceSandFields.length).toBe(4);
+  });
+
+  test('game place ice sand fields random is bad  :[', () => {
+    const mockMath = Object.create(global.Math);
+    mockMath.random = () => 0.9;
+    global.Math = mockMath;
+
+    game.placeIceSandFields();
+
+    expect(game.iceSandFields.length).toBe(0);
   });
 });

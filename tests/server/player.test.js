@@ -18,7 +18,7 @@ describe('player test', () => {
   test('player constructor', () => {
     expect(player.socket).toBe(socket);
     expect(player.server).toBe(server);
-    expect(player.speed).toBe(2);
+    expect(player.speed).toBe(3);
     expect(player.radius).toBe(25);
     expect(player.angle).toBe(0);
     expect(socket.on.mock.calls.length).toBe(5);
@@ -119,46 +119,10 @@ describe('player test', () => {
   });
 
   test('player notify start', () => {
-    player.color = 'blue';
-    player.x = 400;
-    player.y = 300;
-    player.face = 'face2';
-    player.lives = 3;
-
-    const opponent = {
-      x: 100,
-      y: 200,
-      angle: Math.PI,
-      color: 'blue',
-      face: 'face1',
-      lives: 2,
-      isFrozen: undefined,
-      hitAngle: undefined,
-      isShielded: undefined,
-    };
-
-    player.notifyStart([opponent], 30, [], [], [], 3, []);
+    player.notifyStart();
     expect(player.isWaiting).toBe(false);
-    expect(socket.emit.mock.calls.length).toBe(1);
-    expect(socket.emit.mock.calls[0][0]).toBe('start');
-    expect(socket.emit.mock.calls[0][1]).toEqual({
-      x: 400,
-      y: 300,
-      face: 'face2',
-      isFrozen: false,
-      iceSandFields: [],
-      lives: 3,
-      angle: 0,
-      color: 'blue',
-      players: [opponent],
-      timer: 30,
-      powerUps: [],
-      walls: [],
-      portals: [],
-      teamLives: 3,
-      fireRateActivated: false,
-      shootingCount: 0,
-    });
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('start');
   });
 
   test('player notify waiting', () => {
@@ -244,6 +208,19 @@ describe('player test', () => {
     expect(socket.emit).toHaveBeenCalledWith('splash sound');
   });
 
+  test('player notify starting', () => {
+    const face = 'face123';
+    const color = 'color123';
+    const startCounter = 3;
+
+    player.face = face;
+    player.color = color;
+
+    player.notifyStarting(startCounter);
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith('starting', { face, color, startCounter });
+  });
+
   test('player update no button in bound', () => {
     player.x = 100;
     player.y = 200;
@@ -260,7 +237,7 @@ describe('player test', () => {
     player.update();
 
     expect(player.x).toBe(100);
-    expect(player.y).toBe(198);
+    expect(player.y).toBe(197);
   });
 
   test('player update down button', () => {
@@ -270,7 +247,7 @@ describe('player test', () => {
     player.update();
 
     expect(player.x).toBe(100);
-    expect(player.y).toBe(202);
+    expect(player.y).toBe(203);
   });
 
   test('player update left button', () => {
@@ -279,7 +256,7 @@ describe('player test', () => {
     player.pressedLeft = true;
     player.update();
 
-    expect(player.x).toBe(98);
+    expect(player.x).toBe(97);
     expect(player.y).toBe(200);
   });
 
@@ -289,7 +266,7 @@ describe('player test', () => {
     player.pressedRight = true;
     player.update();
 
-    expect(player.x).toBe(102);
+    expect(player.x).toBe(103);
     expect(player.y).toBe(200);
   });
 
@@ -300,8 +277,8 @@ describe('player test', () => {
     player.pressedUp = true;
     player.update();
 
-    expect(player.x).toBe(101.4);
-    expect(player.y).toBe(198.6);
+    expect(player.x).toBe(102.1);
+    expect(player.y).toBe(197.9);
   });
 
   test('player update left button and down', () => {
@@ -311,8 +288,8 @@ describe('player test', () => {
     player.pressedDown = true;
     player.update();
 
-    expect(player.x).toBe(98.6);
-    expect(player.y).toBe(201.4);
+    expect(player.x).toBe(97.9);
+    expect(player.y).toBe(202.1);
   });
 
   test('player update decrements shooting count if gt 0', () => {
@@ -321,5 +298,63 @@ describe('player test', () => {
     player.update();
 
     expect(player.shootingCount).toBe(99);
+  });
+
+  test('player update player is frozen', () => {
+    player.x = 100;
+    player.y = 200;
+    player.isFrozen = 300;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(100);
+    expect(player.y).toBe(200);
+    expect(player.isFrozen).toBe(299);
+  });
+
+  test('player update player is on ice', () => {
+    player.x = 100;
+    player.y = 200;
+    player.isOnIce = true;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(106);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update player is on sand', () => {
+    player.x = 100;
+    player.y = 200;
+    player.isOnSand = true;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(101.5);
+    expect(player.y).toBe(200);
+  });
+
+  test('player update player speed powerup is active', () => {
+    player.x = 100;
+    player.y = 200;
+    player.changedSpeedPowerupActive = 300;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(106);
+    expect(player.y).toBe(200);
+    expect(player.changedSpeedPowerupActive).toBe(299);
+  });
+
+  test('player update player speed powerup is active', () => {
+    player.x = 100;
+    player.y = 200;
+    player.fireRateActivated = 300;
+    player.pressedRight = true;
+    player.update();
+
+    expect(player.x).toBe(103);
+    expect(player.y).toBe(200);
+    expect(player.fireRateActivated).toBe(299);
   });
 });

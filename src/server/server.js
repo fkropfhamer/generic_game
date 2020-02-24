@@ -56,7 +56,6 @@ class Server {
       } else {
         const game = new Game([this.waitingPlayer, player]);
         game.start();
-        console.log('game ist starting');
         this.waitingPlayer = false;
       }
     } else if (mode === Mode.TEAMS) {

@@ -19,7 +19,9 @@ describe('view', () => {
     value: (type) => {
       const element = {
         getContext: () => {
-          return {};
+          return {
+            drawImage: jest.fn(),
+          };
         },
         appendChild: jest.fn(),
         style: {},
@@ -359,6 +361,27 @@ describe('view', () => {
     expect(elements['choice4-label'].appendChild).toHaveBeenCalledWith(images.face4);
   });
 
+  test('view show start screen click show instruction screen', () => {
+    const images = {
+      face1: { classList: { add: jest.fn() } },
+      face2: { classList: { add: jest.fn() } },
+      face3: { classList: { add: jest.fn() } },
+      face4: { classList: { add: jest.fn() } },
+    };
+
+    const callback = jest.fn();
+    view.images = images;
+    view.showInstructionScreen = jest.fn();
+
+    view.showStartScreen(callback);
+
+    expect(view.showInstructionScreen).toHaveBeenCalledTimes(0);
+
+    elements.instructionbutton.onclick();
+    expect(view.showInstructionScreen).toHaveBeenCalledTimes(1);
+    expect(view.showInstructionScreen).toHaveBeenCalledWith(callback, images);
+  });
+
   test('view show start screen onclick nothing checked', () => {
     const images = {
       face1: { classList: { add: jest.fn() } },
@@ -406,5 +429,137 @@ describe('view', () => {
 
     expect(callback).toHaveBeenCalledTimes(2);
     expect(callback).toHaveBeenNthCalledWith(2, 'face4', 'teams');
+  });
+
+  test('view show starting screen', () => {
+    View.showStartingScreen(1, 'color123');
+
+    expect(elements.startingscreen.style.display).toBe('initial');
+    expect(elements.startingscreenmessage.innerHTML).toBe(
+      'Game is starting in 1! Your color is color123'
+    );
+  });
+
+  test('view show instruction screen', () => {
+    const images = {
+      arrowbuttons: {},
+      mouseclick: {},
+      portalinstruction: {},
+      health: {},
+      firerate: {},
+      speed: {},
+      shield: {},
+      freeze: {},
+    };
+
+    const callback = jest.fn();
+    view.showStartScreen = jest.fn();
+
+    view.showInstructionScreen(callback, images);
+
+    expect(elements.instructionscreen.style.display).toBe('initial');
+
+    expect(view.showStartScreen).toHaveBeenCalledTimes(0);
+
+    elements.backbutton.onclick();
+    expect(view.showStartScreen).toHaveBeenCalledTimes(1);
+    expect(view.showStartScreen).toHaveBeenCalledWith(callback);
+  });
+
+  test('view draw image at angle prescale', () => {
+    const image = { src: 'img', width: 10, height: 15 };
+    const mockContext = {
+      save: jest.fn(),
+      translate: jest.fn(),
+      rotate: jest.fn(),
+      drawImage: jest.fn(),
+      restore: jest.fn(),
+    };
+
+    view.scale = 1;
+    view.ctx = mockContext;
+
+    view.drawImageAtAngle(image, 0, 0, 0);
+
+    expect(view.preScaledImages.img.width).toEqual(10);
+    expect(view.preScaledImages.img.height).toEqual(15);
+  });
+
+  test('view hide starting screen', () => {
+    View.hideStartingScreen();
+
+    expect(elements.startingscreen.style.display).toBe('none');
+  });
+
+  test('view hide cursor', () => {
+    view.canvas = { style: {} };
+
+    view.hideCursor();
+
+    expect(view.canvas.style.cursor).toBe('none');
+  });
+
+  test('view show cursor', () => {
+    view.canvas = { style: {} };
+
+    view.showCursor();
+
+    expect(view.canvas.style.cursor).toBe('initial');
+  });
+
+  test('view draw crosshair', () => {
+    view.drawCross = jest.fn();
+    view.drawPartOfRingWithoutScale = jest.fn();
+
+    view.drawCrossHair(1, 2, 3);
+
+    expect(view.drawCross).toHaveBeenCalledTimes(1);
+    expect(view.drawCross).toHaveBeenCalledWith(1, 2, 10, 'yellow', 2);
+    expect(view.drawPartOfRingWithoutScale).toHaveBeenCalledTimes(2);
+  });
+
+  test('view draw cross', () => {
+    const mockContext = {
+      beginPath: jest.fn(),
+      moveTo: jest.fn(),
+      lineTo: jest.fn(),
+      fill: jest.fn(),
+      stroke: jest.fn(),
+    };
+
+    view.ctx = mockContext;
+    view.scale = 1;
+    view.drawCross(100, 100, 10, 'color123', 1);
+
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+    expect(mockContext.moveTo).toHaveBeenCalledTimes(2);
+    expect(mockContext.lineTo).toHaveBeenCalledTimes(2);
+
+    expect(mockContext.strokeStyle).toBe('color123');
+    expect(mockContext.lineWidth).toBe(1);
+
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+  });
+
+  test('view draw part of ring without scale', () => {
+    const mockContext = {
+      beginPath: jest.fn(),
+      arc: jest.fn(),
+      stroke: jest.fn(),
+    };
+
+    view.ctx = mockContext;
+
+    view.drawPartOfRingWithoutScale(1, 2, 3, 4, Math.PI, 5, 'color123');
+
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+
+    expect(mockContext.arc).toHaveBeenCalledTimes(1);
+    expect(mockContext.arc).toHaveBeenCalledWith(1, 2, 5, 0, Math.PI, false);
+
+    expect(mockContext.lineWidth).toBe(5);
+    expect(mockContext.strokeStyle).toBe('color123');
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
   });
 });
