@@ -16,8 +16,10 @@ ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/dist /app/dist
 COPY --from=build /app/public /app/public
-COPY --from=build package.json .
-COPY --from=build package-lock.json .
+COPY --from=build /app/package.json .
+COPY --from=build /app/package-lock.json .
+
+RUN npm i
 
 EXPOSE 8080
 
