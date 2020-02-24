@@ -25,7 +25,6 @@ class Server {
 
   setupSocket() {
     this.io.on(SocketEvent.CONNECTION, (socket) => {
-      console.log('user connected');
       // eslint-disable-next-line no-new
       new Player(socket, this);
     });
@@ -52,7 +51,6 @@ class Server {
       if (!this.waitingPlayer) {
         this.waitingPlayer = player;
         player.notifyWaiting(1);
-        console.log('player is waiting');
       } else {
         const game = new Game([this.waitingPlayer, player]);
         game.start();
