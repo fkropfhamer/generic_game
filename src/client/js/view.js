@@ -58,8 +58,6 @@ export default class View {
   }
 
   drawPartOfRingWithoutScale(x, y, radiusObject, distanceToObject, endAngle, lineWidth, color) {
-    // const scaledX = View.floor(x * this.scale);
-    // const scaledY = View.floor(y * this.scale);
     const scaledRadius = View.floor((radiusObject + distanceToObject) * this.scale);
 
     this.ctx.beginPath();
@@ -113,7 +111,6 @@ export default class View {
     const distance = thirdOfRadius + 1;
 
     this.drawCross(x, y, radius, color, 2);
-    // this.drawCircle(x, y, thirdOfRadius, 'black');
     this.drawPartOfRingWithoutScale(x, y, 0, distance, state, 2, color);
     this.drawPartOfRingWithoutScale(x, y, distance, distance, state, 2, color);
   }
