@@ -80,7 +80,6 @@ export default class Game {
 
   placeIceSandFields() {
     const iceSandSpawnProbability = config.ICE_SAND_SPAWN_PROBABILTIY;
-    this.iceSandFields = [];
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       const randomNumber = Math.random();
       if (randomNumber <= iceSandSpawnProbability) {
