@@ -12,7 +12,6 @@ export default class Game {
     this.walls = [];
     this.powerUps = [];
     this.randomPowerUps = [];
-    this.iceSandFields = [];
     this.portals = [];
     this.setupPowerups();
     this.setupWalls();
