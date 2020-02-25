@@ -313,10 +313,10 @@ describe('game test', () => {
       radius: 1,
     };
 
-    game.randomPowerUps = [powerUp];
+    game.displayedPowerUps = [powerUp];
     game.checkPlayerHitsPowerUp(player);
 
-    expect(game.randomPowerUps).toEqual([]);
+    expect(game.displayedPowerUps).toEqual([]);
     expect(powerUp.update).toHaveBeenCalledTimes(1);
   });
 
@@ -334,10 +334,10 @@ describe('game test', () => {
       radius: 1,
     };
 
-    game.randomPowerUps = [powerUp];
+    game.displayedPowerUps = [powerUp];
     game.checkPlayerHitsPowerUp(player);
 
-    expect(game.randomPowerUps).toEqual([powerUp]);
+    expect(game.displayedPowerUps).toEqual([powerUp]);
     expect(powerUp.update).toHaveBeenCalledTimes(0);
   });
 
@@ -646,23 +646,23 @@ describe('game test', () => {
   test('game place random powerup', () => {
     const powerUp = {};
 
-    game.randomPowerUps = [];
+    game.displayedPowerUps = [];
     game.powerUps = [powerUp];
 
     game.placeRandomPowerUp();
 
-    expect(game.randomPowerUps).toEqual([powerUp]);
+    expect(game.displayedPowerUps).toEqual([powerUp]);
   });
 
   test('game place random powerup more than max power up are placed', () => {
     const powerUp = {};
-    const randomPowerUps = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
-    game.randomPowerUps = randomPowerUps;
+    const displayedPowerUps = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+    game.displayedPowerUps = displayedPowerUps;
     game.powerUps = [powerUp];
 
     game.placeRandomPowerUp();
 
-    expect(game.randomPowerUps).toEqual(randomPowerUps);
+    expect(game.displayedPowerUps).toEqual(displayedPowerUps);
   });
 
   test('game place random powerup is allready placed', () => {
@@ -676,13 +676,13 @@ describe('game test', () => {
 
     const powerUp = {};
     const powerUp2 = {};
-    const randomPowerUps = [powerUp];
-    game.randomPowerUps = randomPowerUps;
+    const displayedPowerUps = [powerUp];
+    game.displayedPowerUps = displayedPowerUps;
     game.powerUps = [powerUp, powerUp2];
 
     game.placeRandomPowerUp();
 
-    expect(game.randomPowerUps).toEqual([powerUp, powerUp2]);
+    expect(game.displayedPowerUps).toEqual([powerUp, powerUp2]);
   });
 
   test('game place ice sand fields', () => {
