@@ -21,11 +21,19 @@ describe('player test', () => {
     expect(player.speed).toBe(3);
     expect(player.radius).toBe(25);
     expect(player.angle).toBe(0);
+    expect(player.shootingCount).toBe(0);
+    expect(player.isShielded).toBe(false);
+    expect(player.fireRateActivated).toBe(false);
+    expect(player.changedSpeedPowerupActive).toBe(false);
+    expect(player.isFrozen).toBe(false);
+    expect(player.isOnIce).toBe(false);
+    expect(player.isOnSand).toBe(false);
     expect(socket.on.mock.calls.length).toBe(5);
     expect(socket.on.mock.calls[0][0]).toBe('keyspressed');
     expect(socket.on.mock.calls[1][0]).toBe('shoot');
     expect(socket.on.mock.calls[2][0]).toBe('update angle');
     expect(socket.on.mock.calls[3][0]).toBe('disconnect');
+    expect(socket.on.mock.calls[4][0]).toBe('ready');
   });
 
   test('socket event onkeyspressed', () => {
