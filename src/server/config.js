@@ -54,6 +54,8 @@ const config = Util.deepFreeze({
     powerUpTypes.ADDHEALTH,
     powerUpTypes.ADDHEALTH,
     powerUpTypes.ADDHEALTH,
+    powerUpTypes.ADDHEALTH,
+    powerUpTypes.ADDHEALTH,
     powerUpTypes.SHIELD,
     powerUpTypes.SHIELD,
     powerUpTypes.SPEED,

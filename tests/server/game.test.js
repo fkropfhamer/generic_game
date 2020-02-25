@@ -666,14 +666,23 @@ describe('game test', () => {
   });
 
   test('game place random powerup is allready placed', () => {
+    let counter = -0.5;
+    const mockMath = Object.create(global.Math);
+    mockMath.random = () => {
+      counter += 0.5;
+      return counter;
+    };
+    global.Math = mockMath;
+
     const powerUp = {};
+    const powerUp2 = {};
     const randomPowerUps = [powerUp];
     game.randomPowerUps = randomPowerUps;
-    game.powerUps = [powerUp];
+    game.powerUps = [powerUp, powerUp2];
 
     game.placeRandomPowerUp();
 
-    expect(game.randomPowerUps).toEqual(randomPowerUps);
+    expect(game.randomPowerUps).toEqual([powerUp, powerUp2]);
   });
 
   test('game place ice sand fields', () => {
