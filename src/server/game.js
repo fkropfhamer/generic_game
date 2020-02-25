@@ -71,13 +71,13 @@ export default class Game {
 
   placeRandomPowerUp() {
     if (this.displayedPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
-      let powerUpNotOnField = true;
+      let powerUpDisplayed = false;
 
-      while (powerUpNotOnField) {
+      while (!powerUpDisplayed) {
         const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
         if (this.displayedPowerUps.indexOf(randomPowerUp) === -1) {
           this.displayedPowerUps.push(randomPowerUp);
-          powerUpNotOnField = false;
+          powerUpDisplayed = true;
         }
       }
     }
