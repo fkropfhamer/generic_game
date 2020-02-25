@@ -116,13 +116,12 @@ const config = Util.deepFreeze({
     },
   ],
 
-  WALL_LINEWIDTH: 3,
-  NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_WALLS: 12,
+  NUMBER_OF_VERTICAL_WALLS: 10,
   NUMBER_OF_HORIZONTAL_BARRIERS: 3,
   NUMBER_OF_VERTICAL_BARRIERS: 3,
+  WALL_LINEWIDTH: 3,
   constraintWalls: {
-    x: 0,
     y: 10,
     height: 20,
     angle: 0,
