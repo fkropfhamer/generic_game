@@ -12,8 +12,8 @@ export default class Game {
     this.walls = [];
     this.powerUps = [];
     this.randomPowerUps = [];
-    this.iceSandFields = [];
     this.portals = [];
+    this.iceSandFields = [];
     this.setupPowerups();
     this.setupWalls();
     this.setupPortals();
@@ -84,8 +84,8 @@ export default class Game {
   }
 
   placeIceSandFields() {
-    const iceSandSpawnProbability = config.ICE_SAND_SPAWN_PROBABILTIY;
     this.iceSandFields = [];
+    const iceSandSpawnProbability = config.ICE_SAND_SPAWN_PROBABILTIY;
     config.ICE_SAND_FIELDS.forEach((iceSandField) => {
       const randomNumber = Math.random();
       if (randomNumber <= iceSandSpawnProbability) {
