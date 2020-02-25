@@ -151,7 +151,6 @@ describe('game test', () => {
 
   test('game update no bullets', () => {
     game.bullets = [];
-    game.iceSandFields = [];
     game.update();
 
     expect(player1.update).toHaveBeenCalledTimes(1);
@@ -163,7 +162,6 @@ describe('game test', () => {
     const bullet2 = { update: jest.fn() };
 
     game.bullets = [bullet1, bullet2];
-    game.iceSandFields = [];
 
     game.update();
 
