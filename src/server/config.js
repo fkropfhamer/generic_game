@@ -131,8 +131,6 @@ const config = Util.deepFreeze({
   },
 
   barrierWalls: {
-    x: 50,
-    y: 10,
     height: 20,
     width: 60,
     angle: Math.PI / 4,
