@@ -11,7 +11,7 @@ export default class Game {
     this.deadPlayers = [];
     this.walls = [];
     this.powerUps = [];
-    this.randomPowerUps = [];
+    this.displayedPowerUps = [];
     this.portals = [];
     this.iceSandFields = [];
     this.setupPowerups();
@@ -70,13 +70,13 @@ export default class Game {
   }
 
   placeRandomPowerUp() {
-    if (this.randomPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
+    if (this.displayedPowerUps.length < config.MAX_POWERUPS_ON_FIELD) {
       let powerUpNotOnField = true;
 
       while (powerUpNotOnField) {
         const randomPowerUp = this.powerUps[Math.floor(Math.random() * this.powerUps.length)];
-        if (this.randomPowerUps.indexOf(randomPowerUp) === -1) {
-          this.randomPowerUps.push(randomPowerUp);
+        if (this.displayedPowerUps.indexOf(randomPowerUp) === -1) {
+          this.displayedPowerUps.push(randomPowerUp);
           powerUpNotOnField = false;
         }
       }
@@ -216,11 +216,11 @@ export default class Game {
   }
 
   checkPlayerHitsPowerUp(player) {
-    this.randomPowerUps.forEach((powerUp) => {
+    this.displayedPowerUps.forEach((powerUp) => {
       if (Util.collisionOfCircleWithCircle(powerUp, player)) {
         const otherPlayers = this.getOtherPlayers(player);
         powerUp.update(player, otherPlayers);
-        this.randomPowerUps = this.randomPowerUps.filter((p) => !Object.is(powerUp, p));
+        this.displayedPowerUps = this.displayedPowerUps.filter((p) => !Object.is(powerUp, p));
       }
     });
   }
@@ -383,7 +383,7 @@ export default class Game {
         this.bullets,
         this.timer,
         this.walls,
-        this.randomPowerUps,
+        this.displayedPowerUps,
         this.iceSandFields,
         this.calculateTeamLives(),
         this.portals
