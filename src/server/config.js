@@ -121,8 +121,8 @@ const config = Util.deepFreeze({
   NUMBER_OF_HORIZONTAL_BARRIERS: 3,
   NUMBER_OF_VERTICAL_BARRIERS: 3,
   WALL_LINEWIDTH: 3,
+  CONSTRAINTWALL_MARGIN: 10,
   constraintWalls: {
-    y: 10,
     height: 20,
     angle: 0,
     fillColor: Color.WHITE,

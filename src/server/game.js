@@ -106,27 +106,28 @@ export default class Game {
       this.walls.push({
         ...config.constraintWalls,
         x: i,
+        y: config.CONSTRAINTWALL_MARGIN,
         width: horizontalWidth,
       });
       this.walls.push({
         ...config.constraintWalls,
         x: i,
+        y: config.FIELD_HEIGHT - config.CONSTRAINTWALL_MARGIN,
         width: horizontalWidth,
-        y: config.FIELD_HEIGHT - config.constraintWalls.y,
       });
     }
     const veritcalWidth = config.FIELD_HEIGHT / config.NUMBER_OF_VERTICAL_WALLS;
     for (let i = veritcalWidth / 2; i < config.FIELD_HEIGHT; i += veritcalWidth) {
       this.walls.push({
         ...config.constraintWalls,
-        x: config.constraintWalls.y,
+        x: config.CONSTRAINTWALL_MARGIN,
         y: i,
         width: veritcalWidth,
         angle: Math.PI / 2,
       });
       this.walls.push({
         ...config.constraintWalls,
-        x: config.FIELD_WIDTH - config.constraintWalls.y,
+        x: config.FIELD_WIDTH - config.CONSTRAINTWALL_MARGIN,
         y: i,
         width: veritcalWidth,
         angle: Math.PI / 2,
