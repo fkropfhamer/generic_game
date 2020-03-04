@@ -18,13 +18,13 @@ describe('bullet test', () => {
     expect(bullet.y).toBe(200);
     expect(bullet.angle).toBe(Math.PI);
     expect(bullet.player).toBe(player);
-    expect(bullet.speed).toBe(7);
+    expect(bullet.speed).toBe(6);
     expect(bullet.color).toBe('blue');
   });
   test('update bullet 180 degree', () => {
     bullet.update();
 
-    expect(bullet.x).toBe(93);
+    expect(bullet.x).toBe(94);
     expect(bullet.y).toBe(200);
   });
 
@@ -33,14 +33,14 @@ describe('bullet test', () => {
     bullet.update();
 
     expect(bullet.x).toBe(100);
-    expect(bullet.y).toBe(207);
+    expect(bullet.y).toBe(206);
   });
 
   test('update bullet 0 degree', () => {
     bullet.angle = 0;
     bullet.update();
 
-    expect(bullet.x).toBe(107);
+    expect(bullet.x).toBe(106);
     expect(bullet.y).toBe(200);
   });
 
@@ -49,15 +49,15 @@ describe('bullet test', () => {
     bullet.update();
 
     expect(bullet.x).toBe(100);
-    expect(bullet.y).toBe(193);
+    expect(bullet.y).toBe(194);
   });
 
   test('update bullet 45 degree', () => {
     bullet.angle = Math.PI / 4;
     bullet.update();
 
-    expect(Math.round(bullet.x)).toBe(105);
-    expect(Math.round(bullet.y)).toBe(205);
+    expect(Math.round(bullet.x)).toBe(104);
+    expect(Math.round(bullet.y)).toBe(204);
   });
 
   test('map players', () => {
