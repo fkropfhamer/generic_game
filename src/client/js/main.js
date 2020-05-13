@@ -28,7 +28,7 @@ import arrowbuttons from '../img/arrowButtons.png';
 import mouseclick from '../img/mouseClick.png';
 import portalinstruction from '../img/portal-instruction.png';
 
-window.onload = () => {
+function startClient() {
   const view = new View();
   Promise.all([
     AssetLoader.loadImages([
@@ -67,4 +67,10 @@ window.onload = () => {
     // eslint-disable-next-line no-new
     new Client(view, images, audios);
   });
-};
+}
+
+function main() {
+  startClient();
+}
+
+main();
