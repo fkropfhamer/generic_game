@@ -1,13 +1,5 @@
 /* eslint-disable no-restricted-globals */
-const filesToCache = [
-  '/',
-  'index.html',
-  // 'offline.html',
-  // '404.html',
-  // 'js/offline.js',
-  // 'favicon.ico',
-  // 'manifest.json',
-];
+const filesToCache = ['/', 'index.html', 'offline.html', '404.html', 'offline.js', '404.js'];
 
 const staticCacheName = 'generic-game-cache-v1';
 
