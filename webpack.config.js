@@ -125,4 +125,72 @@ module.exports = [
       path: path.resolve(__dirname, 'public'),
     },
   },
+  {
+    entry: './src/client/js/singleplayer/singleplayer.js',
+    module: {
+      rules: [
+        {
+          test: /\.(js)$/,
+          exclude: /node_modules/,
+          use: ['babel-loader'],
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.(png|svg|jpg|gif|mp3)$/,
+          use: ['file-loader'],
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'singleplayer.html',
+        template: path.resolve(__dirname, 'src', 'client', 'html', 'singleplayer.html'),
+        scriptLoading: 'defer',
+      }),
+    ],
+    resolve: {
+      extensions: ['*', '.js'],
+    },
+    output: {
+      filename: 'singleplayer.js',
+      path: path.resolve(__dirname, 'public'),
+    },
+  },
+  {
+    entry: './src/client/js/about/about.js',
+    module: {
+      rules: [
+        {
+          test: /\.(js)$/,
+          exclude: /node_modules/,
+          use: ['babel-loader'],
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.(png|svg|jpg|gif|mp3)$/,
+          use: ['file-loader'],
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'about.html',
+        template: path.resolve(__dirname, 'src', 'client', 'html', 'about.html'),
+        scriptLoading: 'defer',
+      }),
+    ],
+    resolve: {
+      extensions: ['*', '.js'],
+    },
+    output: {
+      filename: 'about.js',
+      path: path.resolve(__dirname, 'public'),
+    },
+  },
 ];
