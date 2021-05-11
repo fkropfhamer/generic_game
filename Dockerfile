@@ -1,4 +1,4 @@
-FROM node:12 as build
+FROM node:14 as build
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN npm run build
 RUN npm run lint
 RUN npm run test
 
-FROM node:12-alpine
+FROM node:14-alpine
 
 ENV NODE_ENV=production
 
