@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --watch ../shared --exec babel-node --es-module-specifier-resolution=node src/index.js",
-    "stop": "pm2 stop all",
     "build": "rollup src/index.js --file dist/bundle.js --format esm"
   },
   "author": "",
