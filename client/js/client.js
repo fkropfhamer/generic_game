@@ -302,7 +302,15 @@ export default class Client {
   }
 
   setupSocket() {
+    this.createSocket(io);
+    this.configureSocket();
+  }
+
+  createSocket(io) {
     this.socket = io('ws://localhost:8080/');
+  }
+
+  configureSocket() {
     this.socket.on(SocketEvent.CONNECT, this.onConnected.bind(this));
     this.socket.on(SocketEvent.START, this.onStart.bind(this));
     this.socket.on(SocketEvent.UPDATE, this.onUpdate.bind(this));

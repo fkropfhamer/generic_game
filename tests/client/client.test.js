@@ -1,7 +1,7 @@
-import Client from '../../src/client/js/client';
-import config from '../../src/server/config';
+import Client from '../../client/js/client';
+import config from '../../shared/config';
 
-jest.mock('../../src/client/js/view');
+jest.mock('../../client/js/view');
 
 const mockAddEventListener = jest.fn();
 
@@ -437,9 +437,9 @@ describe('client', () => {
   });
 
   test('client setup socket', () => {
-    client.setupSocket();
+    client.configureSocket();
 
-    expect(global.io).toHaveBeenCalledTimes(1);
+    //expect(global.io).toHaveBeenCalledTimes(1);
 
     expect(client.socket.on).toHaveBeenCalledTimes(10);
     expect(client.socket.on.mock.calls[0][0]).toBe('connect');
@@ -508,5 +508,23 @@ describe('client', () => {
 
     expect(client.view.drawCrossHair).toHaveBeenCalledTimes(1);
     expect(client.view.drawCrossHair).toHaveBeenCalledWith(0, 0, 40);
+  });
+
+  test('client create Socket', () => {
+    const io = jest.fn();
+
+    client.createSocket(io);
+
+    expect(io).toHaveBeenCalledTimes(1);
+  });
+
+  test('client setup socket', () => {
+    client.configureSocket = jest.fn();
+    client.createSocket = jest.fn();
+
+    client.setupSocket();
+
+    expect(client.configureSocket).toHaveBeenCalledTimes(1);
+    expect(client.createSocket).toHaveBeenCalledTimes(1);
   });
 });
