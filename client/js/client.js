@@ -308,7 +308,7 @@ export default class Client {
   }
 
   createSocket(socket) {
-    this.socket = socket('ws://localhost:8080/');
+    this.socket = socket('ws://localhost:80/');
   }
 
   configureSocket() {

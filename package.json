@@ -13,7 +13,9 @@
     "lint": "eslint . -c .eslintrc.json --ext js,json",
     "lint:fix": "prettier --write '{**/*,*}.{js,jsx,json}'",
     "dev:server": "cd server && npm run dev",
-    "dev:client": "cd client && npm run dev"
+    "dev:client": "cd client && npm run dev",
+    "docker:build:server": "docker build -t generic_game_server . -f server/Dockerfile",
+    "docker:build:client": "docker build -t generic_game_client . -f client/Dockerfile"
   },
   "repository": {
     "type": "git",
