@@ -1,5 +1,5 @@
-import io from 'socket.io';
-import express from 'express';
+import { Server as SocketServer } from 'socket.io';
+import { createServer } from 'http';
 import Player from './player';
 import Game from './game';
 import config from './config';
@@ -17,10 +17,9 @@ class Server {
   }
 
   listen(port) {
-    const fileServer = express();
-    fileServer.use(express.static('public'));
+    const fileServer = createServer();
     this.fileServer = fileServer.listen(port);
-    this.io = io(this.fileServer);
+    this.io = new SocketServer(this.fileServer, { cors: true });
   }
 
   setupSocket() {

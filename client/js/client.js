@@ -1,7 +1,8 @@
-import config from '../../server/config';
+import { io } from 'socket.io-client';
+import config from '../../src/server/config';
 import View from './view';
 // eslint-disable-next-line object-curly-newline
-import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
+import { Color, EventListener, Key, SocketEvent } from '../../src/server/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -302,8 +303,7 @@ export default class Client {
   }
 
   setupSocket() {
-    // eslint-disable-next-line no-undef
-    this.socket = io();
+    this.socket = io('ws://localhost:8080/');
     this.socket.on(SocketEvent.CONNECT, this.onConnected.bind(this));
     this.socket.on(SocketEvent.START, this.onStart.bind(this));
     this.socket.on(SocketEvent.UPDATE, this.onUpdate.bind(this));

@@ -11,7 +11,7 @@
     "lint:fix": "prettier --write '{**/*,*}.{js,jsx,json}'",
     "start": "npm run build && node dist/index.js",
     "start:prod": "node dist/index.js",
-    "dev": "nodemon --exec babel-node src/server/index.js",
+    "dev": "cd server && npm run dev",
     "build:client": "webpack --mode production",
     "watch": "webpack --watch --mode development",
     "build:server": "babel src/server -d dist",
@@ -28,7 +28,7 @@
     "express": "^4.17.1",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^4.1.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -56,7 +56,8 @@
     "prettier": "^1.19.1",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "generic_game_server": "file: ./server"
   },
   "jest": {
     "moduleNameMapper": {
