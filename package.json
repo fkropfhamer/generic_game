@@ -15,7 +15,8 @@
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
     "docker:build:server": "docker build -t generic_game_server . -f server/Dockerfile",
-    "docker:build:client": "docker build -t generic_game_client . -f client/Dockerfile"
+    "docker:build:client": "docker build -t generic_game_client . -f client/Dockerfile",
+    "docker:build": "npm run docker:build:client && npm run docker:build:server"
   },
   "repository": {
     "type": "git",
