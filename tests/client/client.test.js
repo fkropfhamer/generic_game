@@ -439,8 +439,6 @@ describe('client', () => {
   test('client setup socket', () => {
     client.configureSocket();
 
-    //expect(global.io).toHaveBeenCalledTimes(1);
-
     expect(client.socket.on).toHaveBeenCalledTimes(10);
     expect(client.socket.on.mock.calls[0][0]).toBe('connect');
     expect(client.socket.on.mock.calls[1][0]).toBe('start');

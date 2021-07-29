@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import config from '../../shared/config';
 import View from './view';
+// eslint-disable-next-line object-curly-newline
 import { Color, EventListener, Key, SocketEvent } from '../../shared/enums';
 
 export default class Client {
@@ -306,8 +307,8 @@ export default class Client {
     this.configureSocket();
   }
 
-  createSocket(io) {
-    this.socket = io('ws://localhost:8080/');
+  createSocket(socket) {
+    this.socket = socket('ws://localhost:8080/');
   }
 
   configureSocket() {

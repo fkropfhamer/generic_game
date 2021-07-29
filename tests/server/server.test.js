@@ -6,11 +6,9 @@ const mockServer = { listen: jest.fn() };
 
 jest.mock('http', () => {
   return {
-    createServer: () => {
-      return mockServer
-    }
-  }
-})
+    createServer: () => mockServer,
+  };
+});
 
 jest.mock('../../server/src/player');
 jest.mock('../../server/src/game');

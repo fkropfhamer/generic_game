@@ -1,4 +1,3 @@
-
 import config from '../../shared/config';
 import { powerUpTypes } from '../../shared/enums';
 
