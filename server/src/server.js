@@ -2,8 +2,8 @@ import { Server as SocketServer } from 'socket.io';
 import { createServer } from 'http';
 import Player from './player';
 import Game from './game';
-import config from './config';
-import { Mode, SocketEvent } from './enums';
+import config from '../../shared/config';
+import { Mode, SocketEvent } from '../../shared/enums';
 
 class Server {
   constructor() {

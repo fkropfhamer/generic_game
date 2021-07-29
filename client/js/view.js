@@ -1,6 +1,6 @@
-import config from '../../src/server/config';
-import Util from '../../src/server/util';
-import { Mode } from '../../src/server/enums';
+import config from '../../shared/config';
+import Util from '../../shared/util';
+import { Mode } from '../../shared/enums';
 import background from '../img/background.png';
 
 export default class View {
