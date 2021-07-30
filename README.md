@@ -1,7 +1,6 @@
 ![Node.js CI](https://github.com/fkropfhamer/generic_game/workflows/Node.js%20CI/badge.svg)
-[![pipeline status](https://gitlab.lrz.de/gruppe-gg/gg/badges/master/pipeline.svg)](https://gitlab.lrz.de/gruppe-gg/gg/commits/master) [![coverage report](https://gitlab.lrz.de/gruppe-gg/gg/badges/master/coverage.svg)](https://gitlab.lrz.de/gruppe-gg/gg/commits/master)
 
-# Group GG: `Generic Game`
+# Generic Game
 
 University group project
 

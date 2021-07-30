@@ -1,26 +1,17 @@
-import express from 'express';
-import Server from '../../src/server/server';
-import Player from '../../src/server/player';
-import Game from '../../src/server/game';
+import Server from '../../server/src/server';
+import Player from '../../server/src/player';
+import Game from '../../server/src/game';
 
-// eslint-disable-next-line global-require
-jest.mock('express', () => require('jest-express'));
+const mockServer = { listen: jest.fn() };
 
-jest.mock('../../src/server/player');
-jest.mock('../../src/server/game');
-
-jest.mock('socket.io', () => {
+jest.mock('http', () => {
   return {
-    default: jest.fn((s) => {
-      return {
-        webSocket: s,
-        on: jest.fn(),
-      };
-    }),
-    __esModule: true,
-    on: jest.fn(),
+    createServer: () => mockServer,
   };
 });
+
+jest.mock('../../server/src/player');
+jest.mock('../../server/src/game');
 
 describe('server', () => {
   let server;
@@ -53,8 +44,7 @@ describe('server', () => {
 
     server.listen(port);
 
-    expect(express.static).toHaveBeenCalledTimes(1);
-    expect(express.static).toHaveBeenCalledWith('public');
+    expect(mockServer.listen).toHaveBeenCalledTimes(1);
 
     expect(server.io.webSocket).toBe(server.fileServer);
   });

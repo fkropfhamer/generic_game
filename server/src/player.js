@@ -1,9 +1,9 @@
 import Bullet from './bullet';
-import Util from './util';
-import config from './config';
+import Util from '../../shared/util';
+import config from '../../shared/config';
 import PowerUp from './powerup';
 import IceSand from './iceSand';
-import { SocketEvent } from './enums';
+import { SocketEvent } from '../../shared/enums';
 
 export default class Player {
   constructor(socket, server) {

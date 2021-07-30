@@ -1,6 +1,6 @@
-import PowerUp from '../../src/server/powerup';
-import { powerUpTypes } from '../../src/server/enums';
-import config from '../../src/server/config';
+import PowerUp from '../../server/src/powerup';
+import { powerUpTypes } from '../../shared/enums';
+import config from '../../shared/config';
 
 describe('powerup', () => {
   let powerup;

@@ -1,5 +1,5 @@
-import Game from '../../src/server/game';
-import config from '../../src/server/config';
+import Game from '../../server/src/game';
+import config from '../../shared/config';
 
 describe('game test', () => {
   let player1;

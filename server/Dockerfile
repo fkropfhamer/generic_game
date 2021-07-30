@@ -1,21 +1,21 @@
-FROM node:14 as build
+FROM node:16 as build
 
 WORKDIR /app
 
-COPY . /app
+COPY ./server /app
+COPY ./shared /shared
 
-RUN npm i
+RUN npm ci
 RUN npm run build
-RUN npm run lint
-RUN npm run test
 
-FROM node:14-alpine
+FROM node:16-alpine
 
 ENV NODE_ENV=production
 
+RUN npm install pm2 -g
+
 WORKDIR /app
 COPY --from=build /app/dist /app/dist
-COPY --from=build /app/public /app/public
 COPY --from=build /app/package.json .
 COPY --from=build /app/package-lock.json .
 
@@ -23,6 +23,4 @@ RUN npm i
 
 EXPOSE 8080
 
-ENTRYPOINT ["npm"]
-
-CMD ["run", "start:prod"]
+CMD ["pm2-runtime", "dist/bundle.js"]

@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import AssetLoader from '../../src/client/js/assetloader';
+import AssetLoader from '../../client/js/assetloader';
 
 describe('assetloader', () => {
   let imageToLoad;

@@ -1,0 +1,11 @@
+version: "3"
+services:
+  generic_game_server:
+    image: generic_game_server:latest
+
+  generic_game_client:
+    image: generic_game_client:latest
+    ports: 
+      - 443:443
+      - 80:80
+
