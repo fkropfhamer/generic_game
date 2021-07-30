@@ -17,8 +17,10 @@
     "build:server": "cd server && npm run build",
     "build:client": "cd client && npm run build",
     "build": "npm run build:server && npm run build:client",
-    "docker:build:server": "docker build -t generic_game_server . -f server/Dockerfile",
-    "docker:build:client": "docker build -t generic_game_client . -f client/Dockerfile",
+    "docker:build:server": "docker build -t generic_game_server:stable . -f server/Dockerfile",
+    "docker:build:client": "docker build -t generic_game_client:stable . -f client/Dockerfile",
+    "docker:build:server:staging": "docker build -t generic_game_server:staging . -f server/Dockerfile",
+    "docker:build:client:staging": "docker build -t generic_game_client:staging . -f client/Dockerfile.staging",
     "docker:build": "npm run docker:build:client && npm run docker:build:server"
   },
   "repository": {
