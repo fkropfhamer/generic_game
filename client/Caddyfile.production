@@ -1,4 +1,4 @@
-http://gg:80 {
+gg.dinokatze.com {
     root * /app/dist
     reverse_proxy /socket.io/* http://generic_game_server:8080
     file_server
