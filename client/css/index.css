@@ -24,3 +24,9 @@ canvas {
 .instruction {
     margin: 3%
 }
+
+.rootscreen {
+    position: absolute;
+    z-index: 5;
+    background-color: lightgrey;
+}
