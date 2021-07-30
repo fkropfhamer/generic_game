@@ -1,5 +1,5 @@
-import { powerUpTypes } from './enums';
-import config from './config';
+import config from '../../shared/config';
+import { powerUpTypes } from '../../shared/enums';
 
 export default class PowerUp {
   constructor(x, y, type) {

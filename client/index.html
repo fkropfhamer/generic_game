@@ -5,44 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <noscript><h1 style="background-color: red;">please enable Javasript!</h1></noscript>
-    <div id="rootscreen" class="container-fluid position-absolute d-flex justify-content-center" >
-        <div id="startscreen" class="container screen" style="background-color: white; display: none;">
+    <div id="rootscreen" class="rootscreen" >
+        <div id="startscreen" style="background-color: white; display: none;">
             <h1>Generic Game</h1>
             <h2>choose Player!</h2>
-            <div class="row" id="player-selection">
-                <div id="choice1-di" class="col">
-                    <label id="choice1-label" class="form-check-label" for="exampleRadios2"></label> 
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="choice1" value="option1" checked>
+            <div id="player-selection">
+                <div id="choice1-div">
+                    <label id="choice1-label" for="exampleRadios2"></label> 
+                    <input type="radio" name="exampleRadios" id="choice1" value="option1" checked>
                 </div>
-                <div id="choice2-div" class="col">
-                    <label id="choice2-label" class="form-check-label" for="exampleRadios2"></label>
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="choice2" value="option2">
+                <div id="choice2-div">
+                    <label id="choice2-label" for="exampleRadios2"></label>
+                    <input type="radio" name="exampleRadios" id="choice2" value="option2">
                 </div>
-                <div id="choice3-di" class="col">
-                    <label id="choice3-label" class="form-check-label" for="exampleRadios2"></label>
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="choice3" value="option3">
+                <div id="choice3-di">
+                    <label id="choice3-label" for="exampleRadios2"></label>
+                    <input type="radio" name="exampleRadios" id="choice3" value="option3">
                 </div>
-                <div id="choice4-di" class="col">
-                    <label id="choice4-label" class="form-check-label" for="exampleRadios2"></label>
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="choice4" value="option4">
+                <div id="choice4-di">
+                    <label id="choice4-label" for="exampleRadios2"></label>
+                    <input type="radio" name="exampleRadios" id="choice4" value="option4">
                 </div>
             </div>
-            <div class="form-check form-check-inline">
-                <input id="teamgame-checkbox" class="form-check-input" type="checkbox" name="teamgame-checkbox">
-                <label class="form-check-label" for="teamgame-checkbox">teamgame?</label>
+            <div >
+                <input id="teamgame-checkbox" type="checkbox" name="teamgame-checkbox">
+                <label for="teamgame-checkbox">teamgame?</label>
             </div>
-            <div class="row">
-                <button id="startbutton" class="btn btn-success">start</button>
-                <button id="instructionbutton" class="btn btn-success">instruction</button>
+            <div>
+                <button id="startbutton">start</button>
+                <button id="instructionbutton" >instruction</button>
             </div>
         </div>
-        <div id="instructionscreen" class="container instruction" style="background-color: white; display: none;">
+        <div id="instructionscreen" style="background-color: white; display: none;">
             <h1>Game Instruction</h1>
-            <div class="container" id="goal-instructions">
+            <div id="goal-instructions">
                 <dl>
                     <dt>Goal:</dt>
                     <dd>- Shoot your opponent as often as possible</dd>
@@ -51,12 +50,12 @@
             </div>
             <div class="container"><dl><dt>Basics:</dt></dl></div>
             <div class="row text-center" id="basic-instructions">
-                <div id="arrowbuttons-di" class="col" style = >Walk using Arrow-Buttons</div>
+                <div id="arrowbuttons-di" class="col" >Walk using Arrow-Buttons</div>
                 <div id="mouseclick-di" class="col">Shoot by Mouse-Click</div>
                 <div id="portal-di" class="col">Walk through Portals</div>
             </div>
             <div class="row text-center" id="walk-shoot-instruction">
-                <div id="arrowbuttons-img" class="col" style = ></div>
+                <div id="arrowbuttons-img" class="col" ></div>
                 <div id="mouseclick-img" class="col"></div>
                 <div id="portal-img" class="col"></div>
             </div>
@@ -104,10 +103,12 @@
     <div class="progress" style="height: 2.5%;">
         <div id="timeprogress" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
     </div>
+    
     <div id="root"></div>
     <div class="progress" id="lifeprogress" style="height: 2.5%;">
         <div id="bluelivebar" class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         <div id="redlivebar" class="progress-bar bg-danger" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
+    <script type="module" src="/js/main.js"></script>
 </body>
 </html>

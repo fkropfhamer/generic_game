@@ -1,7 +1,7 @@
-import config from '../../server/config';
+import { io } from 'socket.io-client';
+import config from '../../shared/config';
 import View from './view';
-// eslint-disable-next-line object-curly-newline
-import { Color, EventListener, Key, SocketEvent } from '../../server/enums';
+import { Color, EventListener, Key, SocketEvent } from '../../shared/enums';
 
 export default class Client {
   constructor(view, images, audios) {
@@ -302,8 +302,15 @@ export default class Client {
   }
 
   setupSocket() {
-    // eslint-disable-next-line no-undef
-    this.socket = io();
+    this.createSocket(io);
+    this.configureSocket();
+  }
+
+  createSocket(socket) {
+    this.socket = socket(import.meta.env.VITE_WEBSOCKET_URL);
+  }
+
+  configureSocket() {
     this.socket.on(SocketEvent.CONNECT, this.onConnected.bind(this));
     this.socket.on(SocketEvent.START, this.onStart.bind(this));
     this.socket.on(SocketEvent.UPDATE, this.onUpdate.bind(this));

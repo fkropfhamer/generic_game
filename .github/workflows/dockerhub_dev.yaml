@@ -1,0 +1,25 @@
+name: Publish to Docker Hub Dev
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Login to docker 
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: Build the server docker Image
+      run: docker build -t fkropfhamer/generic_game_server:staging . -f server/Dockerfile
+    - name: Build the client docker Image
+      run: docker build -t fkropfhamer/generic_game_client:staging . -f client/Dockerfile.staging
+    - name: Push client to docker hub
+      run: docker push ${{ secrets.DOCKER_USER }}/generic_game_server:staging
+    - name: Push client to docker hub
+      run: docker push ${{ secrets.DOCKER_USER }}/generic_game_client:staging

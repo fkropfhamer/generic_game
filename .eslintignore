@@ -1,6 +1,10 @@
-/public
-/dist
-/coverage
+public
+dist
+coverage
 
 package-lock.json
 package.json
+
+node_modules
+
+babel.config.json
