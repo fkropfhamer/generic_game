@@ -1,11 +1,11 @@
 version: "3"
 services:
   generic_game_server:
-    image: fkropfhamer/generic_game_server:stable
+    image: fkropfhamer/generic_game_server:staging
     restart: always
 
   generic_game_client:
-    image: fkropfhamer/generic_game_client:stable
+    image: fkropfhamer/generic_game_client:staging
     ports: 
       - 443:443
       - 80:80
