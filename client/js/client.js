@@ -308,7 +308,7 @@ export default class Client {
   }
 
   createSocket(socket) {
-    this.socket = socket('ws://localhost:80/');
+    this.socket = socket(import.meta.env.VITE_WEBSOCKET_URL);
   }
 
   configureSocket() {
