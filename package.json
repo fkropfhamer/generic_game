@@ -2,11 +2,14 @@
   "name": "generic_game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "",
   "scripts": {
     "postinstall": "npm run install:server && npm run install:client",
     "install:client": "cd client && npm i",
     "install:server": "cd server && npm i",
+    "reinstall": "npm ci && npm run reinstall:client && npm run reinstall:server",
+    "reinstall:client": "cd client && npm ci",
+    "reinstall:server": "cd server && npm ci",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint:prettier": "prettier --check '{**/*,*}.{js,jsx,json}'",
@@ -23,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.lrz.de:gruppe-gg/gg.git"
+    "url": "git@github.com:fkropfhamer/generic_game.git"
   },
   "author": "",
   "license": "ISC",
