@@ -15,8 +15,11 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name: Build the docker Image
-      run: docker build . --tag fkropfhamer/generic_game:latest
-    - name: Push to docker hub
-      run: docker push ${{ secrets.DOCKER_USER }}/generic_game
-
+    - name: Build the server docker Image
+      run: docker build -t fkropfhamer/generic_game_server . -f server/Dockerfile
+    - name: Build the client docker Image
+      run: docker build -t fkropfhamer/generic_game_client . -f client/Dockerfile
+    - name: Push to server docker hub
+      run: docker push ${{ secrets.DOCKER_USER }}/generic_game_server
+    - name: Push to server docker hub
+      run: docker push ${{ secrets.DOCKER_USER }}/generic_game_client
