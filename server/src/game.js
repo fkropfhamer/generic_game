@@ -1,8 +1,8 @@
-import config from './config';
-import Util from './util';
+import config from '../../shared/config';
+import Util from '../../shared/util';
 import PowerUp from './powerup';
 import IceSand from './iceSand';
-import { Color, iceSandTypes } from './enums';
+import { Color, iceSandTypes } from '../../shared/enums';
 
 export default class Game {
   constructor(players) {

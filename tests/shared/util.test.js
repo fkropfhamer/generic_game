@@ -1,5 +1,5 @@
-import Util from '../../src/server/util';
-import config from '../../src/server/config';
+import Util from '../../shared/util';
+import config from '../../shared/config';
 
 describe('Util test', () => {
   test('constructor', () => {

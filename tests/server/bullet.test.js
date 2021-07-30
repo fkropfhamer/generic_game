@@ -1,4 +1,4 @@
-import Bullet from '../../src/server/bullet';
+import Bullet from '../../server/src/bullet';
 
 describe('bullet test', () => {
   let bullet;

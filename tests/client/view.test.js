@@ -1,5 +1,5 @@
-import View from '../../src/client/js/view';
-import config from '../../src/server/config';
+import View from '../../client/js/view';
+import config from '../../shared/config';
 
 describe('view', () => {
   let view;

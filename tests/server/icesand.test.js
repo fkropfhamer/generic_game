@@ -1,4 +1,4 @@
-import IceSand from '../../src/server/iceSand';
+import IceSand from '../../server/src/iceSand';
 
 describe('icesand', () => {
   let iceSand;
