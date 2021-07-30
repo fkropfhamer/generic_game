@@ -33,6 +33,7 @@
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8",
     "babel-jest": "^24.9.0",
+    "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.5.0",
@@ -48,6 +49,5 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js"
     }
-  },
-  "dependencies": {}
+  }
 }
