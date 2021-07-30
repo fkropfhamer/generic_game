@@ -6,10 +6,10 @@ COPY ./client /app
 COPY ./shared /shared
 
 RUN npm ci
-RUN npm run build
+RUN npm run build:staging
 
 FROM caddy:2-alpine
 
 WORKDIR /app
 COPY --from=build /app/dist /app/dist
-COPY ./client/Caddyfile.production /etc/caddy/Caddyfile
+COPY ./client/Caddyfile.staging /etc/caddy/Caddyfile
