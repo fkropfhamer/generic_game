@@ -12,9 +12,10 @@ University group project
 ## getting started:
 
 1. `npm i`
-2. `npm start`
-3. open browser on `localhost:8080`
-4. play!
+2. `npm run dev:server`
+3. `npm run dev:client`
+4. open browser on `localhost:3000`
+5. play!
 
 ## commands:
 
@@ -23,15 +24,15 @@ University group project
 - `npm install`
 -> install packages
 
-- `npm ci`
+- `npm run reinstall`
 -> reinstall all packages
 
 ### for development:
 
-- `npm run dev` 
+- `npm run dev:server` 
 -> for server 
 
-- `npm run watch`
+- `npm run dev:client`
 -> for client 
 
 ### for production:
@@ -44,9 +45,6 @@ University group project
 
 - `npm run build`
 -> build client + server
-
-- `npm run start`
--> start project
 
 ### for linting:
 
@@ -66,25 +64,20 @@ University group project
 
 ### for docker
 
-- `docker build -t gg .`
--> build docker image
+- `npm run docker:build`
+-> build docker images
 
-- `docker run -it -p 8080:8080 gg:latest`
--> run docker container interactive
+- `npm run docker:build:server`
+-> build server docker image
 
-- `docker run -it -p 8080:8080 -d gg:latest`
--> run docker container in background
-
-
+- `npm run docker:build:client`
+-> build client docker image
 
 ## dependencies:
 
 ### used packages:   
 - socket.io
-- webpack
 - babel
-- express
-- bootstrap
             
 ### code style:
 - eslint
