@@ -2,7 +2,7 @@ name: Publish to Docker Hub
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
 
 jobs:
   build: 
@@ -16,9 +16,9 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the server docker Image
-      run: docker build -t fkropfhamer/generic_game_server:latest . -f server/Dockerfile
+      run: docker build -t fkropfhamer/generic_game_server:dev . -f server/Dockerfile
     - name: Build the client docker Image
-      run: docker build -t fkropfhamer/generic_game_client:latest . -f client/Dockerfile
+      run: docker build -t fkropfhamer/generic_game_client:dev . -f client/Dockerfile
     - name: Push to server docker hub
       run: docker push ${{ secrets.DOCKER_USER }}/generic_game_server
     - name: Push to server docker hub
