@@ -168,7 +168,7 @@ export default class View {
   }
 
   showCursor() {
-    this.canvas.style.cursor = 'initial';
+    this.canvas.style.cursor = 'flex';
   }
 
   drawImageAtAngle(image, x, y, angle, scale = 1) {
@@ -215,7 +215,7 @@ export default class View {
   }
 
   static showWaitingScreen(numberOfPlayers) {
-    document.getElementById('waitingscreen').style.display = 'initial';
+    document.getElementById('waitingscreen').style.display = 'flex';
     const playerString = numberOfPlayers === 1 ? 'player' : 'players';
     document.getElementById(
       'waitingscreenheading'
@@ -228,21 +228,21 @@ export default class View {
 
   static showTimeOverScreen() {
     this.hideDeathMessage();
-    document.getElementById('timeoverscreen').style.display = 'initial';
+    document.getElementById('timeoverscreen').style.display = 'flex';
   }
 
   static showWinScreen() {
     this.hideDeathMessage();
-    document.getElementById('winscreen').style.display = 'initial';
+    document.getElementById('winscreen').style.display = 'flex';
   }
 
   static showLoseScreen() {
     this.hideDeathMessage();
-    document.getElementById('losescreen').style.display = 'initial';
+    document.getElementById('losescreen').style.display = 'flex';
   }
 
   showStartScreen(callback) {
-    document.getElementById('startscreen').style.display = 'initial';
+    document.getElementById('startscreen').style.display = 'flex';
     View.hideInstructionScreen();
 
     this.images.face1.classList.add('img-thumbnail');
@@ -290,7 +290,7 @@ export default class View {
   showInstructionScreen(callback, images) {
     View.hideDeathMessage();
     View.hideStartScreen();
-    document.getElementById('instructionscreen').style.display = 'initial';
+    document.getElementById('instructionscreen').style.display = 'flex';
 
     document.getElementById('arrowbuttons-img').appendChild(images.arrowbuttons);
     document.getElementById('mouseclick-img').appendChild(images.mouseclick);
@@ -311,7 +311,7 @@ export default class View {
     const startingScreen = document.getElementById('startingscreen');
     const startingScreenMesssage = document.getElementById('startingscreenmessage');
     startingScreenMesssage.innerHTML = `Game is starting in ${startCounter}! Your color is ${color}`;
-    startingScreen.style.display = 'initial';
+    startingScreen.style.display = 'flex';
   }
 
   static hideStartingScreen() {
@@ -323,7 +323,7 @@ export default class View {
   }
 
   static showDeathMessage() {
-    document.getElementById('deathmessage').style.display = 'initial';
+    document.getElementById('deathmessage').style.display = 'flex';
   }
 
   static hideDeathMessage() {
