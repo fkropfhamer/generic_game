@@ -101,3 +101,11 @@ button {
 .timeoverscreen {
     background-color: khaki;
 }
+
+.progress-bar {
+    height: 100%;
+}
+
+.progress {
+    height: 2.5%;
+}
