@@ -259,14 +259,14 @@ describe('view', () => {
   test('view show waiting player === 1', () => {
     View.showWaitingScreen(1);
 
-    expect(elements.waitingscreen.style.display).toBe('initial');
+    expect(elements.waitingscreen.style.display).toBe('flex');
     expect(elements.waitingscreenheading.innerHTML).toBe('You have to wait for 1 other player!');
   });
 
   test('view show waiting player === 3', () => {
     View.showWaitingScreen(3);
 
-    expect(elements.waitingscreen.style.display).toBe('initial');
+    expect(elements.waitingscreen.style.display).toBe('flex');
     expect(elements.waitingscreenheading.innerHTML).toBe('You have to wait for 3 other players!');
   });
 
@@ -280,27 +280,27 @@ describe('view', () => {
     View.showTimeOverScreen();
 
     expect(elements.deathmessage.style.display).toBe('none');
-    expect(elements.timeoverscreen.style.display).toBe('initial');
+    expect(elements.timeoverscreen.style.display).toBe('flex');
   });
 
   test('view show win screen', () => {
     View.showWinScreen();
 
     expect(elements.deathmessage.style.display).toBe('none');
-    expect(elements.winscreen.style.display).toBe('initial');
+    expect(elements.winscreen.style.display).toBe('flex');
   });
 
   test('view show lose screen', () => {
     View.showLoseScreen();
 
     expect(elements.deathmessage.style.display).toBe('none');
-    expect(elements.losescreen.style.display).toBe('initial');
+    expect(elements.losescreen.style.display).toBe('flex');
   });
 
   test('view show death message', () => {
     View.showDeathMessage();
 
-    expect(elements.deathmessage.style.display).toBe('initial');
+    expect(elements.deathmessage.style.display).toBe('flex');
   });
 
   test('view hide death message', () => {
@@ -340,7 +340,7 @@ describe('view', () => {
 
     view.showStartScreen(callback);
 
-    expect(elements.startscreen.style.display).toBe('initial');
+    expect(elements.startscreen.style.display).toBe('flex');
 
     expect(images.face1.classList.add).toHaveBeenCalledTimes(1);
     expect(images.face1.classList.add).toHaveBeenCalledWith('img-thumbnail');
@@ -434,7 +434,7 @@ describe('view', () => {
   test('view show starting screen', () => {
     View.showStartingScreen(1, 'color123');
 
-    expect(elements.startingscreen.style.display).toBe('initial');
+    expect(elements.startingscreen.style.display).toBe('flex');
     expect(elements.startingscreenmessage.innerHTML).toBe(
       'Game is starting in 1! Your color is color123'
     );
@@ -457,7 +457,7 @@ describe('view', () => {
 
     view.showInstructionScreen(callback, images);
 
-    expect(elements.instructionscreen.style.display).toBe('initial');
+    expect(elements.instructionscreen.style.display).toBe('flex');
 
     expect(view.showStartScreen).toHaveBeenCalledTimes(0);
 
@@ -504,7 +504,7 @@ describe('view', () => {
 
     view.showCursor();
 
-    expect(view.canvas.style.cursor).toBe('initial');
+    expect(view.canvas.style.cursor).toBe('flex');
   });
 
   test('view draw crosshair', () => {
