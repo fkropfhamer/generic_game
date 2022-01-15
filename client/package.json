@@ -1,6 +1,6 @@
 {
-  "name": "vite",
-  "version": "0.0.0",
+  "name": "generic_game_client",
+  "version": "1.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
