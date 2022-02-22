@@ -24,7 +24,7 @@ University group project
 - `npm install`
 -> install packages
 
-- `npm run reinstall`
+- `npm run ci`
 -> reinstall all packages
 
 ### for development:
