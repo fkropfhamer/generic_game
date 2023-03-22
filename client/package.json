@@ -4,7 +4,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:staging": "vite build --mode staging",
     "serve": "vite preview"
   },
   "devDependencies": {
