@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import View from '../../client/js/view';
 import config from '../../shared/config';
 

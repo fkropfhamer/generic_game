@@ -43,6 +43,7 @@ describe('game test', () => {
 
   test('test game start', () => {
     jest.useFakeTimers();
+    jest.spyOn(global, 'setTimeout');
 
     game.notifyPlayersUpdate = jest.fn();
     game.starting = jest.fn();
@@ -619,6 +620,7 @@ describe('game test', () => {
 
   test('game starting counter > 0', () => {
     jest.useFakeTimers();
+    jest.spyOn(global, 'setTimeout');
     game.startCounter = 10;
 
     game.starting();
@@ -633,6 +635,7 @@ describe('game test', () => {
 
   test('game starting counter = 0', () => {
     jest.useFakeTimers();
+    jest.spyOn(global, 'setInterval');
     game.startCounter = 0;
 
     game.starting();
