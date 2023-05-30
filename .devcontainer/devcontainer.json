@@ -1,0 +1,5 @@
+{
+    "name": "generic-game",
+    "image": "node:18",
+    "postCreateCommand": "npm ci"
+}
