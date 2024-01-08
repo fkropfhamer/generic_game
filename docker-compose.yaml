@@ -2,11 +2,17 @@ version: "3"
 services:
   generic_game_server:
     image: fkropfhamer/generic_game_server:stable
-    restart: always
+    build:
+      context: .
+      target: server
+    restart: unless-stopped
 
   generic_game_client:
     image: fkropfhamer/generic_game_client:stable
+    build: 
+      context: .
+      target: client
     ports: 
       - 443:443
       - 80:80
-    restart: always
+    restart: unless-stopped

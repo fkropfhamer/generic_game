@@ -64,14 +64,8 @@ University group project
 
 ### for docker
 
-- `npm run docker:build`
+- `docker compose build`
 -> build docker images
-
-- `npm run docker:build:server`
--> build server docker image
-
-- `npm run docker:build:client`
--> build client docker image
 
 ## dependencies:
 

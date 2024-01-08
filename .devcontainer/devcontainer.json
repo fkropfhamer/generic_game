@@ -1,5 +1,6 @@
 {
     "name": "generic-game",
-    "image": "node:18",
-    "postCreateCommand": "npm ci"
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:20",
+    "postCreateCommand": "npm ci",
+    "forwardPorts": [3000, 8080]
 }
